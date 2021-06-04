@@ -39,6 +39,6 @@
 
 .canvas-wrapper {
   background: wheat;
-  height: 600px;
-  width: 600px;
+  height: 80vh;
+  width: 80vw;
 }

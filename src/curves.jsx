@@ -1,26 +1,27 @@
+var percentPts;
 export function drawCurves(ctx) {
     ctx.beginPath();
-    var percentPts = []
-    for (var i = -1; i <= 8; i++) {
+    percentPts = []
+    for (var i = -1; i < 8; i++) {
         const pts = getPoints({ x: 0, y: 100 + i * 100 }, 8, ptHor, controlHor)
-        // drawCurve(ctx, pts)
+        drawCurve(ctx, pts)
         percentPts = percentPts.concat(percentPoints(pts))
     }
-    for (var j = -1; j <= 8; j++) {
+    for (var j = -1; j < 8; j++) {
         const pts = getPoints({ x: 100 + j * 100, y: 0 }, 8, ptVer, controlVer)
-        // drawCurve(ctx, pts)
+        drawCurve(ctx, pts)
         percentPts = percentPts.concat(percentPoints(pts))
     }
     console.log(percentPts)
     var k = 0;
     const f = setInterval(() => {
-        if (k == percentPts.length - 1) clearInterval(f)
+        if (k === percentPts.length - 1) clearInterval(f)
         drawPoint(ctx, percentPts[k++])
-    }, 5)
+    }, 2)
 }
 
 function drawPoint(ctx, point) {
-    if (point.x < 0 || point.y < 0 || point.x > 800 || point.y > 800) return
+    if (point.x < 0 || point.y < 0 || point.x > ctx.canvas.width || point.y > ctx.canvas.height) return
     ctx.beginPath();
     ctx.arc(point.x, point.y, 5, 0, Math.PI * 2, false);
     ctx.closePath();
@@ -42,7 +43,7 @@ function drawCurve(ctx, values) {
 
 function percentPoints(points) {
     const pts = []
-    for (var j = 1; j < points.length; j++)
+    for (var j = 1; j < points[0].length; j++)
         for (var k = 0; k <= 1; k += 0.01)
             pts.push(getQuadraticBezierXYatPercent(points[0][j - 1], points[1][j], points[0][j], k));
     return pts
@@ -78,9 +79,9 @@ function ptVer(pt) {
 }
 
 function controlHor(pt, last, i) {
-    return { x: (pt.x + last.x) / 2, y: pt.y + ((i % 2 === 0) ? 1 : -1) * 100 };
+    return { x: (pt.x + last.x) / 2, y: pt.y + ((i % 2 === 0) ? 1 : -1) * 50 };
 }
 
 function controlVer(pt, last, i) {
-    return { x: pt.x + ((i % 2 === 0) ? 1 : -1) * 100, y: (pt.y + last.y) / 2 }
+    return { x: pt.x + ((i % 2 === 0) ? 1 : -1) * 50, y: (pt.y + last.y) / 2 }
 }
