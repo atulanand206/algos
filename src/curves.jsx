@@ -1,3 +1,25 @@
+import { Boxes } from './Jigsaw/Jigsaw';
+
+export function Draw(ctx) {
+    const grid = Boxes({x: 100, y: 100}, 100, 3, 4)
+    for (var i = 0; i < 3; i++) {
+        for (var j = 0; j < 4; j++) {
+            drawPoints(ctx, grid.faces[i][j].clockwise)
+        }
+    }
+}
+
+export function drawPoints(ctx, points) {
+    ctx.beginPath();
+    ctx.moveTo(points[0].x, points[0].y);
+    for (var i = 1; i < points.length; i++)
+        ctx.lineTo(points[i].x, points[i].y);
+    ctx.strokeStyle = "#000"
+    ctx.stroke()
+    ctx.strokeStyle = "transparent"
+    ctx.closePath();
+}
+
 var percentPts;
 export function drawCurves(ctx) {
     ctx.beginPath();

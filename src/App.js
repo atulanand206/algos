@@ -1,6 +1,6 @@
 import  { useRef, useEffect } from 'react';
 import './App.css';
-import { drawCurves } from './curves';
+import { Draw, drawCurves, line } from './curves';
 
 const drawStar = (cx) => {
   function pointAt(center, radius, angle) {
@@ -51,7 +51,9 @@ const Canvas = props => {
     canvas.width = size * scale;
     canvas.height = size * scale;
     context.scale(scale, scale);
-    drawCurves(context)
+    // drawCurves(context)
+    // line(context)
+    Draw(context)
     // drawZigZag(context)
     // drawStar(context)
   }, [])
