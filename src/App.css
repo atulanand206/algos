@@ -41,5 +41,17 @@
   padding: 1em;
   background: wheat;
   height: 80vh;
+  position: inline-block;
   width: 80vw;
+}
+
+.canvas-image {
+  background: transparent;
+  opacity: 0.5;
+  height: 80vh;
+  width: 80vw;
+  position: absolute;
+  inset: 0;
+  left: 10vw;
+  top: 10vh;
 }

@@ -1,12 +1,14 @@
-import { Boxes, offsetA, log, extrapolate } from './Jigsaw/Jigsaw';
-
-export async function Draw(ctx) {
-    const grid = Boxes({x: 100, y: 100}, 100, 5, 5)
+export async function Draw(ctx, grid) {
+    
     var pts = []
     var i, j
-    for (i = 0; i < 5; i++) {
-        for (j = 0; j < 5; j++) {
-            pts.push(offsetA(grid.faces[i][j].clockwise, j * 50 - 50 , i * 50 - 50))
+    for (i = 0; i < 8; i++) {
+        for (j = 0; j < 8; j++) {
+            pts.push(
+                // offsetA(
+                    grid.faces[i][j].clockwise
+                    // , j * 50 - 50 , i * 50 - 50)
+            )
         }
     }
     pts.forEach(pnts => {
@@ -15,10 +17,10 @@ export async function Draw(ctx) {
 
     for (i = 0; i < pts.length; i++) {
         for (j = 0; j < pts[i].length; j++) {
-            drawPoint(ctx, pts[i][j], j % 2 == 0 ? '#FF5733' : '#fff')
-            await new Promise(r => setTimeout(r, 0.02));
+            drawPoint(ctx, pts[i][j], i % 2 === 0 ? '#FF5733' : '#fff')
+            // await new Promise(r => setTimeout(r, 0.02));
         }
-        await new Promise(r => setTimeout(r, 5));
+        // await new Promise(r => setTimeout(r, 5));
     }
 }
 

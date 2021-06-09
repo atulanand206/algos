@@ -1,43 +1,13 @@
-import  { useRef, useEffect } from 'react';
+import React from 'react';
+import { useRef, useEffect } from 'react';
 import './App.css';
-import { Draw, drawCurves, line } from './curves';
+import { Draw } from './curves';
+import { Boxes } from './Jigsaw/Jigsaw';
 
-const drawStar = (cx) => {
-  function pointAt(center, radius, angle) {
-    const sinAngle = Math.sin(angle)
-    const cosAngle = Math.cos(angle)
-    return [center[0] + cosAngle * radius, center[1] + sinAngle * radius]
-  }
+const grid = Boxes({ x: 0, y: 0 }, 100, 8, 8)
 
-  var center = [200, 200]
-  var rad = 100
-  var start = pointAt(center, rad, 0)
-  cx.beginPath();
-  cx.moveTo(start[0], start[1])
-  for (var i = 1; i <= 8; i++) {
-    var point = pointAt(center, rad, i * Math.PI / 4)
-    cx.quadraticCurveTo(center[0], center[1], point[0], point[1])
-  }
-  cx.moveTo(start[0], start[1])
-  cx.fillStyle = "#FF8C00"
-  cx.fill()
-  cx.fillStyle = "transparent"
-}
-
-const drawZigZag = (cx) => {
-  function nextPoint(point) {
-    if (point[0] === 10) return [100, point[1] + 8]
-    else return [10, point[1] + 8]
-  }
-  var start = [10, 10]
-  cx.beginPath();
-  cx.moveTo(start[0], start[1])
-  for (var i = 0; i < 12; i++) {
-    start = nextPoint(start)
-    cx.lineTo(start[0], start[1])
-    cx.strokeStyle = "#000";
-    cx.stroke()
-  }
+const draw = (ctx) => {
+  Draw(ctx, grid)
 }
 
 const Canvas = props => {
@@ -51,24 +21,25 @@ const Canvas = props => {
     canvas.width = size * scale;
     canvas.height = size * scale;
     context.scale(scale, scale);
-    // drawCurves(context)
-    // line(context)
-    Draw(context)
-    // drawZigZag(context)
-    // drawStar(context)
+
+    draw(context)
   }, [])
 
-  return <canvas ref={canvasRef} {...props}/>
+  return <canvas ref={canvasRef} {...props} />
 }
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <Canvas className='canvas-wrapper'/>
-      </header>
-    </div>
-  );
+class App extends React.Component {
+
+  render() {
+    return (
+      <div className="App">
+        <header className="App-header">
+          <Canvas className='canvas-wrapper' />
+          <img className='canvas-image' src='anne1.jpeg' alt="Public Space" height="800" width="800" />
+        </header>
+      </div>
+    );
+  }
 }
 
 export default App;
