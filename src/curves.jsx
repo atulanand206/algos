@@ -2,8 +2,8 @@ import { Boxes } from './Jigsaw/Jigsaw';
 
 export function Draw(ctx) {
     const grid = Boxes({x: 100, y: 100}, 100, 3, 4)
-    for (var i = 0; i < 3; i++) {
-        for (var j = 0; j < 4; j++) {
+    for (var i = 0; i < 4; i++) {
+        for (var j = 0; j < 3; j++) {
             drawPoints(ctx, grid.faces[i][j].clockwise)
         }
     }

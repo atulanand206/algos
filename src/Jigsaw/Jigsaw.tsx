@@ -1,5 +1,4 @@
 import util from 'util';
-import { drawPoints } from '../curves';
 
 export function log(object: any) {
     console.log(util.inspect(object, { showHidden: true, depth: 10 }))
@@ -20,11 +19,7 @@ export interface Edge {
 }
 
 export interface Face {
-    top: Edge;
-    left: Edge;
-    bottom: Edge;
-    right: Edge;
-    clockwise: Path[];
+    clockwise: Point[];
 }
 
 export interface Grid {
@@ -36,18 +31,22 @@ export interface Grid {
 export function Boxes(start: Point, length: number, rows: number, cols: number): Grid {
     const horizontal = []
     for (var i = 0; i <= cols; i++) {
-        horizontal.push(HLine(offset(start, 0, length * i), length, cols))
+        if (i == 0 || i == cols) {
+            horizontal.push(HLine(offset(start, 0, length * i), length, cols)) 
+        } else {
+            horizontal.push(ZLine(offset(start, 0, length * i), length, cols))
+        }
     }
 
     const vertical = []
-    for (var i = 0; i <= rows; i++) {
+    for (i = 0; i <= rows; i++) {
         vertical.push(VLine(offset(start, length * i, 0), length, cols))
     }
 
     const faces = []
-    for (var i = 0; i < rows; i++) {
+    for (i = 0; i < cols; i++) {
         const row = []
-        for (var j = 0; j < cols; j++) {
+        for (var j = 0; j < rows; j++) {
             row.push(SquareFace(horizontal, vertical, i, j))
         }
         faces.push(row)
@@ -62,17 +61,22 @@ export function Boxes(start: Point, length: number, rows: number, cols: number):
 
 export function SquareFace(horizontal: Edge[][], vertical: Edge[][], i: number, j: number): Face {
     return {
-        top: horizontal[i][j],
-        right: vertical[i + 1][j],
-        bottom: horizontal[1][j],
-        left: vertical[i][j],
-        clockwise: [
-            horizontal[i][j].natural,
-            vertical[i + 1][j].natural,
-            horizontal[i + 1][j].reverse,
-            vertical[i][j].reverse
-        ]
+        clockwise: 
+            horizontal[i][j].natural.points
+            .concat(vertical[j + 1][i].natural.points)
+            .concat(horizontal[i + 1][j].reverse.points)
+            .concat(vertical[j][i].reverse.points)
+            .concat(horizontal[i][j].natural.points)
+        
     }
+}
+
+export function ZLine(start: Point, length: number, steps: number): Edge[] {
+    const edges = []
+    for (var i = 0; i < steps; i++) {
+        edges.push(ZEdge(offset(start, length * i, 0), length))
+    }
+    return edges
 }
 
 export function HLine(start: Point, length: number, steps: number): Edge[] {
@@ -89,6 +93,12 @@ export function VLine(start: Point, length: number, steps: number): Edge[] {
         edges.push(VEdge(offset(start, 0, length * i), length))
     }
     return edges
+}
+
+export function ZEdge(start: Point, length: number): Edge {
+    const end = offset(start, length, 0)
+    const mid = offset(start, length / 2, length / 10)
+    return { natural: { points: [start, mid, end] }, reverse: { points: [end, mid, start] } }
 }
 
 export function HEdge(start: Point, length: number): Edge {
