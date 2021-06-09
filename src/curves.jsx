@@ -1,12 +1,34 @@
-import { Boxes } from './Jigsaw/Jigsaw';
+import { Boxes, offsetA, log, extrapolate } from './Jigsaw/Jigsaw';
 
-export function Draw(ctx) {
-    const grid = Boxes({x: 100, y: 100}, 100, 3, 4)
-    for (var i = 0; i < 4; i++) {
-        for (var j = 0; j < 3; j++) {
-            drawPoints(ctx, grid.faces[i][j].clockwise)
+export async function Draw(ctx) {
+    const grid = Boxes({x: 100, y: 100}, 100, 5, 5)
+    var pts = []
+    var i, j
+    for (i = 0; i < 5; i++) {
+        for (j = 0; j < 5; j++) {
+            pts.push(offsetA(grid.faces[i][j].clockwise, j * 50 - 50 , i * 50 - 50))
         }
     }
+    pts.forEach(pnts => {
+        drawPoints(ctx, pnts)
+    })
+
+    for (i = 0; i < pts.length; i++) {
+        for (j = 0; j < pts[i].length; j++) {
+            drawPoint(ctx, pts[i][j], j % 2 == 0 ? '#FF5733' : '#fff')
+            await new Promise(r => setTimeout(r, 0.02));
+        }
+        await new Promise(r => setTimeout(r, 5));
+    }
+}
+
+function drawPoint(ctx, point, color) {
+    if (point.x < 0 || point.y < 0 || point.x > ctx.canvas.width || point.y > ctx.canvas.height) return
+    ctx.beginPath();
+    ctx.arc(point.x, point.y, 5, 0, Math.PI * 2, false);
+    ctx.closePath();
+    ctx.fillStyle = color;
+    ctx.fill();
 }
 
 export function drawPoints(ctx, points) {
@@ -38,16 +60,8 @@ export function drawCurves(ctx) {
     var k = 0;
     const f = setInterval(() => {
         if (k === percentPts.length - 1) clearInterval(f)
-        drawPoint(ctx, percentPts[k++])
+        // drawPoint(ctx, percentPts[k++])
     }, 2)
-}
-
-function drawPoint(ctx, point) {
-    if (point.x < 0 || point.y < 0 || point.x > ctx.canvas.width || point.y > ctx.canvas.height) return
-    ctx.beginPath();
-    ctx.arc(point.x, point.y, 5, 0, Math.PI * 2, false);
-    ctx.closePath();
-    ctx.fill();
 }
 
 function drawCurve(ctx, values) {

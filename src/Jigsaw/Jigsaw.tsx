@@ -1,4 +1,5 @@
 import util from 'util';
+import _ from 'lodash';
 
 export function log(object: any) {
     console.log(util.inspect(object, { showHidden: true, depth: 10 }))
@@ -31,23 +32,37 @@ export interface Grid {
 export function Boxes(start: Point, length: number, rows: number, cols: number): Grid {
     const horizontal = []
     for (var i = 0; i <= cols; i++) {
-        if (i == 0 || i == cols) {
-            horizontal.push(HLine(offset(start, 0, length * i), length, cols)) 
+        if (i === 0 || i === cols) {
+            horizontal.push(HLine(offset(start, 0, length * i), length, rows))
         } else {
-            horizontal.push(ZLine(offset(start, 0, length * i), length, cols))
+            const row = []
+            for (var j = 0; j <= rows; j++) {
+                if (j % 2 === 0) {
+                    row.push(HBEdge(offset(start, length * j, length * i), length))
+                } else {
+                    const edge = HTEdge(offset(start, length * j, length * i), length)
+                    
+                    row.push(edge)
+                }
+            }
+            horizontal.push(row)
         }
     }
 
     const vertical = []
     for (i = 0; i <= rows; i++) {
-        vertical.push(VLine(offset(start, length * i, 0), length, cols))
+        if (i > 0 && i < cols) {
+            vertical.push(VCLine(offset(start, length * i, 0), length, cols))
+        } else {
+            vertical.push(VLine(offset(start, length * i, 0), length, cols))
+        }
     }
 
     const faces = []
     for (i = 0; i < cols; i++) {
         const row = []
-        for (var j = 0; j < rows; j++) {
-            row.push(SquareFace(horizontal, vertical, i, j))
+        for (j = 0; j < rows; j++) {
+            row.push(ExtrapolatedFace(SquareFace(horizontal, vertical, i, j).clockwise))
         }
         faces.push(row)
     }
@@ -57,6 +72,14 @@ export function Boxes(start: Point, length: number, rows: number, cols: number):
         vertical: vertical,
         faces: faces
     }
+}
+
+export function ExtrapolatedFace(line: Point[]): Face {
+    var pnts: Point[] = []
+    for (var k = 0; k < line.length - 1; k++) {
+        pnts = pnts.concat(extrapolate(line[k], line[k+1]))
+    }
+    return { clockwise: pnts }
 }
 
 export function SquareFace(horizontal: Edge[][], vertical: Edge[][], i: number, j: number): Face {
@@ -95,10 +118,40 @@ export function VLine(start: Point, length: number, steps: number): Edge[] {
     return edges
 }
 
+export function VCLine(start: Point, length: number, steps: number): Edge[] {
+    const edges = []
+    for (var i = 0; i < steps; i++) {
+        if (i % 2 === 0) {
+            edges.push(VREdge(offset(start, 0, length * i), length))
+        } else {
+            edges.push(VLEdge(offset(start, 0, length * i), length))
+        }
+    }
+    return edges
+}
+
 export function ZEdge(start: Point, length: number): Edge {
     const end = offset(start, length, 0)
     const mid = offset(start, length / 2, length / 10)
     return { natural: { points: [start, mid, end] }, reverse: { points: [end, mid, start] } }
+}
+
+export function HBEdge(start: Point, length: number): Edge {
+    const end = offset(start, length, 0)
+    const a = offset(start, length * 0.4, 0)
+    const b = offset(start, length * 0.3, -length * 0.2)
+    const c = offset(start, length * 0.7, -length * 0.2)
+    const d = offset(start, length * 0.6, 0)
+    return { natural: { points: [start, a, b, c, d, end] }, reverse: { points: [end, d, c, b, a, start] } }
+}
+
+export function HTEdge(start: Point, length: number): Edge {
+    const end = offset(start, length, 0)
+    const a = offset(start, length * 0.4, 0)
+    const b = offset(start, length * 0.3, length * 0.2)
+    const c = offset(start, length * 0.7, length * 0.2)
+    const d = offset(start, length * 0.6, 0)
+    return { natural: { points: [start, a, b, c, d, end] }, reverse: { points: [end, d, c, b, a, start] } }
 }
 
 export function HEdge(start: Point, length: number): Edge {
@@ -106,11 +159,52 @@ export function HEdge(start: Point, length: number): Edge {
     return { natural: { points: [start, end] }, reverse: { points: [end, start] } }
 }
 
+export function VLEdge(start: Point, length: number): Edge {
+    const end = offset(start, 0, length)
+    const a = offset(start, 0, length * 0.4)
+    const b = offset(start, -length * 0.2, length * 0.3)
+    const c = offset(start, -length * 0.2, length * 0.7)
+    const d = offset(start, 0, length * 0.6)
+    return { natural: { points: [start, a, b, c, d, end] }, reverse: { points: [end, d, c, b, a, start] } }
+}
+
+export function VREdge(start: Point, length: number): Edge {
+    const end = offset(start, 0, length)
+    const a = offset(start, 0, length * 0.4)
+    const b = offset(start, length * 0.2, length * 0.3)
+    const c = offset(start, length * 0.2, length * 0.7)
+    const d = offset(start, 0, length * 0.6)
+    return { natural: { points: [start, a, b, c, d, end] }, reverse: { points: [end, d, c, b, a, start] } }
+}
+
 export function VEdge(start: Point, length: number): Edge {
     const end = offset(start, 0, length)
-    return { natural: { points: [start, end] }, reverse: { points: [end, start] } }
+    return IEdge([start, end])
+}
+
+export function IEdge(pts: Point[]): Edge {
+    return { natural: { points: pts }, reverse: { points: _.reverse(pts) } }
+}
+
+export function offsetA(pts: Point[], x: number, y: number): Point[] {
+    return pts.map(point => offset(point, x, y))
 }
 
 export function offset(pt: Point, x: number, y: number): Point {
     return { x: pt.x + x, y: pt.y + y }
+}
+
+export function extrapolate(start: Point, end: Point): Point[] {
+    const arr = [start, end]
+    for (var i = 0; i < 7; i++) {
+        var iterations = Math.pow(2, i)
+        for (var j = 0; j < iterations; j++) {
+            arr.splice(j * 2 + 1, 0, mid(arr[j * 2], arr[j * 2 + 1]))
+        }
+    }
+    return arr
+}
+
+export function mid(start: Point, end: Point): Point {
+    return { x: (start.x + end.x) / 2, y: (start.y + end.y) / 2}
 }
