@@ -1,3 +1,12 @@
+body {
+  background-color: white;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
 .App {
   text-align: center;
 }
@@ -14,7 +23,7 @@
 }
 
 .App-header {
-  background-color: #282c34;
+  background-color: white;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -45,13 +54,25 @@
   width: 80vw;
 }
 
-.canvas-image {
-  background: transparent;
-  opacity: 0.5;
-  height: 80vh;
-  width: 80vw;
+.grid-images {
   position: absolute;
   inset: 0;
-  left: 10vw;
-  top: 10vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.canvas-image {
+  background: red;
+  height: 80vh;
+  width: 80vw;
+}
+
+.canvas-image-wrapper {
+  height: 100px;
+  width: 100px;
+}
+
+footer {
+  position: sticky;
+  bottom: 0;
 }

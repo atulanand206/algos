@@ -27,6 +27,7 @@ export interface Grid {
     horizontal: Edge[][];
     vertical: Edge[][];
     faces: Face[][];
+    essentials: Face[][];
 }
 
 export function Boxes(start: Point, length: number, rows: number, cols: number): Grid {
@@ -58,11 +59,20 @@ export function Boxes(start: Point, length: number, rows: number, cols: number):
         }
     }
 
+    const essentials = []
+    for (i = 0; i < cols; i++) {
+        const row = []
+        for (j = 0; j < rows; j++) {
+            row.push(SquareFace(horizontal, vertical, i, j))
+        }
+        essentials.push(row)
+    }
+
     const faces = []
     for (i = 0; i < cols; i++) {
         const row = []
         for (j = 0; j < rows; j++) {
-            row.push(ExtrapolatedFace(SquareFace(horizontal, vertical, i, j).clockwise))
+            row.push(ExtrapolatedFace(essentials[i][j].clockwise))
         }
         faces.push(row)
     }
@@ -70,6 +80,7 @@ export function Boxes(start: Point, length: number, rows: number, cols: number):
     return {
         horizontal: horizontal,
         vertical: vertical,
+        essentials: essentials,
         faces: faces
     }
 }
@@ -89,7 +100,7 @@ export function SquareFace(horizontal: Edge[][], vertical: Edge[][], i: number, 
             .concat(vertical[j + 1][i].natural.points)
             .concat(horizontal[i + 1][j].reverse.points)
             .concat(vertical[j][i].reverse.points)
-            .concat(horizontal[i][j].natural.points)
+            .concat(horizontal[i][j].natural.points[0])
         
     }
 }
