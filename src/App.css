@@ -58,6 +58,8 @@ body {
   position: absolute;
   inset: 0;
   display: flex;
+  top: 90px;
+  left: 100px;
   flex-direction: column;
 }
 
@@ -70,9 +72,16 @@ body {
 .canvas-image-wrapper {
   height: 100px;
   width: 100px;
+  border-color: red;
+  border-width: 1px;
 }
 
 footer {
   position: sticky;
   bottom: 0;
+}
+
+.canvas-image-block {
+  height: 100px;
+  width: 100px;
 }

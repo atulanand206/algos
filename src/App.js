@@ -3,26 +3,13 @@ import { useRef, useEffect } from 'react';
 import './App.css';
 import { Draw } from './curves';
 import { Boxes } from './Jigsaw/Jigsaw';
-import { Slider } from 'material-ui-slider';
+import { Faces } from './Faces/Face'
+import { vis, pos } from './utils/_helpers'
 
 const grid = Boxes({ x: 0, y: 0 }, 100, 8, 8)
 
 const draw = (ctx) => {
   Draw(ctx, grid)
-}
-
-const getPath = (x, y) => {
-  var pat = "polygon("
-
-  if (x < grid.essentials.length && y < grid.essentials[x].length) {
-    const face = grid.essentials[x][y].clockwise
-    for (var i = 0; i < face.length; i++) {
-      pat = pat.concat(face[i].x / 8 + '% ' + face[i].y / 8 + '%')
-      if (i !== face.length - 1) pat = pat.concat(', ')
-    }
-  }
-  pat = pat.concat(')')
-  return pat
 }
 
 const Canvas = props => {
@@ -48,72 +35,35 @@ class App extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      step: 30,
-      visibility: this.vis(8, 8)
+      visibility: vis(8, 8)
     }
   }
 
-  vis(x, y) {
-    const v = []
-    for (var i = 0; i < x; i++) {
-      const row = []
-      for (var j = 0; j < y - 2; j++) {
-        row.push(true)
-      }
-      row.push(true)
-      row.push(true)
-      v.push(row)
-    }
-    return v
+  componentDidMount() {
+    this.sched()
   }
 
-  onSliderChange(value) {
-    this.setState({step: value})
-    return `${value}°C`;
+  async sched() {
+    var len = grid.faces.length
+    var total = grid.faces.length > 0 ? grid.faces.length * grid.faces[0].length : 0
+    for (var k = 0; k < total; k++) {
+      var cd = pos(k, len)
+      const vi = this.state.visibility
+      vi[cd[0]][cd[1]] = true
+      this.setState({ visibility: vi })
+      await new Promise(r => setTimeout(r, 200));
+    }
   }
 
   render() {
     return (
       <div className="App">
         <header className="App-header">
-          {/* <Canvas className='canvas-wrapper' /> */}
+          <Canvas className='canvas-wrapper' />
           <div className='grid-images'>
-            {grid.essentials.map((row, i) => row.map((it, j) => {
-              // if ((i === 4 && j === 5) || (i === 1 && j === 3) || (i === 6 && j === 7)) {
-              //   return <div className='canvas-image-wrapper' />
-              // }
-              return <div className='canvas-image-wrapper' 
-              style={
-                {
-                  transform: `translateX(${this.state.step * j}px) translateY(${this.state.step * i}px)`
-                }}
-              >
-                <img
-                  className='canvas-image'
-                  style={{ clipPath: getPath(i, j)
-                    , transform: `translateY(-${100 * (i * grid.essentials.length + j)}px)`,
-                    display: (i < this.state.visibility.length && j < this.state.visibility[i].length 
-                        && this.state.visibility[i][j]) ? 'block' : 'none'
-                  }}
-                  src='anne1.jpeg' alt="Public Space"
-                  height="100" width="100"
-                />
-              </div>
-            }))}
+            {Faces(grid, this.state.visibility)}
           </div>
         </header>
-        <footer>
-          <Slider
-            defaultValue={30}
-            onChange={(v) => this.onSliderChange(v)}
-            aria-labelledby="discrete-slider"
-            valueLabelDisplay="auto"
-            step={10}
-            marks
-            min={0}
-            max={100}
-          />
-        </footer>
       </div>
     );
   }
