@@ -32,12 +32,12 @@ export interface Grid {
 
 export function Boxes(start: Point, length: number, rows: number, cols: number): Grid {
     const horizontal = []
-    for (var i = 0; i <= cols; i++) {
-        if (i === 0 || i === cols) {
-            horizontal.push(HLine(offset(start, 0, length * i), length, rows))
+    for (var i = 0; i <= rows; i++) {
+        if (i === 0 || i === rows) {
+            horizontal.push(HLine(offset(start, 0, length * i), length, cols))
         } else {
             const row = []
-            for (var j = 0; j <= rows; j++) {
+            for (var j = 0; j <= cols; j++) {
                 if (j % 2 === 0) {
                     row.push(HBEdge(offset(start, length * j, length * i), length))
                 } else {
@@ -51,27 +51,27 @@ export function Boxes(start: Point, length: number, rows: number, cols: number):
     }
 
     const vertical = []
-    for (i = 0; i <= rows; i++) {
+    for (i = 0; i <= cols; i++) {
         if (i > 0 && i < cols) {
-            vertical.push(VCLine(offset(start, length * i, 0), length, cols))
+            vertical.push(VCLine(offset(start, length * i, 0), length, rows))
         } else {
-            vertical.push(VLine(offset(start, length * i, 0), length, cols))
+            vertical.push(VLine(offset(start, length * i, 0), length, rows))
         }
     }
 
     const essentials = []
-    for (i = 0; i < cols; i++) {
+    for (i = 0; i < rows; i++) {
         const row = []
-        for (j = 0; j < rows; j++) {
+        for (j = 0; j < cols; j++) {
             row.push(SquareFace(horizontal, vertical, i, j))
         }
         essentials.push(row)
     }
 
     const faces = []
-    for (i = 0; i < cols; i++) {
+    for (i = 0; i < rows; i++) {
         const row = []
-        for (j = 0; j < rows; j++) {
+        for (j = 0; j < cols; j++) {
             row.push(ExtrapolatedFace(essentials[i][j].clockwise))
         }
         faces.push(row)

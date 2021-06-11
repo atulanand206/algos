@@ -30,3 +30,36 @@ export const vis = (x: number, y: number) => {
 export const pos = (x: number, len: number) => {
 	return [Math.floor(x / len), x % len]
 }
+
+export const spiralPrint = (m: number, n: number) => {
+	var i, k = 0, l = 0;
+	const ans = []
+
+
+	while (k < m && l < n) {
+		for (i = l; i < n; ++i) {
+			ans.push([k, i])
+		}
+		k++;
+
+		for (i = k; i < m; ++i) {
+			ans.push([i, n - 1])
+		}
+		n--;
+
+		if (k < m) {
+			for (i = n - 1; i >= l; --i) {
+				ans.push([m - 1, i])
+			}
+			m--;
+		}
+
+		if (l < n) {
+			for (i = m - 1; i >= k; --i) {
+				ans.push([i, l])
+			}
+			l++;
+		}
+	}
+	return ans
+}

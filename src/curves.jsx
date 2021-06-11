@@ -1,10 +1,12 @@
 import {offsetA} from './Jigsaw/Jigsaw'
+
+export const rows = 25
+export const cols = 25
 export async function Draw(ctx, grid) {
-    
     var pts = []
     var i, j
-    for (i = 0; i < 8; i++) {
-        for (j = 0; j < 8; j++) {
+    for (i = 0; i < rows; i++) {
+        for (j = 0; j < cols; j++) {
             pts.push(
                 // offsetA(
                     grid.faces[i][j].clockwise
@@ -13,12 +15,12 @@ export async function Draw(ctx, grid) {
         }
     }
     pts.forEach(pnts => {
-        drawPoints(ctx, pnts)
+        // drawPoints(ctx, pnts)
     })
 
     // for (i = 0; i < pts.length; i++) {
     //     for (j = 0; j < pts[i].length; j++) {
-    //         drawPoint(ctx, pts[i][j],  % 2 === 0 ? '#FF5733' : '#fff')
+    //         drawPoint(ctx, pts[i][j], j % 2 === 0 ? '#FF5733' : '#fff')
     //         await new Promise(r => setTimeout(r, 0.02));
     //     }
     //     await new Promise(r => setTimeout(r, 5));
