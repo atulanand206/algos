@@ -1,0 +1,18 @@
+.sort-wrapper {
+    display: flex;
+    flex-direction: row;
+    gap: 1px;
+}
+
+.sort-bar {
+    width: 10px;
+    background: teal;   
+}
+
+.numbers {
+    background-color: red;
+}
+
+.numbers:valid {
+	background-color: green;
+}
