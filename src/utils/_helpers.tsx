@@ -28,6 +28,7 @@ export const vis = (x: number, y: number) => {
 }
 
 export const pos = (x: number, len: number) => {
+	// console.log('pos', x, len, Math.floor(x / len), x % len)
 	return [Math.floor(x / len), x % len]
 }
 

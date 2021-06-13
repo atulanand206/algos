@@ -16,12 +16,12 @@ export const FaceAbsolute = (grid: Grid, start: Point, i: number, j: number, vis
 	const translateYWrapper = -start.y + (offsetY(i) || 0)
 	const translateY = 100 * (i * grid.essentials.length + j)
 	return <Block start={start} path={path}
-		translateXWrapper={translateXWrapper} translateYWrapper={translateYWrapper}
-		translateYImage={translateY} visibility={visibility}
+		translateXWrapper={0} translateYWrapper={0}
+		translateYImage={0} visibility={visibility}
 	/>
 }
 
-export const Face = (grid: Grid, start: Point, i: number, j: number, visibility: boolean) => {
+export const FaceSerial = (grid: Grid, start: Point, i: number, j: number, visibility: boolean) => {
 	const path = getPath(grid, i, j)
 	const translateY = 100 * (i * grid.essentials.length + j)
 	return <Block start={start} path={path}
@@ -30,7 +30,15 @@ export const Face = (grid: Grid, start: Point, i: number, j: number, visibility:
 	/>
 }
 
+export function renderList(grid: Grid, i: number, j: number, visibility: boolean): JSX.Element {
+	return FaceAbsolute(grid, grid.essentials[i][j].clockwise[0], i, j, visibility);
+}
+
+export function render(grid: Grid, i: number, j: number, visibility: boolean): JSX.Element {
+	return FaceSerial(grid, grid.essentials[i][j].clockwise[0], i, j, visibility);
+}
+
 export const Faces = (grid: Grid, visibility: boolean[][]) => {
 	return grid.essentials.map((row, i) => row.map((it, j) =>
-		Face(grid, it.clockwise[0], i, j, (i < visibility.length && j < visibility[i].length && visibility[i][j]))))
+		render(grid, i, j, (i < visibility.length && j < visibility[i].length && visibility[i][j]))))
 }

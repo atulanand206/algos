@@ -1,7 +1,7 @@
 import {offsetA} from './Jigsaw/Jigsaw'
 
-export const rows = 25
-export const cols = 25
+export const rows = 8
+export const cols = 8
 export async function Draw(ctx, grid) {
     var pts = []
     var i, j

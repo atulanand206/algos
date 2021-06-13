@@ -63,6 +63,12 @@ body {
   flex-direction: column;
 }
 
+.recycled-images {
+  overflow-y: scroll;
+  height: 100px;
+  width: 900px;
+}
+
 .canvas-image {
   background: red;
   height: 80vh;

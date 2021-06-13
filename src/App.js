@@ -1,9 +1,9 @@
-import React from 'react';
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
+import RecycledList from "react-recycled-scrolling";
 import './App.css';
 import { Draw, rows, cols } from './curves';
 import { Boxes } from './Jigsaw/Jigsaw';
-import { Faces } from './Faces/Face'
+import { Faces, renderList } from './Faces/Face'
 import { vis, pos, spiralPrint } from './utils/_helpers'
 
 const grid = Boxes({ x: 0, y: 0 }, 800 / cols, rows, cols)
@@ -32,53 +32,64 @@ const Canvas = props => {
   return <canvas ref={canvasRef} {...props} />
 }
 
-class App extends React.Component {
+var len = grid.faces.length
+var total = len > 0 ? len * grid.faces[0].length : 0
+const pieces = []
+for (var i = 0; i < total; i++) {
+  var cd = pos(i, len)
+  pieces.push({
+    x: cd[0],
+    y: cd[1]
+  })
+}
 
-  constructor(props) {
-    super(props)
-    this.state = {
-      visibility: visi
-    }
-  }
+export default function App() {
 
-  componentDidMount() {
-    this.spiral()
-  }
+  const [visibility, setVisibility] = useState(visi)
 
-  async rowwise() {
-    var len = grid.faces.length
-    var total = len > 0 ? len * grid.faces[0].length : 0
+  useEffect(() => {
+    rowwise()
+  })
+
+  const rowwise = async () => {
     for (var k = 0; k < total; k++) {
       var cd = pos(k, len)
-      const vi = this.state.visibility
+      const vi = visibility
       vi[cd[0]][cd[1]] = true
-      this.setState({ visibility: vi })
+      setVisibility(vi)
+      console.log(vi)
       await new Promise(r => setTimeout(r, 200));
     }
   }
 
-  async spiral() {
+  const spiral = () => {
+    // console.log(visibility)
+
     const series = spiralPrint(grid.essentials.length, grid.essentials[0].length)
     for (var l = 0; l < series.length; l++) {
-      const vi = this.state.visibility
+      const vi = visibility
       vi[series[l][0]][series[l][1]] = true
-      this.setState({ visibility: vi })
-      await new Promise(r => setTimeout(r, 200))
+      setVisibility(vi)
+      // await new Promise(r => setTimeout(r, 200))
     }
   }
 
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <Canvas className='canvas-wrapper' />
-          <div className='grid-images'>
-            {Faces(grid, this.state.visibility)}
-          </div>
-        </header>
-      </div>
-    );
+  const cellItem = ({ x, y }) => {
+    return renderList(grid, x, y, true)
   }
-}
 
-export default App;
+
+  return (
+    <div className="App">
+      <header className="App-header">
+        {/* <div className='recycled-images'> */}
+          {/* <RecycledList itemFn={cellItem} attrList={pieces} itemHeight={100} /> */}
+        {/* </div> */}
+        <Canvas className='canvas-wrapper' />
+        <div className='grid-images'>
+          {Faces(grid, visibility)}
+        </div>
+      </header>
+    </div>
+  );
+}
