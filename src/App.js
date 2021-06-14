@@ -1,5 +1,4 @@
-import { useRef, useEffect, useState } from 'react';
-import RecycledList from "react-recycled-scrolling";
+import React, { useRef, useEffect } from 'react';
 import './App.css';
 import { Draw, rows, cols } from './curves';
 import { Boxes } from './Jigsaw/Jigsaw';
@@ -43,53 +42,58 @@ for (var i = 0; i < total; i++) {
   })
 }
 
-export default function App() {
+class App extends React.Component {
 
-  const [visibility, setVisibility] = useState(visi)
+  constructor(props) {
+    super(props)
+    this.state = {
+      visibility: visi
+    }
+  }
 
-  useEffect(() => {
-    rowwise()
-  })
+  componentDidMount() {
+    this.spiral()
+  }
 
-  const rowwise = async () => {
+  rowwise = async () => {
     for (var k = 0; k < total; k++) {
       var cd = pos(k, len)
-      const vi = visibility
+      const vi = this.state.visibility
       vi[cd[0]][cd[1]] = true
-      setVisibility(vi)
-      console.log(vi)
+      this.setState({ visibility: vi })
       await new Promise(r => setTimeout(r, 200));
     }
   }
 
-  const spiral = () => {
-    // console.log(visibility)
-
+  spiral = async () => {
     const series = spiralPrint(grid.essentials.length, grid.essentials[0].length)
     for (var l = 0; l < series.length; l++) {
-      const vi = visibility
+      const vi = this.state.visibility
       vi[series[l][0]][series[l][1]] = true
-      setVisibility(vi)
-      // await new Promise(r => setTimeout(r, 200))
+      this.setState({ visibility: vi })
+      await new Promise(r => setTimeout(r, 200))
     }
   }
 
-  const cellItem = ({ x, y }) => {
+  cellItem = ({ x, y }) => {
     return renderList(grid, x, y, true)
   }
 
-
-  return (
-    <div className="App">
-      <header className="App-header">
-        {/* <div className='recycled-images'> */}
+  render() {
+    return (
+      <div className="App">
+        <header className="App-header">
+          {/* <div className='recycled-images'> */}
           {/* <RecycledList itemFn={cellItem} attrList={pieces} itemHeight={100} /> */}
-        {/* </div> */}
-        <Canvas className='canvas-wrapper' />
-        <div className='grid-images'>
-          {Faces(grid, visibility)}
-        </div>
-      </header>
-    </div>
-  );
+          {/* </div> */}
+          <Canvas className='canvas-wrapper' />
+          <div className='grid-images'>
+            {Faces(grid, this.state.visibility)}
+          </div>
+        </header>
+      </div>
+    );
+  }
 }
+
+export default App

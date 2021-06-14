@@ -27,8 +27,6 @@ export const insertion = async (value: number[], callback: (values: number[]) =>
         while (j >= 0 && value[j] > key) {
             value[j + 1] = value[j];
             j = j - 1;
-            // callback(value)
-            // await new Promise(r => setTimeout(r, 200));
         }
         value[j + 1] = key;
         callback(value)

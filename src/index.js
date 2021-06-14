@@ -2,12 +2,12 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
-import Sort from './Sort/Sort';
 import reportWebVitals from './reportWebVitals';
+import Algorithm from './Algorithm/Algorithm';
 
 ReactDOM.render(
   <React.StrictMode>
-    <Sort />
+    <Algorithm />
   </React.StrictMode>,
   document.getElementById('root')
 );

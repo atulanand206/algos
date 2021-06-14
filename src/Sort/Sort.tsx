@@ -11,7 +11,7 @@ const Bar = (props: BarProps) => <div
 	style={{ height: `${props.value * 10}px` }}></div>
 
 type SortProps = {
-
+	technique: number
 }
 
 type SortState = {
@@ -39,7 +39,8 @@ class Sort extends React.Component<SortProps, SortState> {
 	}
 
 	sort() {
-		this.state.options[1](this.state.data.split(' ').map(k => parseInt(k)),
+		if (this.props.technique >= this.state.options.length) return
+		this.state.options[this.props.technique](this.state.data.split(' ').map(k => parseInt(k)),
 			(values: number[]) => this.setState({ vals: values }))
 	}
 
