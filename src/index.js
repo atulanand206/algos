@@ -4,10 +4,11 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import Algorithm from './Algorithm/Algorithm';
+import Template from './Template/Template'
 
 ReactDOM.render(
   <React.StrictMode>
-    <Algorithm />
+    <Template />
   </React.StrictMode>,
   document.getElementById('root')
 );
