@@ -1,0 +1,33 @@
+@import "src/utils/colors";
+@import "src/utils/fonts";
+
+.landing {
+
+    &__wrapper {
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: $color_background;
+    }
+
+    &__logo {
+        font-size: $fnt_xlarge;
+    }
+
+    &__controls {
+        display: flex;
+        flex-direction: row;
+        gap: 2em;
+
+        &-button {
+            font-size: $fnt_large;
+            color: $color_white;
+            width: 8em;
+            height: 8em;
+            border-radius: 50%;
+            background-color: $color_accent;
+        }
+    }
+}

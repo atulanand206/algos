@@ -1,0 +1,18 @@
+@import "src/utils/colors";
+@import "src/utils/fonts";
+
+.scoreboard {
+
+    &__wrapper {
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: $color_accent;
+        color: $color_white;
+
+        &-visible {
+            display: flex;
+        }
+    }
+}
