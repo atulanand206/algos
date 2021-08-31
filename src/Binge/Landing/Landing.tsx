@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Player } from '../../utils/_interfaces';
 import Scoreboard from './../Scoreboard/Scoreboard';
 import './Landing.scss'
  
@@ -14,6 +15,12 @@ const Landing = () => {
     setVisibilityScoreboard(false)
   }
 
+  const players: Player[] = [
+    { name: "Vicky", score: 0 },
+    { name: "Rohan", score: 0 },
+    { name: "Rohan", score: 0 }
+  ]
+
   return (
     <div className='landing__wrapper'>
       <p className='landing__logo'>Binguiz</p>
@@ -21,7 +28,7 @@ const Landing = () => {
         <button className='landing__controls-button' onClick={openScoreboard}>Let's Begin</button>
         <button className='landing__controls-button' onClick={closeScoreboard}>Scoreboard</button>
       </div>
-      <Scoreboard visibility={visibilityScoreBoard}/>
+      <Scoreboard visibility={visibilityScoreBoard} players={players}/>
     </div>
   )
 }

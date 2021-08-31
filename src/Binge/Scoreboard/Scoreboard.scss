@@ -2,8 +2,8 @@
 @import "src/utils/fonts";
 
 .scoreboard {
-
     &__wrapper {
+        position: absolute;
         display: none;
         flex-direction: column;
         align-items: center;
@@ -11,8 +11,46 @@
         background: $color_accent;
         color: $color_white;
 
+        & > * {
+            position: absolute;
+        }
+
         &-visible {
             display: flex;
         }
+    }
+
+    &__foreground {
+        background: $color_sb_bg;
+        padding: 1em;
+    }
+
+    &__header {
+        font-size: 1.5em;
+        text-align: center;
+        margin-block: 1em;
+    }
+}
+
+.table {
+    display: flex;
+    flex-direction: column;
+    background: transparent;
+
+    & > *,
+    & > * > * {
+        background: transparent;
+    }
+
+    &--row {
+        display: flex;
+        flex-direction: row;
+        margin-block: 1em;
+    }
+
+    &--cell {
+        width: 4em;
+        text-align: center;
+        margin-inline: 1em;
     }
 }
