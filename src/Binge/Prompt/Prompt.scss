@@ -4,6 +4,17 @@
 .prompt {
 
     &__wrapper {
+        position: absolute;
         height: 100vh;
     }
+
+    &__container {
+        background: $color_white;
+        padding: 1em;
+    }
+
+    &__line {
+        margin: 1em;
+    }
 }
+

@@ -4,7 +4,7 @@ import './Scoreboard.scss'
 
 type Props = {
   players: Player[]
-  visibility: Boolean
+  visibility: boolean
 }
 
 type TableProps = {
