@@ -3,6 +3,13 @@ import { Player } from '../../utils/_interfaces'
 import Scoreboard from './../Scoreboard/Scoreboard'
 import Prompt from '../Prompt/Prompt'
 import './Landing.scss'
+
+const sampleQuestion = [
+  'X was created by a knight who was a physician by profession in the late 19th century.',
+  'Y, a character similar to X is seen performing the same acts as X and keeps getting in and out of houses without any trouble and usually with the owner’s consent.',
+  'The countries of X and Y are geographically divided by 21 miles. There have been many records for traversing these 21 miles in the history of the continent.',
+  'ID X, Y and the 21 miles stretch.'
+]
  
 const Landing = () => {
   
@@ -30,7 +37,7 @@ const Landing = () => {
         <button className='landing__controls-button' onClick={closeScoreboard}>Scoreboard</button>
       </div>
       {/* <Scoreboard visibility={visibilityScoreBoard} players={players}/> */}
-      <Prompt visibility={visibilityScoreBoard} />
+      <Prompt question={sampleQuestion} visibility={visibilityScoreBoard} />
     </div>
   )
 }
