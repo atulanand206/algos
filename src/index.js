@@ -5,11 +5,11 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import Algorithm from './Algorithm/Algorithm';
 import Template from './Template/Template'
-import Landing from './Binge/Landing/Landing'
+import { Landing, Board } from './Binge/Landing/Landing'
 
 ReactDOM.render(
   <React.StrictMode>
-    <Landing />
+    <Board />
   </React.StrictMode>,
   document.getElementById('root')
 );

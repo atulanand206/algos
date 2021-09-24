@@ -1,0 +1,42 @@
+{
+    "players": [
+        {
+            "id": 0,
+            "name": "Vicky",
+            "score": 0
+        },
+        {
+            "id": 1,
+            "name": "Rohit",
+            "score": 0
+        },
+        {
+            "id": 2,
+            "name": "James",
+            "score": 0
+        },
+        {
+            "id": 3,
+            "name": "Jamie",
+            "score": 0
+        }
+    ],
+    "questions": [
+        {
+            "id": 0,
+            "question": [
+                "X was created by a knight who was a physician by profession in the late 19th century.",
+                "Y, a character similar to X is seen performing the same acts as X and keeps getting in and out of houses without any trouble and usually with the owner’s consent.",
+                "The countries of X and Y are geographically divided by 21 miles. There have been many records for traversing these 21 miles in the history of the continent.",
+                "ID X, Y and the 21 miles stretch."
+            ],
+            "answer": "X: Sherlock, Y: Poirot"
+        }
+    ],
+    "attempts": [
+        {
+            "player": 0,
+            "question": 0
+        }
+    ]
+}

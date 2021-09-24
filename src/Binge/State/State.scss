@@ -12,9 +12,13 @@
     &__player {
         width: 25%;
         padding-block: 2em;
-        
+
         &--name {
             text-align: center;
+
+            &--active {
+                font-size: xx-large;
+            }
         }
     }
 }

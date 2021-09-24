@@ -2,8 +2,7 @@ import { Button } from "@material-ui/core"
 import './Query.scss'
 
 export enum QueryType {
-	HINT, 
-	APPROVE, PASS, REJECT, REDUCE_MAX, BONUS, REVEAL, EXTEND, SCORE
+	HINT, APPROVE, PASS, REJECT, REDUCE_MAX, BONUS, REVEAL, HIDE, EXTEND, SCORE
 }
 
 export const queryPlaceholder = (queryType: QueryType) => {
@@ -18,44 +17,47 @@ export const queryPlaceholder = (queryType: QueryType) => {
 		case QueryType.BONUS : return 'Bonus'
 		case QueryType.HINT : return 'Hint'
 		case QueryType.REVEAL : return 'Reveal'
+		case QueryType.HIDE : return 'Hide'
 	}
 }
 
 type QueryProps = {
 	queryType: QueryType
+	onQuery: (queryType: QueryType) => void
 }
 
 export const Query = (props: QueryProps) => {
 	return (
 		<div className='query__button'>
-			<Button variant='contained' color='primary'>{queryPlaceholder(props.queryType)}</Button>
+			<Button variant='contained' color='primary' onClick={() => props.onQuery(props.queryType)}>{queryPlaceholder(props.queryType)}</Button>
 		</div>
 	)
 }
 
 type QueryBoardProps = {
-
+	onQuery: (queryType: QueryType) => void
 }
 
 export const QueryBoard = (props: QueryBoardProps) => {
   return (
     <div className='query__board'>
       <div className='query__column'>  
-        <Query queryType={QueryType.APPROVE} />
-        <Query queryType={QueryType.REJECT} />
-        <Query queryType={QueryType.PASS} />
+        <Query {...props} queryType={QueryType.APPROVE} />
+        <Query {...props} queryType={QueryType.REJECT} />
+        <Query {...props} queryType={QueryType.PASS} />
       </div>
       <div className='query__column'>  
-        <Query queryType={QueryType.HINT} />
-        <Query queryType={QueryType.REVEAL} />
+        <Query {...props} queryType={QueryType.HINT} />
+        <Query {...props} queryType={QueryType.REVEAL} />
+        <Query {...props} queryType={QueryType.HIDE} />
       </div>
       <div className='query__column'>  
-        <Query queryType={QueryType.SCORE} />
-        <Query queryType={QueryType.EXTEND} />
+        <Query {...props} queryType={QueryType.SCORE} />
+        <Query {...props} queryType={QueryType.EXTEND} />
       </div>   
       <div className='query__column'>  
-				<Query queryType={QueryType.BONUS} />
-        <Query queryType={QueryType.REDUCE_MAX} />
+		<Query {...props} queryType={QueryType.BONUS} />
+        <Query {...props} queryType={QueryType.REDUCE_MAX} />
       </div>    
     </div>
   )
