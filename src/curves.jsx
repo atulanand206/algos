@@ -15,7 +15,7 @@ export async function Draw(ctx, grid) {
         }
     }
     pts.forEach(pnts => {
-        // drawPoints(ctx, pnts)
+        drawPoints(ctx, pnts)
     })
 
     // for (i = 0; i < pts.length; i++) {

@@ -4,6 +4,7 @@ import { Draw, rows, cols } from './curves';
 import { Boxes } from './Jigsaw/Jigsaw';
 import { Faces, renderList } from './Faces/Face'
 import { vis, pos, spiralPrint } from './utils/_helpers'
+import { TSvg } from './Svg/TSvg';
 
 const grid = Boxes({ x: 0, y: 0 }, 800 / cols, rows, cols)
 
@@ -86,9 +87,10 @@ class App extends React.Component {
           {/* <div className='recycled-images'> */}
           {/* <RecycledList itemFn={cellItem} attrList={pieces} itemHeight={100} /> */}
           {/* </div> */}
-          <Canvas className='canvas-wrapper' />
+          {/* <Canvas className='canvas-wrapper' /> */}
           <div className='grid-images'>
-            {Faces(grid, this.state.visibility)}
+            {/* {Faces(grid, this.state.visibility)} */}
+            <TSvg />
           </div>
         </header>
       </div>
