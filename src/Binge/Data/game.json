@@ -31,6 +31,28 @@
                 "ID X, Y and the 21 miles stretch."
             ],
             "answer": "X: Sherlock, Y: Poirot"
+        },
+        {
+            "id": 1,
+            "question": [
+                "X got his early education in a boys residential school. X was also responsible for the erection of the main gate walls and the other kids at the school helped X put the gate in place.",
+                "Later in life, X and his wife Y enjoyed wild safaris with nasty elephants, in the solitude of the African jungles.",
+                "Y always felt responsible for events occurring across the globe and had to stay especially cautious in all the public appearances.",
+                "The show depicts the evolution of X & Y as ordinary human beings as they are impacted by unfolding world history.",
+                "ID X, Y & the show."
+            ],
+            "answer": "X: Prince Philip, Duke of Edinburgh, Y: Queen Elizabeth II, The Crown"
+        },
+        {
+            "id": 2,
+            "question": [
+                "A creature Z from underworld presented itself in a school classroom and stayed on X’s tail since then when X found Y.",
+                "X suddenly came in the spotlight and became infamous for controlling millions of people without being nowhere close to them.",
+                "X had to create an elaborate plan to get rid of X, involving multiple deaths, in spite of warning from Z, but of no avail as X died when Z reacquired Y.",
+                "Y is also the name of the series/movie.",
+                "ID X, Y & Z."
+            ],
+            "answer": "X: Light Yagami, Y: Death Note, Z: Shinigami"
         }
     ],
     "attempts": [

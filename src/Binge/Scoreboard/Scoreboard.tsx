@@ -1,3 +1,4 @@
+import { Button } from '@material-ui/core'
 import classNames from 'classnames/bind'
 import { Player } from '../../utils/_interfaces'
 import './Scoreboard.scss'
@@ -5,6 +6,7 @@ import './Scoreboard.scss'
 type Props = {
   players: Player[]
   visibility: boolean
+  close: () => void
 }
 
 type TableProps = {
@@ -32,7 +34,10 @@ const Scoreboard = (props: Props) => {
       'scoreboard__wrapper',
       props.visibility && 'scoreboard__wrapper-visible')} >
       <div className='scoreboard__foreground'>
-        <p className='scoreboard__header'>Tally</p>
+        <p className='scoreboard__header'>Scoreboard</p>
+        <div className='scoreboard__close'>
+          <Button variant='contained' color='primary' onClick={() => props.close()}>Close</Button>
+        </div>
         <Table players={props.players} />
       </div>
     </div>

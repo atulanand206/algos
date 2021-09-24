@@ -36,18 +36,10 @@ export const Board = () => {
   const [currentQuestionId, setCurrentQuestionId] = useState(0)
   const [currentPlayerId, setCurrentPlayerId] = useState(0)
   const [bonus, setBonus] = useState(10)
-  const [visibilityScoreBoard, setVisibilityScoreboard] = useState(false)
-
-  const openScoreboard = () => {
-    setVisibilityScoreboard(true)
-  }
-
-  const closeScoreboard = () => {
-    setVisibilityScoreboard(false)
-  }
+  const [scoreBoardVisibility, setScoreboardVisibility] = useState(false)
 
   const over = () => {
-
+    setScoreboardVisibility(true)
   }
 
   const nextPlayer = () => (currentPlayerId + 1) % players.length
@@ -61,8 +53,8 @@ export const Board = () => {
       attempts.concat({ player: currentPlayerId, question: currentQuestionId })
       setAttempts(attempts)
       setCurrentQuestionId(currentQuestionId + 1)
+      setRoundOpener(nextPlayer())
       setCurrentPlayerId(nextPlayer())
-      setRoundOpener(currentPlayerId)
     }
   }
 
@@ -70,8 +62,8 @@ export const Board = () => {
     if (questions.length == currentQuestionId + 1) {
       over()
     } else {
+      setRoundOpener(nextPlayer())
       setCurrentPlayerId(nextPlayer())
-      setRoundOpener(currentPlayerId)
     }
   }
 
@@ -109,7 +101,7 @@ export const Board = () => {
   }
 
   const queryScore = () => {
-    setVisibilityScoreboard(true)
+    setScoreboardVisibility(true)
   }
 
   const queryReduce = () => {
@@ -156,7 +148,7 @@ export const Board = () => {
     }
   }
 
-  const renderScoreBoard = <Scoreboard visibility={visibilityScoreBoard} players={players} />
+  const renderScoreBoard = <Scoreboard visibility={scoreBoardVisibility} players={players} close={() => setScoreboardVisibility(false)} />
 
   return (
     <div className='board__wrapper'>
