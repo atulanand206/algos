@@ -1,2 +1,20 @@
 @import "src/utils/colors";
 @import "src/utils/fonts";
+
+.state {
+
+    &__container {
+        display: flex;
+        width: 100%;
+        align-items: center;
+    }
+
+    &__player {
+        width: 25%;
+        padding-block: 2em;
+        
+        &--name {
+            text-align: center;
+        }
+    }
+}

@@ -9,7 +9,7 @@ import Landing from './Binge/Landing/Landing'
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <Landing />
   </React.StrictMode>,
   document.getElementById('root')
 );

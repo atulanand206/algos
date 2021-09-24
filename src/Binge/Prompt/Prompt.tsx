@@ -1,8 +1,7 @@
 import { useState } from 'react'
 import classNames from 'classnames/bind'
-import { QueryBoard } from '../Query/Query'
 import './Prompt.scss'
-import { State } from '../State/State'
+import { randomInt } from '../../utils/_helpers'
 
 type PromptContainerProps = {
   question: string[]
@@ -10,15 +9,33 @@ type PromptContainerProps = {
 
 const PromptContainer = (props: PromptContainerProps) => {
   return (
-    <div className='prompt__container'>
+    <div className={classNames(
+      'prompt__container', 
+      'prompt__container--pos--' + randomInt(5),
+      'prompt__container--color--' + randomInt(5)
+      )}>
       {props.question.map(line => <p className='prompt__line'>{line}</p>)}
+    </div>
+  )
+}
+
+type AnswerProps = {
+  answer: string
+}
+
+const Answer = (props: AnswerProps) => {
+  return (
+    <div className='prompt__answer'>
+      {props.answer}
     </div>
   )
 }
 
 type Props = {
   question: string[]
+  answer: string
   visibility: boolean
+  revealed: boolean
 }
  
 const Prompt = (props: Props) => {
@@ -28,10 +45,13 @@ const Prompt = (props: Props) => {
         'prompt__wrapper',
         props.visibility && 'prompt__wrapper-visible')} >
       <PromptContainer question={props.question}/>
-      <QueryBoard />
-      <State />
+      {renderAnswer()}
     </div>
   )
+
+  function renderAnswer() {
+    return <Answer answer={props.revealed ? props.answer : '. . .'} />
+  }
 }
 
 export default Prompt

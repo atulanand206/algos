@@ -64,3 +64,8 @@ export const spiralPrint = (m: number, n: number) => {
 	}
 	return ans
 }
+
+export const randomInt = (size: number) => {
+	return Math.floor((Math.random() * size) + 1)
+}
+  
