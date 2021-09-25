@@ -6,18 +6,18 @@ export enum QueryType {
 }
 
 export const queryPlaceholder = (queryType: QueryType) => {
-	switch(queryType) {
+	switch (queryType) {
 		case QueryType.APPROVE: return 'Approve'
-		case QueryType.EXTEND : return 'Extend'
-		case QueryType.SCORE : return 'Score'
-		case QueryType.APPROVE : return 'Approve'
-		case QueryType.REJECT : return 'Reject'
-		case QueryType.PASS : return 'Pass'
-		case QueryType.REDUCE_MAX : return 'Reduce'
-		case QueryType.BONUS : return 'Bonus'
-		case QueryType.HINT : return 'Hint'
-		case QueryType.REVEAL : return 'Reveal'
-		case QueryType.HIDE : return 'Hide'
+		case QueryType.EXTEND: return 'Extend'
+		case QueryType.SCORE: return 'Score'
+		case QueryType.APPROVE: return 'Approve'
+		case QueryType.REJECT: return 'Reject'
+		case QueryType.PASS: return 'Pass'
+		case QueryType.REDUCE_MAX: return 'Reduce'
+		case QueryType.BONUS: return 'Bonus'
+		case QueryType.HINT: return 'Hint'
+		case QueryType.REVEAL: return 'Reveal'
+		case QueryType.HIDE: return 'Hide'
 	}
 }
 
@@ -39,26 +39,18 @@ type QueryBoardProps = {
 }
 
 export const QueryBoard = (props: QueryBoardProps) => {
-  return (
-    <div className='query__board'>
-      <div className='query__column'>  
-        <Query {...props} queryType={QueryType.APPROVE} />
-        <Query {...props} queryType={QueryType.REJECT} />
-        <Query {...props} queryType={QueryType.PASS} />
-      </div>
-      <div className='query__column'>  
-        <Query {...props} queryType={QueryType.HINT} />
-        <Query {...props} queryType={QueryType.REVEAL} />
-        <Query {...props} queryType={QueryType.HIDE} />
-      </div>
-      <div className='query__column'>  
-        <Query {...props} queryType={QueryType.SCORE} />
-        <Query {...props} queryType={QueryType.EXTEND} />
-      </div>   
-      <div className='query__column'>  
-		<Query {...props} queryType={QueryType.BONUS} />
-        <Query {...props} queryType={QueryType.REDUCE_MAX} />
-      </div>    
-    </div>
-  )
+	return (
+		<div className='query__board'>
+			<Query {...props} queryType={QueryType.APPROVE} />
+			<Query {...props} queryType={QueryType.REJECT} />
+			<Query {...props} queryType={QueryType.PASS} />
+			<Query {...props} queryType={QueryType.HINT} />
+			<Query {...props} queryType={QueryType.REVEAL} />
+			<Query {...props} queryType={QueryType.HIDE} />
+			<Query {...props} queryType={QueryType.SCORE} />
+			<Query {...props} queryType={QueryType.EXTEND} />
+			<Query {...props} queryType={QueryType.BONUS} />
+			<Query {...props} queryType={QueryType.REDUCE_MAX} />
+		</div>
+	)
 }

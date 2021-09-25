@@ -1,15 +1,16 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.scss';
+import React from 'react'
+import ReactDOM from 'react-dom'
+import './index.scss'
 import App from './App';
-import reportWebVitals from './reportWebVitals';
+import reportWebVitals from './reportWebVitals'
 import Algorithm from './Algorithm/Algorithm';
 import Template from './Template/Template'
-import { Landing, Board } from './Binge/Landing/Landing'
+import { Board } from './Binge/Landing/Board'
+import { Lobby } from './Binge/Lobby/Lobby'
 
 ReactDOM.render(
   <React.StrictMode>
-    <Board />
+    <Lobby />
   </React.StrictMode>,
   document.getElementById('root')
 );

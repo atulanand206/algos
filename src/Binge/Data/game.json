@@ -3,21 +3,25 @@
         {
             "id": 0,
             "name": "Vicky",
+            "email": "V@af.c",
             "score": 0
         },
         {
             "id": 1,
             "name": "Rohit",
+            "email": "V@af.c",
             "score": 0
         },
         {
             "id": 2,
             "name": "James",
+            "email": "V@af.c",
             "score": 0
         },
         {
             "id": 3,
             "name": "Jamie",
+            "email": "V@af.c",
             "score": 0
         }
     ],
@@ -58,7 +62,8 @@
     "attempts": [
         {
             "player": 0,
-            "question": 0
+            "question": 0,
+            "points": 10
         }
     ]
 }

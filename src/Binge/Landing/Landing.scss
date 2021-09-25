@@ -4,7 +4,7 @@
 .landing {
 
     &__wrapper {
-        height: 100%;
+        height: 100vh;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -17,6 +17,7 @@
     }
 
     &__controls {
+        margin-top: 2em;
         display: flex;
         flex-direction: row;
         gap: 2em;

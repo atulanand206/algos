@@ -1,0 +1,16 @@
+.scene {
+  &__wrapper {
+    & > * {
+      margin: 1em;
+    }
+  }
+  &__player {
+    & > * {
+      text-align: left;
+    }
+    &--email {
+      font-size: small;
+      text-align: left;
+    }
+  }
+}
