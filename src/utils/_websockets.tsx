@@ -6,7 +6,8 @@ export class WebSckts {
   client: W3CWebSocket
 
   constructor() {
-    this.client = new W3CWebSocket(`ws://${window.location.host}/ws`);
+    this.client = new W3CWebSocket(`ws://${window.location.hostname}:${5000}/ws`);
+    console.log("Websockets constructed")
     if (WebSckts._instance) {
       return WebSckts._instance
     }

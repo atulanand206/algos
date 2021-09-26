@@ -12,8 +12,8 @@ ReactDOM.render(
   document.getElementById('root')
 );
 
-new WebSckts()
-WebSckts._instance.init()
+var ws = new WebSckts()
+ws.init()
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

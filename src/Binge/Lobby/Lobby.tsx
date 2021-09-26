@@ -20,6 +20,8 @@ export const Lobby = () => {
 
 	const launch = () => {
 		setLaunched(true)
+		if (WebSckts._instance !== undefined)
+			WebSckts._instance.send("How's it going")
 	}
 
 	const start = () => {
@@ -39,8 +41,6 @@ export const Lobby = () => {
 		setFinished(true)
 	}
 
-	if (WebSckts._instance !== undefined)
-		WebSckts._instance.send("How's it going")
 
 	const body = () => {
 		if (finished) return <Landing launch={launch} />
