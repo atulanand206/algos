@@ -10,7 +10,6 @@ export const queryPlaceholder = (queryType: QueryType) => {
 		case QueryType.APPROVE: return 'Approve'
 		case QueryType.EXTEND: return 'Extend'
 		case QueryType.SCORE: return 'Score'
-		case QueryType.APPROVE: return 'Approve'
 		case QueryType.REJECT: return 'Reject'
 		case QueryType.PASS: return 'Pass'
 		case QueryType.REDUCE_MAX: return 'Reduce'

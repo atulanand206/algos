@@ -1,5 +1,3 @@
-import {offsetA} from './Jigsaw/Jigsaw'
-
 export const rows = 8
 export const cols = 8
 export async function Draw(ctx, grid) {
@@ -9,8 +7,8 @@ export async function Draw(ctx, grid) {
         for (j = 0; j < cols; j++) {
             pts.push(
                 // offsetA(
-                    grid.faces[i][j].clockwise
-                    // , j * 50 - 50 , i * 50 - 50)
+                grid.faces[i][j].clockwise
+                // , j * 50 - 50 , i * 50 - 50)
             )
         }
     }
@@ -18,13 +16,13 @@ export async function Draw(ctx, grid) {
         drawPoints(ctx, pnts)
     })
 
-    // for (i = 0; i < pts.length; i++) {
-    //     for (j = 0; j < pts[i].length; j++) {
-    //         drawPoint(ctx, pts[i][j], j % 2 === 0 ? '#FF5733' : '#fff')
-    //         await new Promise(r => setTimeout(r, 0.02));
-    //     }
-    //     await new Promise(r => setTimeout(r, 5));
-    // }
+    for (i = 0; i < pts.length; i++) {
+        for (j = 0; j < pts[i].length; j++) {
+            drawPoint(ctx, pts[i][j], j % 2 === 0 ? '#FF5733' : '#fff')
+            await new Promise(r => setTimeout(r, 0.02));
+        }
+        await new Promise(r => setTimeout(r, 5));
+    }
 }
 
 function drawPoint(ctx, point, color) {

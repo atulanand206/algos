@@ -1,4 +1,4 @@
-import { Button, FormGroup, Table, TextField } from "@material-ui/core"
+import { Button, TextField } from "@material-ui/core"
 import { useState } from "react"
 import { Player } from "../../utils/_interfaces"
 import './Chooser.scss'

@@ -3,9 +3,9 @@ import { Player } from '../../utils/_interfaces'
 import { Enter } from '../Chooser/Chooser'
 import { Board } from '../Landing/Board'
 import { Landing } from '../Landing/Landing'
-import { Scene } from '../Scene/Scene'
 import Game from '../Data/game.json'
 import Scoreboard from '../Scoreboard/Scoreboard'
+import { WebSckts } from './../../utils/_websockets'
 
 export const Lobby = () => {
 
@@ -24,6 +24,11 @@ export const Lobby = () => {
 
 	const start = () => {
 		setReady(true)
+		console.log(attempts)
+		console.log(questions)
+		setAttempts(attempts)
+		setPlayers(players)
+		setQuestions(questions)
 	}
 
 	const enter = (player: Player) => {
@@ -34,10 +39,18 @@ export const Lobby = () => {
 		setFinished(true)
 	}
 
-	if (finished) return <Landing launch={launch} />
-	if (ready) return <Board gameOver={finish} />
-	if (entered) return <Scoreboard players={players} close={start} visibility={!ready} />
-	if (launched) return <Enter enter={enter} />
-	return <Landing launch={launch} />
+	if (WebSckts._instance !== undefined)
+		WebSckts._instance.send("How's it going")
 
+	const body = () => {
+		if (finished) return <Landing launch={launch} />
+		if (ready) return <Board gameOver={finish} />
+		if (entered) return <Scoreboard players={players} close={start} visibility={!ready} />
+		if (launched) return <Enter enter={enter} />
+		return <Landing launch={launch} />
+	}
+
+	return (
+		body()
+	)
 }

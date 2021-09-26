@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { Player } from '../../utils/_interfaces'
 import { QueryBoard, QueryType } from '../Query/Query'
 import { State } from '../State/State'
 import Scoreboard from '../Scoreboard/Scoreboard'
@@ -79,7 +78,10 @@ export const Board = (props: Props) => {
   }
 
   const queryHint = () => {
-
+    //todo: fake
+    setRole(ROLE_AUDIENCE)
+    setRole(ROLE_PLAYER)
+    setQuestions(questions)
   }
 
   const queryReveal = () => {
@@ -92,6 +94,7 @@ export const Board = (props: Props) => {
 
   const queryExtend = () => {
     setRounds(rounds + 1)
+    setBonus(0)
   }
 
   const queryScore = () => {
@@ -113,7 +116,6 @@ export const Board = (props: Props) => {
       case QueryType.APPROVE: queryApprove(); break;
       case QueryType.EXTEND: queryExtend(); break;
       case QueryType.SCORE: queryScore(); break;
-      case QueryType.APPROVE: queryApprove(); break;
       case QueryType.REJECT: queryReject(); break;
       case QueryType.PASS: queryPass(); break;
       case QueryType.REDUCE_MAX: queryReduce(); break;

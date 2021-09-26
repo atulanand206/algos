@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import classNames from 'classnames/bind'
 import './Prompt.scss'
 import { randomInt } from '../../utils/_helpers'
@@ -10,10 +9,10 @@ type PromptContainerProps = {
 const PromptContainer = (props: PromptContainerProps) => {
   return (
     <div className={classNames(
-      'prompt__container', 
+      'prompt__container',
       'prompt__container--pos--' + randomInt(5),
       'prompt__container--color--' + randomInt(5)
-      )}>
+    )}>
       {props.question.map(line => <p className='prompt__line'>{line}</p>)}
     </div>
   )
@@ -37,14 +36,14 @@ type Props = {
   visibility: boolean
   revealed: boolean
 }
- 
+
 const Prompt = (props: Props) => {
 
   return (
     <div className={classNames(
-        'prompt__wrapper',
-        props.visibility && 'prompt__wrapper-visible')} >
-      <PromptContainer question={props.question}/>
+      'prompt__wrapper',
+      props.visibility && 'prompt__wrapper-visible')} >
+      <PromptContainer question={props.question} />
       {renderAnswer()}
     </div>
   )
