@@ -41,7 +41,7 @@ export const Board = (props: Props) => {
     if (questions.length === currentQuestionId + 1) {
       over()
     } else {
-      players[currentPlayerId].score += currentPoints
+      players[currentPlayerId].scores.current += currentPoints
       setPlayers(players)
       attempts.concat({ player: currentPlayerId, question: currentQuestionId, points: currentPoints })
       setAttempts(attempts)
@@ -107,7 +107,7 @@ export const Board = (props: Props) => {
   }
 
   const queryBonus = () => {
-    players[currentPlayerId].score += bonus
+    players[currentPlayerId].scores.current += bonus
     setPlayers(players)
   }
 

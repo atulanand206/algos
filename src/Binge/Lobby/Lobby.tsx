@@ -18,10 +18,30 @@ export const Lobby = () => {
 	const [ready, setReady] = useState(false)
 	const [finished, setFinished] = useState(false)
 
+	const sendLaunchRequest = () => {
+		const obj = JSON.stringify({
+			"action": 0,
+			"content": JSON.stringify({
+				"id": "5b0471ce-5193-4707-b17b-9ad7f5628926",
+				"name": "James",
+				"email": "cat@gc.com",
+				"scores": {
+					"overall": 16
+				}
+			})
+		})
+		console.log(obj)
+		sendWS(obj)
+	}
+
+	const sendWS = (content: string) => {
+		if (WebSckts._instance.isConnected())
+			WebSckts._instance.send(content)
+	}
+
 	const launch = () => {
 		setLaunched(true)
-		if (WebSckts._instance !== undefined)
-			WebSckts._instance.send("How's it going")
+		sendLaunchRequest()
 	}
 
 	const start = () => {
@@ -31,6 +51,7 @@ export const Lobby = () => {
 		setAttempts(attempts)
 		setPlayers(players)
 		setQuestions(questions)
+
 	}
 
 	const enter = (player: Player) => {

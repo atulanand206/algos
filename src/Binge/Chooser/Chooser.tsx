@@ -14,9 +14,13 @@ export const Enter = (props: Props) => {
 
 	const enter = () => {
 		props.enter({
+			id: "!",
 			name: name,
 			email: email,
-			score: 0
+			scores: {
+				current: 0,
+				overall: 0
+			}
 		})
 	}
 

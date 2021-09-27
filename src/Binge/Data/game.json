@@ -1,28 +1,40 @@
 {
     "players": [
         {
-            "id": 0,
+            "id": "0",
             "name": "Vicky",
             "email": "V@af.c",
-            "score": 0
+            "scores": {
+                "current": 0,
+                "overall": 16
+            }
         },
         {
-            "id": 1,
+            "id": "1",
             "name": "Rohit",
             "email": "V@af.c",
-            "score": 0
+            "scores": {
+                "current": 0,
+                "overall": 16
+            }
         },
         {
-            "id": 2,
+            "id": "2",
             "name": "James",
             "email": "V@af.c",
-            "score": 0
+            "scores": {
+                "current": 0,
+                "overall": 16
+            }
         },
         {
-            "id": 3,
+            "id": "3",
             "name": "Jamie",
             "email": "V@af.c",
-            "score": 0
+            "scores": {
+                "current": 0,
+                "overall": 16
+            }
         }
     ],
     "questions": [

@@ -14,7 +14,7 @@ const Avatar = (props: PlayerProps) => {
 			<p className={classNames(
 				'state__player--name',
 				props.active && 'state__player--name--active'
-				)}>{props.name}</p>
+			)}>{props.name}</p>
 			<p className='state__player--name'>{props.score}</p>
 		</div>
 	)
@@ -28,7 +28,7 @@ type Props = {
 export const State = (props: Props) => {
 	return (
 		<div className='state__container'>
-			{props.players.map((_, ix) => <Avatar name={_.name} score={_.score} active={ix === props.currentPlayerId} />)}
+			{props.players.map((_, ix) => <Avatar name={_.name} score={_.scores.current} active={ix === props.currentPlayerId} />)}
 		</div>
 	)
 }

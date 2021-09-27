@@ -1,5 +1,27 @@
 import { w3cwebsocket as W3CWebSocket } from "websocket";
 
+enum Action {
+  Begin,
+  Join,
+  Start,
+  Attempt,
+  Score,
+  Next,
+  Over,
+  Extend,
+  S_Game,
+  S_Player,
+  S_Question,
+  S_Answer,
+  S_Over,
+  Failure
+}
+
+type WebScktsMessage = {
+  action: Action
+  content: string
+}
+
 export class WebSckts {
 
   static _instance: WebSckts
@@ -17,16 +39,11 @@ export class WebSckts {
   public init() {
     this.client.onopen = () => {
       console.log('WebSocket client connected');
-      const obj = JSON.stringify({
-        "id": "ef60f971-f5ff-4772-9e83-ea6e65af2061",
-        "name": "James",
-        "email": "cat@ge.com"
-      })
-      console.log(obj)
-      this.client.send(obj)
     };
     this.client.onmessage = (message) => {
       console.log(message);
+      var wbms: WebScktsMessage = JSON.parse(message.data.toString())
+      console.log(wbms)
     };
     this.client.onclose = () => {
       console.log('WebSocket connection closed')
@@ -38,5 +55,9 @@ export class WebSckts {
 
   public send(message: string) {
     this.client.send(message)
+  }
+
+  public isConnected() {
+    return WebSckts._instance !== undefined && WebSckts._instance.client.OPEN
   }
 }
