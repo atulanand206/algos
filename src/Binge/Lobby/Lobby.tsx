@@ -35,6 +35,8 @@ export const Lobby = () => {
 
 	const enter = (player: Player) => {
 		setEntered(true)
+		if (WebSckts._instance !== undefined)
+			WebSckts._instance.send(JSON.stringify(player))
 	}
 
 	const finish = () => {

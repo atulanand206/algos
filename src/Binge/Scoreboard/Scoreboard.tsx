@@ -17,7 +17,7 @@ const Table = (props: TableProps) => {
   return (
     <div className='table'>
       {props.players.map((player, ix) => {
-        return <div className='table--row'>
+        return <div className='table--row' key={ix} >
           <div className='table--cell'>{ix + 1}</div>
           <div className='table--cell'>{player.name}</div>
           <div className='table--cell'>{player.score}</div>
