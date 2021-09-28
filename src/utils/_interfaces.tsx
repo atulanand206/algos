@@ -7,7 +7,7 @@ export type Player = {
     id: string
     name: string
     email: string
-    scores: Score
+    // scores: Score
 }
 
 export type Game = {

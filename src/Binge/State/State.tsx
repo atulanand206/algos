@@ -4,7 +4,7 @@ import './State.scss'
 
 type PlayerProps = {
 	name: string
-	score: number
+	// score: number
 	active: boolean
 }
 
@@ -15,7 +15,7 @@ const Avatar = (props: PlayerProps) => {
 				'state__player--name',
 				props.active && 'state__player--name--active'
 			)}>{props.name}</p>
-			<p className='state__player--name'>{props.score}</p>
+			{/* <p className='state__player--name'>{props.score}</p> */}
 		</div>
 	)
 }
@@ -28,7 +28,9 @@ type Props = {
 export const State = (props: Props) => {
 	return (
 		<div className='state__container'>
-			{props.players.map((_, ix) => <Avatar name={_.name} score={_.scores.current} active={ix === props.currentPlayerId} />)}
+			{props.players.map((_, ix) => <Avatar name={_.name}
+				// score={_.scores.current}
+				active={ix === props.currentPlayerId} />)}
 		</div>
 	)
 }

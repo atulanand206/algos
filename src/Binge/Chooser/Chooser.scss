@@ -3,15 +3,11 @@
 
 .chooser {
   &__wrapper {
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
     background: $color_background;
+  }
 
-    & > * {
-      margin: 1em;
-    }
+  &__modal {
+    display: grid;
+    grid-gap: 2em;
   }
 }

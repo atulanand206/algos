@@ -8,7 +8,7 @@ export const Landing = (props: Props) => {
 		<div className='landing__wrapper'>
 			<p className='landing__logo'>Binquiz</p>
 			<div className='landing__controls'>
-				<button className='landing__controls-button' onClick={props.launch}>Let's Begin</button>
+				<p className='landing__controls-button' onClick={props.launch}>Let's Begin</p>
 			</div>
 		</div>
 	)

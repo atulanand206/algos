@@ -2,7 +2,6 @@
 @import "src/utils/fonts";
 
 .landing {
-
     &__wrapper {
         height: 100vh;
         display: flex;
@@ -14,6 +13,7 @@
 
     &__logo {
         font-size: $fnt_xlarge;
+        font-family: "Pacifico", cursive;
     }
 
     &__controls {
@@ -25,10 +25,6 @@
         &-button {
             font-size: $fnt_large;
             color: $color_white;
-            width: 8em;
-            height: 8em;
-            border-radius: 50%;
-            background-color: $color_accent;
         }
     }
 }

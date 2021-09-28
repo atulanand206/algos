@@ -1,7 +1,9 @@
+@import url("https://fonts.googleapis.com/css2?family=Raleway:wght@600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Pacifico&display=swap");
 $fnt_large: 1.4em;
 $fnt_xlarge: 8em;
 
-@mixin noselection {
+@mixin no-selection {
     -webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none; /* Safari */
     -khtml-user-select: none; /* Konqueror HTML */
