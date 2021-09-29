@@ -1,0 +1,20 @@
+@import "../../utils/components";
+
+.text-field {
+  &__input {
+    @include no-decoration;
+    padding: 1em;
+    position: relative;
+  }
+
+  &__wrapper {
+    @include no-decoration;
+    // &::after {
+    //   content: "";
+    //   position: absolute;
+    //   height: 4px;
+    //   width: 100%;
+    //   color: $color_white;
+    // }
+  }
+}

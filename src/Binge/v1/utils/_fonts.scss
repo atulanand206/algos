@@ -1,13 +1,12 @@
 @import url("https://fonts.googleapis.com/css2?family=Raleway:wght@600&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Pacifico&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Sedgwick+Ave+Display&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Merriweather&display=swap");
 
 $font_btn: 1.4em;
 $fnt_normal: 2em;
-$fnt_large: 3em;
-
-* {
-    font-family: "Raleway", sans-serif;
-}
+$fnt_large: 4em;
+$fnt_xlarge: 10em;
 
 @mixin no-selection {
     -webkit-touch-callout: none; /* iOS Safari */
@@ -15,6 +14,10 @@ $fnt_large: 3em;
     -khtml-user-select: none; /* Konqueror HTML */
     -moz-user-select: none; /* Old versions of Firefox */
     -ms-user-select: none; /* Internet Explorer/Edge */
-    user-select: none; /* Non-prefixed version, currently
-                                  supported by Chrome, Edge, Opera and Firefox */
+    user-select: none; /* Non-prefixed version, currently supported by Chrome, Edge, Opera and Firefox */
+}
+
+* {
+    @include no-selection;
+    font-family: "Raleway", sans-serif;
 }

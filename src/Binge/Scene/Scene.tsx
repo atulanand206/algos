@@ -1,5 +1,5 @@
 import { Button } from "@material-ui/core"
-import { Player } from "../../utils/_interfaces"
+import { Player } from "../v1/utils/_interfaces"
 import './Scene.scss'
 
 type Props = {

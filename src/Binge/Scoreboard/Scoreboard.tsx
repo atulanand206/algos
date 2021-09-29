@@ -1,6 +1,6 @@
 import { Button } from '@material-ui/core'
 import classNames from 'classnames/bind'
-import { Player } from '../../utils/_interfaces'
+import { Player } from '../v1/utils/_interfaces'
 import './Scoreboard.scss'
 
 type Props = {

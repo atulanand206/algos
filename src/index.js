@@ -2,8 +2,8 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import './index.scss'
 import reportWebVitals from './reportWebVitals'
-import { Controller } from './Binge/Controller/Controller'
-import { WebSckts } from './utils/_websockets'
+import { Controller } from './Binge/v1/Controller/Controller'
+import { WebSckts } from './Binge/v1/utils/_websockets'
 
 ReactDOM.render(
   <React.StrictMode>

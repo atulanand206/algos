@@ -1,0 +1,15 @@
+@import "../utils/components";
+
+.landing {
+    &__wrapper {
+        @include flex-vertical-center;
+    }
+
+    &__logo {
+        @include logo-large;
+    }
+
+    &__button {
+        @include action-button;
+    }
+}

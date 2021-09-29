@@ -1,0 +1,23 @@
+@import "../../utils/components";
+
+.form {
+  &__wrapper {
+    @include flex-vertical-center;
+
+    & > * {
+      margin-block: 1em;
+    }
+  }
+
+  &__header {
+    @include header;
+  }
+
+  &__buttons {
+    @include flex-horizonal-center;
+  }
+
+  &__button {
+    @include action-button;
+  }
+}

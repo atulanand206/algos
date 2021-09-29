@@ -1,5 +1,5 @@
 import classNames from 'classnames'
-import { Player } from '../../utils/_interfaces'
+import { Player } from '../v1/utils/_interfaces'
 import './State.scss'
 
 type PlayerProps = {

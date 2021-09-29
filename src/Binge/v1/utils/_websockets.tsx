@@ -2,7 +2,9 @@ import { IMessageEvent, w3cwebsocket as W3CWebSocket } from "websocket";
 
 export enum Action {
   Begin,
+  Specs,
   Join,
+  Watch,
   Start,
   Reveal,
   Attempt,

@@ -1,0 +1,52 @@
+@import "colors";
+@import "fonts";
+
+@mixin logo {
+  text-align: center;
+  color: $color_white;
+  font-family: "Sedgwick Ave Display", cursive;
+}
+
+@mixin logo-large {
+  @include logo;
+  font-size: $fnt_xlarge;
+}
+
+@mixin logo-normal {
+  @include logo;
+  font-size: $fnt_large;
+}
+
+@mixin no-decoration {
+  background: none;
+  border: none;
+}
+
+@mixin action-button {
+  @include no-decoration;
+  font-family: "Merriweather", serif;
+  font-size: $fnt_large;
+  color: $color_white;
+  margin: 0.5em;
+}
+
+@mixin flex {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin flex-vertical-center {
+  @include flex;
+  flex-direction: column;
+}
+
+@mixin flex-horizonal-center {
+  @include flex;
+  flex-direction: row;
+}
+
+@mixin header {
+  font-size: $fnt_normal;
+  color: $color_white;
+}

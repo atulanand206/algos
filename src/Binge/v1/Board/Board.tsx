@@ -1,12 +1,12 @@
 import { useState } from 'react'
-import { QueryBoard, QueryType } from '../Query/Query'
-import { State } from '../State/State'
-import Scoreboard from '../Scoreboard/Scoreboard'
-import Prompt from '../Prompt/Prompt'
-import './Landing.scss'
-import { ROLE_AUDIENCE, ROLE_PLAYER, ROLE_QUIZMASTER } from '../Features/Features'
-import { Header } from '../Header/Header'
-import Game from '../Data/game.json'
+import { QueryBoard, QueryType } from '../../Query/Query'
+import { State } from '../../State/State'
+import Scoreboard from '../../Scoreboard/Scoreboard'
+import Prompt from '../../Prompt/Prompt'
+import './Board.scss'
+import { ROLE_AUDIENCE, ROLE_PLAYER, ROLE_QUIZMASTER } from '../../Features/Features'
+import { Header } from '../../Header/Header'
+import Game from '../../Data/game.json'
 
 type Props = {
   gameOver: () => void
