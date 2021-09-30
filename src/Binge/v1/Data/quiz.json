@@ -1,0 +1,28 @@
+{
+  "id": "fed69145-475d-4edb-8509-f7c91a7607b6",
+  "players": [
+    {
+      "id": "ef60f971-f5ff-4772-9e83-ea6e65af2061",
+      "name": "James",
+      "email": "cat@ge.com"
+    },
+    {
+      "id": "5b0471ce-5193-4707-b17b-9ad7f5628926",
+      "name": "James",
+      "email": "cat@gc.com"
+    }
+  ],
+  "quizmaster": {
+    "id": "65ee1721-0f45-42b5-9656-b6b2451425a5",
+    "name": "James",
+    "email": "cat@gre.com"
+  },
+  "tags": [
+    "58546356-f7eb-4580-9b11-9553a2904268",
+    "fad1f57b-5fa7-46cd-b7fd-d07c75c337e7",
+    "c47cfd75-947d-48f5-92fb-35f2364f1fc4",
+    "ba9de0e6-c3b1-4d06-a5c4-de6db35cb99b",
+    "019c66d4-e606-43a2-9985-8af735c5b354",
+    "6685b05d-9808-41d6-8a61-c21b7374070d"
+  ]
+}

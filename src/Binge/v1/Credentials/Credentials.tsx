@@ -25,7 +25,6 @@ export const Form_Audience = 'audience'
 export const Credentials = (props: Props) => {
 
 	const submit = (action: string, entries: Map<string, string>) => {
-		console.log(entries)
 		props.enter(action, entries)
 	}
 

@@ -1,27 +1,8 @@
 import { IMessageEvent, w3cwebsocket as W3CWebSocket } from "websocket";
-
-export enum Action {
-  Begin,
-  Specs,
-  Join,
-  Watch,
-  Start,
-  Reveal,
-  Attempt,
-  Score,
-  Next,
-  Over,
-  Extend,
-  S_Game,
-  S_Player,
-  S_Question,
-  S_Answer,
-  S_Over,
-  Failure
-}
+import { Action } from "./Action";
 
 type WebScktsMessage = {
-  action: Action
+  action: string
   content: string
 }
 
@@ -41,13 +22,21 @@ export class WebSckts {
     WebSckts._instance = this
   }
 
-  public static register(action: Action, handler: (msg: string) => void) {
+  private static register(action: Action, handler: (msg: string) => void) {
     this._instance.handlers.set(action, handler)
   }
 
-  public static send(message: string) {
+  private static send(message: string) {
     if (this._instance === undefined) return
     if (this.isConnected()) this._instance.client.send(message)
+  }
+
+  public static sendAndReceive(requestAction: Action, requestObj: string, responseAction: Action, onResponse: (response: string) => void) {
+    const request = { action: Action.toString(requestAction), content: JSON.stringify(requestObj) }
+    WebSckts.register(responseAction, (response) => {
+      onResponse(response)
+    })
+    WebSckts.send(JSON.stringify(request))
   }
 
   private init() {
@@ -68,8 +57,9 @@ export class WebSckts {
   private onMessage(message: IMessageEvent) {
     try {
       var wbms: WebScktsMessage = JSON.parse(message.data.toString())
-      if (this.handlers.has(wbms.action)) {
-        this.handlers.get(wbms.action)(message)
+      var action = Action.fromString(wbms.action)
+      if (this.handlers.has(action)) {
+        this.handlers.get(action)(message)
       }
     } catch (e) { }
   }

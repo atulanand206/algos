@@ -1,7 +1,7 @@
 import './Landing.scss'
 
 type Props = {
-	enter: () => void
+	launch: () => void
 }
 
 export const Landing = (props: Props) => {
@@ -9,7 +9,7 @@ export const Landing = (props: Props) => {
 	return (
 		<div className='landing__wrapper'>
 			<p className='landing__logo'>Binquiz</p>
-			<p className='landing__button' onClick={props.enter}>enter</p>
+			<p className='landing__button' onClick={props.launch}>enter</p>
 		</div>
 	)
 }

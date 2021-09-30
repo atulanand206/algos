@@ -3,9 +3,13 @@ import { Player } from '../utils/_interfaces'
 import { Credentials, Form_Credentials, Form_QuizMaster, Form_Player, Form_Audience, Action_Create, Action_Join, Action_Watch, Entry_Handle, Entry_Name, Entry_TeamsInAQuiz, Entry_PlayersInATeam, Entry_Questions_Count, Entry_QuizId } from '../Credentials/Credentials'
 import { Landing } from '../Landing/Landing'
 import Game from '../Data/game.json'
+import Quiz from '../Data/quiz.json'
 // import Scoreboard from '../Scoreboard/Scoreboard'
-import { Action, WebSckts } from '../utils/_websockets'
+import { WebSckts } from '../utils/_websockets'
+import { Action } from "../utils/Action"
 import './Controller.scss'
+import { Lobby } from '../Lobby/Lobby'
+import { ROLE_AUDIENCE, ROLE_PLAYER, ROLE_QUIZMASTER } from '../../Features/Features'
 
 export const Controller = () => {
 
@@ -15,74 +19,84 @@ export const Controller = () => {
 
 	const [formType, setFormType] = useState(Form_Credentials)
 	const [player, setPlayer] = useState({})
-	const [quiz, setQuiz] = useState({})
+	const [quiz, setQuiz] = useState(Game)
+	const [role, setRole] = useState(ROLE_AUDIENCE)
 
 	const [launched, setLaunched] = useState(false)
 	const [entered, setEntered] = useState(false)
 	const [ready, setReady] = useState(false)
 	const [finished, setFinished] = useState(false)
 
-	const enter = () => {
-		setEntered(true)
+	const launch = () => {
+		setLaunched(true)
 	}
 
 	const formEntered = (action: string, entries: Map<string, string>) => {
 		switch (formType) {
 			case Form_Credentials: createPlayer(action, entries); break;
-			case Form_QuizMaster: updateMatchSpecs(entries); break;
+			case Form_QuizMaster: createQuiz(entries); break;
 			case Form_Player: joinPlayer(entries); break;
 			case Form_Audience: joinAudience(entries); break;
 		}
 	}
 
 	const createPlayer = (action: string, entries: Map<string, string>) => {
-		const player = { id: "", name: entries.get(Entry_Name), email: entries.get(Entry_Handle) }
-		const request = { action: Action.Begin, content: JSON.stringify(player) }
-		WebSckts.register(Action.S_Player, (response) => {
+		const obj = { id: "", name: entries.get(Entry_Name) || '', email: entries.get(Entry_Handle) || '' }
+		WebSckts.sendAndReceive(Action.BEGIN, JSON.stringify(obj), Action.S_PLAYER, (response: string) => {
 			setPlayer(JSON.parse(response))
-			switch (action) {
-				case Action_Create: setFormType(Form_QuizMaster); break;
-				case Action_Join: setFormType(Form_Player); break;
-				case Action_Watch: setFormType(Form_Audience); break;
-			}
+			onPlayerCreated(action)
 		})
-		WebSckts.send(JSON.stringify(request))
 	}
 
-	const updateMatchSpecs = (entries: Map<string, string>) => {
-		const specs = { teams: entries.get(Entry_TeamsInAQuiz), players: entries.get(Entry_PlayersInATeam), questions: entries.get(Entry_Questions_Count) }
-		const obj = { player: player, specs: specs }
-		const request = { action: Action.Specs, content: JSON.stringify(player) }
-		WebSckts.register(Action.S_Game, (response) => {
+	const onPlayerCreated = (action: string) => {
+		switch (action) {
+			case Action_Create:
+				setFormType(Form_QuizMaster)
+				setRole(ROLE_QUIZMASTER)
+				break
+			case Action_Join:
+				setFormType(Form_Player)
+				setRole(ROLE_PLAYER)
+				break
+			case Action_Watch:
+				setFormType(Form_Audience)
+				break
+		}
+	}
+
+	const createQuiz = (entries: Map<string, string>) => {
+		const specs = { teams: entries.get(Entry_TeamsInAQuiz) || 4, players: entries.get(Entry_PlayersInATeam) || 4, questions: entries.get(Entry_Questions_Count) || 20 }
+		const obj = { quizmaster: player, specs: specs }
+		WebSckts.sendAndReceive(Action.SPECS, JSON.stringify(obj), Action.S_GAME, (response: string) => {
+			console.log(JSON.parse(response))
 			setQuiz(JSON.parse(response))
+			setEntered(true)
 		})
-		WebSckts.send(JSON.stringify(request))
 	}
 
 	const joinPlayer = (entries: Map<string, string>) => {
-		const obj = { player: player, quizId: entries.get(Entry_QuizId) }
-		const request = { action: Action.Join, content: JSON.stringify(obj) }
-		WebSckts.register(Action.S_Game, (response) => {
+		const obj = { person: player, quiz_id: entries.get(Entry_QuizId) || '' }
+		WebSckts.sendAndReceive(Action.JOIN, JSON.stringify(obj), Action.S_GAME, (response: string) => {
 			setQuiz(JSON.parse(response))
+			setEntered(true)
 		})
-		WebSckts.send(JSON.stringify(request))
 	}
 
 	const joinAudience = (entries: Map<string, string>) => {
-		const obj = { player: player, quizId: entries.get(Entry_QuizId) }
-		const request = { action: Action.Watch, content: JSON.stringify(obj) }
-		WebSckts.register(Action.S_Game, (response) => {
+		const obj = { player: player, quiz_id: entries.get(Entry_QuizId) || '' }
+		WebSckts.sendAndReceive(Action.WATCH, JSON.stringify(obj), Action.S_GAME, (response: string) => {
 			setQuiz(JSON.parse(response))
+			setEntered(true)
 		})
-		WebSckts.send(JSON.stringify(request))
 	}
 
 	const body = () => {
 		// if (finished) return <Landing launch={launch} />
 		// if (ready) return <Board gameOver={finish} />
 		// if (entered) return <Scoreboard players={players} close={start} visibility={!ready} />
-		if (entered) return <Credentials enter={formEntered} type={formType} />
-		return <Landing enter={enter} />
+		if (entered) return <Lobby quiz={Quiz} />
+		if (launched) return <Credentials enter={formEntered} type={formType} />
+		return <Landing launch={launch} />
 	}
 
 	return (
