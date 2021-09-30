@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react"
 import { Box } from "../components/Box/Box"
 import { Form } from "../components/Form/Form"
 import './Credentials.scss'
@@ -25,17 +26,38 @@ export const Form_Audience = 'audience'
 
 export const Credentials = (props: Props) => {
 
-	const submit = (action: string, entries: Map<string, string>) => {
+  const [entries, setEntries] = useState(new Map())
+	const [formReset, setFormReset] = useState(false)
+
+	useEffect(() => {
+		setFormReset(true)
+	}, [props.type])
+
+	const submit = (action: string) => {
 		props.enter(action, entries)
+		entries.clear()
+		setEntries(entries)
 	}
 
-	const credentialsForm = <Form header={Header_Credentials} fields={[Entry_Handle, Entry_Name]} actions={[Action_Create, Action_Join, Action_Watch]} onSubmit={submit} />
+	const onChange = (entry: string, value: any) => {
+		setFormReset(false)
+    entries.set(entry, value)
+    setEntries(entries)
+  }
+	
+	const credentialsForm = <Form
+		reset={formReset}
+		header={Header_Credentials}
+		fields={[Entry_Handle, Entry_Name]}
+		actions={[Action_Create, Action_Join, Action_Watch]}
+		onSubmit={submit}
+		onChange={onChange} />
 
-	const quizMasterSpecsForm = <Form header={Header_Specs} fields={[Entry_TeamsInAQuiz, Entry_PlayersInATeam, Entry_Questions_Count]} actions={[Action_Create]} onSubmit={submit} />
+	const quizMasterSpecsForm = <Form reset={formReset} header={Header_Specs} fields={[Entry_TeamsInAQuiz, Entry_PlayersInATeam, Entry_Questions_Count]} actions={[Action_Create]} onSubmit={submit} onChange={onChange} />
 
-	const playerSpecsForm = <Form header={Header_Specs} fields={[Entry_QuizId]} actions={[Action_Join]} onSubmit={submit} />
+	const playerSpecsForm = <Form reset={formReset} header={Header_Specs} fields={[Entry_QuizId]} actions={[Action_Join]} onSubmit={submit} onChange={onChange} />
 
-	const audienceSpecsForm = <Form header={Header_Specs} fields={[Entry_QuizId]} actions={[Action_Watch]} onSubmit={submit} />
+	const audienceSpecsForm = <Form reset={formReset} header={Header_Specs} fields={[Entry_QuizId]} actions={[Action_Watch]} onSubmit={submit} onChange={onChange}  />
 
 	const form = () => {
 		switch (props.type) {

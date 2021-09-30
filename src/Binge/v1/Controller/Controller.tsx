@@ -13,9 +13,9 @@ import { ROLE_AUDIENCE, ROLE_PLAYER, ROLE_QUIZMASTER } from '../../Features/Feat
 
 export const Controller = () => {
 
-	const [attempts, setAttempts] = useState(Game.attempts)
-	const [players, setPlayers] = useState(Game.players)
-	const [questions, setQuestions] = useState(Game.questions)
+	// const [attempts, setAttempts] = useState(Game.attempts)
+	// const [players, setPlayers] = useState(Game.players)
+	// const [questions, setQuestions] = useState(Game.questions)
 
 	const [formType, setFormType] = useState(Form_Credentials)
 	const [player, setPlayer] = useState({})
@@ -24,8 +24,8 @@ export const Controller = () => {
 
 	const [launched, setLaunched] = useState(false)
 	const [entered, setEntered] = useState(false)
-	const [ready, setReady] = useState(false)
-	const [finished, setFinished] = useState(false)
+	// const [ready, setReady] = useState(false)
+	// const [finished, setFinished] = useState(false)
 
 	const launch = () => {
 		setLaunched(true)
@@ -41,7 +41,7 @@ export const Controller = () => {
 	}
 
 	const createPlayer = (action: string, entries: Map<string, string>) => {
-		const obj = { id: "", name: entries.get(Entry_Name) || '', email: entries.get(Entry_Handle) || '' }
+		const obj = { id: '1', name: entries.get(Entry_Name) || '', email: entries.get(Entry_Handle) || '' }
 		WebSckts.sendAndReceive(Action.BEGIN, JSON.stringify(obj), Action.S_PLAYER, (response: string) => {
 			setPlayer(JSON.parse(response))
 			onPlayerCreated(action)
@@ -65,10 +65,13 @@ export const Controller = () => {
 	}
 
 	const createQuiz = (entries: Map<string, string>) => {
-		const specs = { teams: entries.get(Entry_TeamsInAQuiz) || 4, players: entries.get(Entry_PlayersInATeam) || 4, questions: entries.get(Entry_Questions_Count) || 20 }
+		const specs = {
+			teams: parseInt(entries.get(Entry_TeamsInAQuiz) || '4'),
+			players: parseInt(entries.get(Entry_PlayersInATeam) || '4'),
+			questions: parseInt(entries.get(Entry_Questions_Count) || '20')
+		}
 		const obj = { quizmaster: player, specs: specs }
 		WebSckts.sendAndReceive(Action.SPECS, JSON.stringify(obj), Action.S_GAME, (response: string) => {
-			console.log(JSON.parse(response))
 			setQuiz(JSON.parse(response))
 			setEntered(true)
 		})

@@ -5,18 +5,17 @@ type Props = {
   header: string
   fields: string[]
   actions: string[]
-  onSubmit: (action: string, entries: Map<string, string>) => void
+  reset: boolean
+  onChange: (entry: string, value: string) => void
+  onSubmit: (action: string) => void
 }
 
 export const Form = (props: Props) => {
-
-  const entries = new Map()
-
   return (
     <div className='form__wrapper'>
       <div className='form__header'>{props.header}</div>
-      {props.fields.map((entry) => <TextField placeholder={entry} onChange={(event) => entries.set(entry, event.target.value)} />)}
-      <div className='form__buttons'>{props.actions.map((action) => <button className='form__button' onClick={() => props.onSubmit(action, entries)}>{action}</button>)}</div>
+      {props.fields.map((entry) => <TextField key={entry} placeholder={entry} reset={props.reset} onChange={(event) => props.onChange(entry, event.target.value)} />)}
+      <div className='form__buttons'>{props.actions.map((action) => <button key={action} className='form__button' onClick={() => props.onSubmit(action)}>{action}</button>)}</div>
     </div>
   )
 }

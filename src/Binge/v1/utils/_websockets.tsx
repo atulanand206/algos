@@ -23,7 +23,7 @@ export class WebSckts {
   }
 
   private static register(action: Action, handler: (msg: string) => void) {
-    this._instance.handlers.set(action, handler)
+    this._instance.handlers.set(Action.toString(action), handler)
   }
 
   private static send(message: string) {
@@ -32,7 +32,7 @@ export class WebSckts {
   }
 
   public static sendAndReceive(requestAction: Action, requestObj: string, responseAction: Action, onResponse: (response: string) => void) {
-    const request = { action: Action.toString(requestAction), content: JSON.stringify(requestObj) }
+    const request = { action: Action.toString(requestAction), content: requestObj.toString() }
     WebSckts.register(responseAction, (response) => {
       onResponse(response)
     })
@@ -57,9 +57,9 @@ export class WebSckts {
   private onMessage(message: IMessageEvent) {
     try {
       var wbms: WebScktsMessage = JSON.parse(message.data.toString())
-      var action = Action.fromString(wbms.action)
+      var action = wbms.action
       if (this.handlers.has(action)) {
-        this.handlers.get(action)(message)
+        this.handlers.get(action)(wbms.content)
       }
     } catch (e) { }
   }
