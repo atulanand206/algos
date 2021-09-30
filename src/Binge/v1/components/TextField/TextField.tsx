@@ -7,6 +7,12 @@ type Props = {
 
 export const TextField = (props: Props) => {
   return <div className='text-field__wrapper'>
-    <input className='text-field__input' type='text' id={props.placeholder} placeholder={props.placeholder} onChange={props.onChange} />
+    <input
+      className='text-field__input'
+      type='text'
+      id={props.placeholder}
+      placeholder={`${props.placeholder}...`}
+      onChange={props.onChange}
+      autoComplete="off" />
   </div>
 }

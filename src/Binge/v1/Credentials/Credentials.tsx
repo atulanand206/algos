@@ -1,3 +1,4 @@
+import { Box } from "../components/Box/Box"
 import { Form } from "../components/Form/Form"
 import './Credentials.scss'
 
@@ -49,6 +50,7 @@ export const Credentials = (props: Props) => {
 		<div className='credentials__wrapper'>
 			<p className='credentials__logo'>Binquiz</p>
 			{form()}
+			<Box height='8em' />
 		</div>
 	)
 }

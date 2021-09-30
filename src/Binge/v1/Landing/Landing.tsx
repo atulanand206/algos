@@ -1,3 +1,4 @@
+import { Box } from '../components/Box/Box'
 import './Landing.scss'
 
 type Props = {
@@ -10,6 +11,7 @@ export const Landing = (props: Props) => {
 		<div className='landing__wrapper'>
 			<p className='landing__logo'>Binquiz</p>
 			<p className='landing__button' onClick={props.launch}>enter</p>
+			<Box height='16em' />
 		</div>
 	)
 }

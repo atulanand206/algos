@@ -1,10 +1,27 @@
 @import "../../utils/components";
-
+textarea:focus, input:focus{
+  outline: none;
+}
 .text-field {
+ 
   &__input {
+
+    
     @include no-decoration;
     padding: 1em;
     position: relative;
+    text-align: center;
+    border-bottom: 1px solid $color_white;
+
+    color: $color_white;
+    &::active {
+      @include no-decoration;
+    }
+
+    &::placeholder {
+      
+      color: $color_disabled;
+    }
   }
 
   &__wrapper {

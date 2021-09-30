@@ -24,8 +24,7 @@
 
 @mixin action-button {
   @include no-decoration;
-  font-family: "Merriweather", serif;
-  font-size: $fnt_large;
+  font-size: $fnt_normal;
   color: $color_white;
   margin: 0.5em;
 }
