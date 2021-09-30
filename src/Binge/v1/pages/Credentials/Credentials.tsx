@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
-import { Box } from "../components/Box/Box"
-import { Form } from "../components/Form/Form"
+import { Box } from "../../components/Box/Box"
+import { Form } from "../../components/Form/Form"
 import './Credentials.scss'
 
 type Props = {

@@ -1,22 +1,25 @@
 import { useState } from 'react'
-import { QueryBoard, QueryType } from '../../Query/Query'
-import { State } from '../../State/State'
-import Scoreboard from '../../Scoreboard/Scoreboard'
-import Prompt from '../../Prompt/Prompt'
+import { QueryBoard, QueryType } from '../../../Query/Query'
+import { State } from '../../../State/State'
+import Scoreboard from '../../../Scoreboard/Scoreboard'
+import Prompt from '../../../Prompt/Prompt'
 import './Board.scss'
-import { ROLE_AUDIENCE, ROLE_PLAYER, ROLE_QUIZMASTER } from '../../Features/Features'
-import { Header } from '../../Header/Header'
-import Game from '../../Data/game.json'
+import { ROLE_AUDIENCE, ROLE_PLAYER, ROLE_QUIZMASTER } from '../../../Features/Features'
+import { Header } from '../../../Header/Header'
+import Games from '../../data/game.json'
+import { Game } from '../../utils/_interfaces'
 
 type Props = {
+  quiz: Game
+  role: string
   gameOver: () => void
 }
 
 export const Board = (props: Props) => {
 
-  const [attempts, setAttempts] = useState(Game.attempts)
-  const [players, setPlayers] = useState(Game.players)
-  const [questions, setQuestions] = useState(Game.questions)
+  const [attempts, setAttempts] = useState(Games.attempts)
+  const [players, setPlayers] = useState(Games.players)
+  const [questions, setQuestions] = useState(Games.questions)
 
   const [role, setRole] = useState(ROLE_QUIZMASTER)
   const [revealed, setRevealed] = useState(false)
@@ -28,11 +31,9 @@ export const Board = (props: Props) => {
   const [currentQuestionId, setCurrentQuestionId] = useState(0)
   const [currentPlayerId, setCurrentPlayerId] = useState(0)
   const [bonus, setBonus] = useState(10)
-  const [scoreBoardVisibility, setScoreboardVisibility] = useState(false)
 
   const over = () => {
     setGameOver(true)
-    setScoreboardVisibility(true)
   }
 
   const nextPlayer = () => (currentPlayerId + 1) % players.length
@@ -98,7 +99,6 @@ export const Board = (props: Props) => {
   }
 
   const queryScore = () => {
-    setScoreboardVisibility(true)
   }
 
   const queryReduce = () => {
@@ -127,14 +127,6 @@ export const Board = (props: Props) => {
     }
   }
 
-  const closeScoreboard = () => {
-    if (gameOver) {
-      props.gameOver()
-      return
-    }
-    setScoreboardVisibility(false)
-  }
-
   const renderState = <State players={players} currentPlayerId={currentPlayerId} />
 
   const renderPrompt = <Prompt
@@ -153,7 +145,6 @@ export const Board = (props: Props) => {
   }
 
 
-  const renderScoreBoard = <Scoreboard visibility={scoreBoardVisibility} players={players} close={closeScoreboard} />
 
   return (
     <div className='board__wrapper'>
@@ -161,7 +152,6 @@ export const Board = (props: Props) => {
       {renderPrompt}
       {renderState}
       {renderQueryBoard()}
-      {renderScoreBoard}
     </div>
   )
 

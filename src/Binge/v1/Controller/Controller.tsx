@@ -1,15 +1,14 @@
 import { useState } from 'react'
-import { Player } from '../utils/_interfaces'
-import { Credentials, Form_Credentials, Form_QuizMaster, Form_Player, Form_Audience, Action_Create, Action_Join, Action_Watch, Entry_Handle, Entry_Name, Entry_TeamsInAQuiz, Entry_PlayersInATeam, Entry_Questions_Count, Entry_QuizId } from '../Credentials/Credentials'
-import { Landing } from '../Landing/Landing'
-import Game from '../Data/game.json'
-import Quiz from '../Data/quiz.json'
+import { Credentials, Form_Credentials, Form_QuizMaster, Form_Player, Form_Audience, Action_Create, Action_Join, Action_Watch, Entry_Handle, Entry_Name, Entry_TeamsInAQuiz, Entry_PlayersInATeam, Entry_Questions_Count, Entry_QuizId } from '../pages/Credentials/Credentials'
+import { Landing } from '../pages/Landing/Landing'
 // import Scoreboard from '../Scoreboard/Scoreboard'
 import { WebSckts } from '../utils/_websockets'
 import { Action } from "../utils/Action"
 import './Controller.scss'
-import { Lobby } from '../Lobby/Lobby'
+import { Lobby } from '../pages/Lobby/Lobby'
 import { ROLE_AUDIENCE, ROLE_PLAYER, ROLE_QUIZMASTER } from '../../Features/Features'
+import { Board } from '../pages/Board/Board'
+import Scoreboard from '../../Scoreboard/Scoreboard'
 
 export const Controller = () => {
 
@@ -23,13 +22,27 @@ export const Controller = () => {
 		"name": "Michael",
 		"email": "cat@gc.com"
 	})
-	const [quiz, setQuiz] = useState({})
+	const [quiz, setQuiz] = useState({
+		id: '',
+		quizmaster: {
+			id: '',
+			name: '',
+			email: ''
+		},
+		specs: {
+			teams: 4,
+			players: 4,
+			questions: 4
+		},
+		tags: [],
+		teams: []
+	})
 	const [role, setRole] = useState(ROLE_AUDIENCE)
 
 	const [launched, setLaunched] = useState(false)
 	const [entered, setEntered] = useState(false)
-	// const [ready, setReady] = useState(false)
-	// const [finished, setFinished] = useState(false)
+	const [scoreboard, setScoreboard] = useState(false)
+	const [finished, setFinished] = useState(false)
 
 	const launch = () => {
 		setLaunched(true)
@@ -98,13 +111,26 @@ export const Controller = () => {
 		})
 	}
 
+	const ready = () => {
+		setEntered(true)
+	}
+
+	const finish = () => {
+		setFinished(true)
+	}
+
+	const close = () => {
+		setScoreboard(false)
+	}
+
 	const body = () => {
+		// if (scoreboard) return <Scoreboard teams={quiz.teams} close={close} visibility={!ready} />
 		// if (finished) return <Landing launch={launch} />
-		// if (ready) return <Board gameOver={finish} />
-		// if (entered) return <Scoreboard players={players} close={start} visibility={!ready} />
-		if (entered) return <Lobby quiz={quiz} playerId={player.id} />
-		if (launched) return <Credentials enter={formEntered} type={formType} />
-		return <Landing launch={launch} />
+		// if (entered)
+		return <Board gameOver={finish} quiz={quiz} role={role} />
+		// if (entered) return <Lobby start={ready} quiz={quiz} playerId={player.id} />
+		// if (launched) return <Credentials enter={formEntered} type={formType} />
+		// return <Landing launch={launch} />
 	}
 
 	return (

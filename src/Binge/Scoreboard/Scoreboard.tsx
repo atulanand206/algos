@@ -1,22 +1,22 @@
 import { Button } from '@material-ui/core'
 import classNames from 'classnames/bind'
-import { Player } from '../v1/utils/_interfaces'
+import { Team } from '../v1/utils/_interfaces'
 import './Scoreboard.scss'
 
 type Props = {
-  players: Player[]
+  teams: Team[]
   visibility: boolean
   close: () => void
 }
 
 type TableProps = {
-  players: Player[]
+  teams: Team[]
 }
 
 const Table = (props: TableProps) => {
   return (
     <div className='table'>
-      {props.players.map((player, ix) => {
+      {props.teams.map((player, ix) => {
         return <div className='table--row' key={ix} >
           <div className='table--cell'>{ix + 1}</div>
           <div className='table--cell'>{player.name}</div>
@@ -38,7 +38,7 @@ const Scoreboard = (props: Props) => {
         <div className='scoreboard__close'>
           <Button variant='contained' color='primary' onClick={() => props.close()}>Close</Button>
         </div>
-        <Table players={props.players} />
+        <Table teams={props.teams} />
       </div>
     </div>
   )
