@@ -18,8 +18,12 @@ export const Controller = () => {
 	// const [questions, setQuestions] = useState(Game.questions)
 
 	const [formType, setFormType] = useState(Form_Credentials)
-	const [player, setPlayer] = useState({})
-	const [quiz, setQuiz] = useState(Game)
+	const [player, setPlayer] = useState({
+		"id": "5b0471c-5193-4707-b17b-9ad7f5628926",
+		"name": "Michael",
+		"email": "cat@gc.com"
+	})
+	const [quiz, setQuiz] = useState({})
 	const [role, setRole] = useState(ROLE_AUDIENCE)
 
 	const [launched, setLaunched] = useState(false)
@@ -82,6 +86,7 @@ export const Controller = () => {
 		WebSckts.sendAndReceive(Action.JOIN, JSON.stringify(obj), Action.S_GAME, (response: string) => {
 			setQuiz(JSON.parse(response))
 			setEntered(true)
+			console.log(JSON.parse(response))
 		})
 	}
 
@@ -97,7 +102,7 @@ export const Controller = () => {
 		// if (finished) return <Landing launch={launch} />
 		// if (ready) return <Board gameOver={finish} />
 		// if (entered) return <Scoreboard players={players} close={start} visibility={!ready} />
-		if (entered) return <Lobby quiz={Quiz} />
+		if (entered) return <Lobby quiz={quiz} playerId={player.id} />
 		if (launched) return <Credentials enter={formEntered} type={formType} />
 		return <Landing launch={launch} />
 	}

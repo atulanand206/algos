@@ -1,0 +1,58 @@
+@keyframes createBox {
+  from {
+    width: 0%;
+  }
+  to {
+    width: 80%;
+  }
+}
+
+@mixin hover-underline {
+  display: flex;
+  justify-content: center;
+  position: relative;
+
+  &:hover {
+    &::after {
+      content: "";
+      position: absolute;
+      bottom: -0.2em;
+      width: 80%;
+      height: 0.1em;
+      background: $color_white;
+      border-radius: 4em;
+      animation-duration: 0.3s;
+      animation-name: createBox;
+    }
+  }
+
+  &:active {
+    color: $color_disabled;
+    &::after {
+      background: $color_disabled;
+      animation-duration: 0.3s;
+      animation-name: createBox;
+    }
+  }
+}
+
+@mixin animation-click {
+  cursor: pointer;
+  transform: scale(1) 300ms;
+  transition: all ease-in-out 300ms;
+
+  &:hover {
+    transform: scale(1.1);
+    transition: all ease-in-out 300ms;
+  }
+}
+
+@mixin action-button {
+  @include animation-click;
+  @include no-decoration;
+  @include hover-underline;
+  text-align: center;
+  font-size: $fnt_normal;
+  color: $color_white;
+  margin: 0.5em;
+}

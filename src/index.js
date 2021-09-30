@@ -12,7 +12,7 @@ ReactDOM.render(
   document.getElementById('root')
 );
 
-var ws = new WebSckts()
+new WebSckts()
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

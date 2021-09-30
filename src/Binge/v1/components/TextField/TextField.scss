@@ -1,37 +1,22 @@
 @import "../../utils/components";
-textarea:focus, input:focus{
-  outline: none;
-}
+
 .text-field {
- 
-  &__input {
-
-    
-    @include no-decoration;
-    padding: 1em;
-    position: relative;
-    text-align: center;
-    border-bottom: 1px solid $color_white;
-
-    color: $color_white;
-    &::active {
-      @include no-decoration;
-    }
-
-    &::placeholder {
-      
-      color: $color_disabled;
-    }
-  }
-
   &__wrapper {
     @include no-decoration;
-    // &::after {
-    //   content: "";
-    //   position: absolute;
-    //   height: 4px;
-    //   width: 100%;
-    //   color: $color_white;
-    // }
+    width: 100%;
+  }
+
+  &__value {
+    @include no-decoration;
+    width: 100%;
+    color: $color_white;
+    text-align: center;
+    padding-bottom: 1em;
+    border-bottom: 1px solid $color_white;
+
+    &--editable {
+      cursor: pointer;
+      @include blink;
+    }
   }
 }

@@ -26,7 +26,7 @@ export const Form_Audience = 'audience'
 
 export const Credentials = (props: Props) => {
 
-  const [entries, setEntries] = useState(new Map())
+	const [entries, setEntries] = useState(new Map())
 	const [formReset, setFormReset] = useState(false)
 
 	useEffect(() => {
@@ -41,10 +41,10 @@ export const Credentials = (props: Props) => {
 
 	const onChange = (entry: string, value: any) => {
 		setFormReset(false)
-    entries.set(entry, value)
-    setEntries(entries)
-  }
-	
+		entries.set(entry, value)
+		setEntries(entries)
+	}
+
 	const credentialsForm = <Form
 		reset={formReset}
 		header={Header_Credentials}
@@ -53,11 +53,29 @@ export const Credentials = (props: Props) => {
 		onSubmit={submit}
 		onChange={onChange} />
 
-	const quizMasterSpecsForm = <Form reset={formReset} header={Header_Specs} fields={[Entry_TeamsInAQuiz, Entry_PlayersInATeam, Entry_Questions_Count]} actions={[Action_Create]} onSubmit={submit} onChange={onChange} />
+	const quizMasterSpecsForm = <Form
+		reset={formReset}
+		header={Header_Specs}
+		fields={[Entry_TeamsInAQuiz, Entry_PlayersInATeam, Entry_Questions_Count]}
+		actions={[Action_Create]}
+		onSubmit={submit}
+		onChange={onChange} />
 
-	const playerSpecsForm = <Form reset={formReset} header={Header_Specs} fields={[Entry_QuizId]} actions={[Action_Join]} onSubmit={submit} onChange={onChange} />
+	const playerSpecsForm = <Form
+		reset={formReset}
+		header={Header_Specs}
+		fields={[Entry_QuizId]}
+		actions={[Action_Join]}
+		onSubmit={submit}
+		onChange={onChange} />
 
-	const audienceSpecsForm = <Form reset={formReset} header={Header_Specs} fields={[Entry_QuizId]} actions={[Action_Watch]} onSubmit={submit} onChange={onChange}  />
+	const audienceSpecsForm = <Form
+		reset={formReset}
+		header={Header_Specs}
+		fields={[Entry_QuizId]}
+		actions={[Action_Watch]}
+		onSubmit={submit}
+		onChange={onChange} />
 
 	const form = () => {
 		switch (props.type) {

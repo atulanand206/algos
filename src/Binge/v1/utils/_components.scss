@@ -1,5 +1,7 @@
 @import "colors";
 @import "fonts";
+@import "buttons";
+@import "animations";
 
 @mixin logo {
   text-align: center;
@@ -22,13 +24,6 @@
   border: none;
 }
 
-@mixin action-button {
-  @include no-decoration;
-  font-size: $fnt_normal;
-  color: $color_white;
-  margin: 0.5em;
-}
-
 @mixin flex {
   display: flex;
   align-items: center;
@@ -46,6 +41,7 @@
 }
 
 @mixin header {
+  text-align: center;
   font-size: $fnt_normal;
   color: $color_white;
 }

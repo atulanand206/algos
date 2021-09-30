@@ -1,33 +1,14 @@
-import { useEffect, useState } from 'react'
+import classNames from 'classnames'
 import './TextField.scss'
 
 type Props = {
-  reset: boolean
-  placeholder: string
-  onChange: (e: any) => void
+  value: string
+  editable: boolean
 }
 
 export const TextField = (props: Props) => {
 
-  const [text, setText] = useState('')
-
-  useEffect(() => {
-    setText('') 
-  }, [props.reset])
-
-  const onChange = (event: any) => {
-    setText(event.target.value)
-    props.onChange(event)
-  }
-
-  return <div className='text-field__wrapper'>
-    <input
-      className='text-field__input'
-      value={text}
-      type='text'
-      id={props.placeholder}
-      placeholder={`${props.placeholder}...`}
-      onChange={onChange}
-      autoComplete="off" />
+  return <div className={classNames('text-field__wrapper')}>
+    <p className={classNames('text-field__value', props.editable && 'text-field__value--editable')} id={props.value} >{props.value}</p>
   </div>
 }

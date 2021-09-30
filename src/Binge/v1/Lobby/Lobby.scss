@@ -1,15 +1,52 @@
 @import "../utils/components";
 
-.landing {
+.lobby {
   &__wrapper {
     @include flex-vertical-center;
   }
 
   &__logo {
-    @include logo-large;
+    @include logo-normal;
   }
 
   &__button {
+    @include blink;
     @include action-button;
+  }
+
+  &__quiz--id {
+    &--label,
+    &--value {
+      margin: 0.4em;
+      color: $color_white;
+    }
+
+    &--value {
+      @include blink;
+      cursor: pointer;
+    }
+  }
+  &__teams {
+    @include flex-horizonal-center;
+
+    & > * {
+      margin-inline: 1em;
+      width: clamp(8em, 20vw, 24em);
+      // min-width: 8em;
+      // max-width: 24em;
+    }
+  }
+
+  &__team {
+    @include flex-vertical-center;
+
+    &--name {
+      @include header;
+
+      &--editable {
+        cursor: pointer;
+        @include blink;
+      }
+    }
   }
 }
