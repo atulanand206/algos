@@ -14,6 +14,7 @@ export type Team = {
     id: string
     name: string
     players: Player[]
+    score: number
 }
 
 export type Specs = {

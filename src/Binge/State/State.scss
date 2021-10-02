@@ -2,23 +2,25 @@
 @import "src/utils/fonts";
 
 .state {
-
     &__container {
         display: flex;
         width: 100%;
         align-items: center;
     }
 
-    &__player {
+    &__team {
         width: 25%;
         padding-block: 2em;
 
         &--name {
+            margin: 0;
+            font-size: $fnt_normal;
             text-align: center;
+        }
 
-            &--active {
-                font-size: xx-large;
-            }
+        &--active {
+            border: 2px solid $color_white;
+            border-radius: 16em;
         }
     }
 }

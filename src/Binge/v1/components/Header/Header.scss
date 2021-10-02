@@ -1,6 +1,7 @@
 @import "../../utils/components";
 .header {
 	&__logo {
+		margin: 0.5em;
 		&--normal {
 			@include logo-normal;
 		}

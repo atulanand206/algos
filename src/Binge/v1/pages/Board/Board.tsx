@@ -7,6 +7,7 @@ import { ROLE_AUDIENCE, ROLE_PLAYER, ROLE_QUIZMASTER } from '../../../Features/F
 import { Header } from '../../components/Header/Header'
 import Games from '../../data/game.json'
 import { Game } from '../../utils/_interfaces'
+import { format } from '../../utils/_helpers'
 
 type Props = {
   quiz: Game
@@ -27,34 +28,46 @@ export const Board = (props: Props) => {
   const [roundOpener, setRoundOpener] = useState(0)
   const [currentRound, setCurrentRound] = useState(1)
   const [currentPoints, setCurrentPoints] = useState(10)
+  const [currentQuestionNo, setCurrentQuestionNo] = useState(1)
   const [currentQuestionId, setCurrentQuestionId] = useState(0)
-  const [currentPlayerId, setCurrentPlayerId] = useState(0)
+  const [currentTeamId, setCurrentTeamId] = useState(0)
+  const [timeStart, setTimeStart] = useState(new Date())
+  const [timeElapsed, setTimeElapsed] = useState(0)
+
+  useEffect(() => {
+    window.setTimeout(() => {
+      setTimeElapsed(timeElapsed + 1)
+    }, 1000);
+  })
+
+  useEffect(() => {
+    setTimeElapsed((new Date().getSeconds() - timeStart.getSeconds()))
+  }, [timeStart])
 
   const [question, setQuestion] = useState(questions[currentQuestionId].question)
   const [answer, setAnswer] = useState(questions[currentQuestionId].answer)
+  const [hint, setHint] = useState(questions[currentQuestionId].hint)
 
   useEffect(() => {
     setQuestion(questions[currentQuestionId].question)
     setAnswer(questions[currentQuestionId].answer)
+    setHint(questions[currentQuestionId].hint)
   }, [questions, currentQuestionId])
 
   const over = () => {
     setGameOver(true)
   }
 
-  const nextPlayer = () => (currentPlayerId + 1) % players.length
+  const nextPlayer = () => (currentTeamId + 1) % players.length
 
-  const queryApprove = () => {
+  const queryRight = () => {
     if (questions.length === currentQuestionId + 1) {
       over()
     } else {
-      players[currentPlayerId].scores.current += currentPoints
+      players[currentTeamId].scores.current += currentPoints
       setPlayers(players)
-      attempts.concat({ player: currentPlayerId, question: currentQuestionId, points: currentPoints })
+      attempts.concat({ player: currentTeamId, question: currentQuestionId, points: currentPoints })
       setAttempts(attempts)
-      setCurrentQuestionId(currentQuestionId + 1)
-      setRoundOpener(nextPlayer())
-      setCurrentPlayerId(nextPlayer())
     }
   }
 
@@ -63,7 +76,7 @@ export const Board = (props: Props) => {
       over()
     } else {
       setRoundOpener(nextPlayer())
-      setCurrentPlayerId(nextPlayer())
+      setCurrentTeamId(nextPlayer())
     }
   }
 
@@ -76,12 +89,18 @@ export const Board = (props: Props) => {
           queryReject()
         } else {
           setCurrentRound(currentRound + 1)
-          setCurrentPlayerId(nextPlayer())
+          setCurrentTeamId(nextPlayer())
         }
       } else {
-        setCurrentPlayerId(nextPlayer())
+        setCurrentTeamId(nextPlayer())
       }
     }
+  }
+
+  const queryNext = () => {
+    setCurrentQuestionId(currentQuestionId + 1)
+    setRoundOpener(nextPlayer())
+    setCurrentTeamId(nextPlayer())
   }
 
   const queryHint = () => {
@@ -111,24 +130,28 @@ export const Board = (props: Props) => {
   const queryScore = () => {
   }
 
-  const renderState = <State players={players} currentPlayerId={currentPlayerId} />
+  const renderState = <State teams={props.quiz.teams} currentTeamId={currentTeamId} />
 
   const renderControlsLeft = <div className='board__controls'>
-    <Query queryType={QueryType.HINT} onQuery={function (queryType: QueryType): void {
-      toggleHint()
-    }} />
-    <Query queryType={QueryType.EXTEND} onQuery={function (queryType: QueryType): void {
-      queryExtend()
-    }} />
+    <div className='board__controls--right'>
+      <Query queryType={QueryType.RULES} onQuery={queryRight} />
+      <Query queryType={QueryType.GUIDE} onQuery={queryPass} />
+    </div>
+    <div className='board__controls--right'>
+      <Query queryType={QueryType.EXTEND} onQuery={queryExtend} />
+      <Query queryType={QueryType.LINK} onQuery={queryNext} />
+    </div>
   </div>
 
   const renderControlsRight = <div className='board__controls'>
-    <Query queryType={QueryType.APPROVE} onQuery={function (queryType: QueryType): void {
-      queryApprove()
-    }} />
-    <Query queryType={QueryType.PASS} onQuery={function (queryType: QueryType): void {
-      queryPass()
-    }} />
+    <div className='board__controls--right'>
+      <Query queryType={QueryType.HINT} onQuery={toggleHint} />
+      <Query queryType={QueryType.PASS} onQuery={queryPass} />
+    </div>
+    <div className='board__controls--right'>
+      <Query queryType={QueryType.RIGHT} onQuery={queryRight} />
+      <Query queryType={QueryType.NEXT} onQuery={queryNext} />
+    </div>
   </div>
 
   return (
@@ -137,12 +160,16 @@ export const Board = (props: Props) => {
       <div className='board__columns'>
         <div className='board__column board__column--left'>
           <p className='board__quizid'>{props.quiz.id}</p>
-          {question.map(line => <p className='prompt__line'>{line}</p>)}
+          <p className='board__info'>{`${currentQuestionNo} - ${currentRound} - ${timeElapsed}`}</p>
+          <div className='board__questions'>{question.map(line => <p className='board__questions--line'>{line}</p>)}</div>
           {renderControlsLeft}
         </div>
         <div className='board__column board__column--right'>
           {renderState}
-          <div className='board__answer'>{answer}</div>
+          <div className='board__answers'>
+            <p className='board__answer'>{answer}</p>
+            <p className='board__hint'>{hint}</p>
+          </div>
           {renderControlsRight}
         </div>
       </div>

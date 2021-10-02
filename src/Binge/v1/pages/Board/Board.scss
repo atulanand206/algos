@@ -9,17 +9,50 @@
     }
   }
 
-  &__columns {
-    @include grid-columns;
+  &__quizid,
+  &__info,
+  &__questions--line,
+  &__answer,
+  &__hint {
+    margin: 0;
+    font-size: $fnt_normal;
   }
 
-  &__board__column {
+  &__columns {
+    @include grid-columns;
+    height: 70vh;
+  }
+
+  &__column {
+    height: 100%;
+    width: 100%;
+    display: grid;
+
     &--right {
-      justify-content: right;
+      & > p,
+      & > * > p {
+        text-align: center;
+      }
     }
   }
 
+  &__questions {
+    @include scrollbar;
+    @include container;
+  }
+
+  &__answers {
+    @include grid-rows;
+    @include container;
+    align-items: center;
+  }
+
   &__controls {
-    @include grid-columns;
+    @include grid-rows;
+    align-self: end;
+
+    &--right {
+      @include grid-columns;
+    }
   }
 }
