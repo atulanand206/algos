@@ -2,9 +2,7 @@
 
 .state {
     &__container {
-        display: flex;
-        width: 100%;
-        align-items: center;
+        @include flex-horizonal-center;
     }
 
     &__team {

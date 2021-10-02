@@ -4,10 +4,13 @@ import { Landing } from '../pages/Landing/Landing'
 import { WebSckts } from '../utils/_websockets'
 import { Action } from "../utils/Action"
 import './Controller.scss'
+import './../pages/Board/Board.scss'
 import { Lobby } from '../pages/Lobby/Lobby'
 import { ROLE_AUDIENCE, ROLE_PLAYER, ROLE_QUIZMASTER } from '../../Features/Features'
-import { Board } from '../pages/Board/Board'
 import Scoreboard from '../../Scoreboard/Scoreboard'
+import { Header } from '../components/Header/Header'
+import { Query } from '../components/Query/Query'
+import { State } from '../components/State/State'
 
 export const Controller = () => {
 
@@ -83,7 +86,6 @@ export const Controller = () => {
 	const [hintRevealed, setHintRevealed] = useState(false)
 	const [currentRound, setCurrentRound] = useState(1)
 	const [currentPoints, setCurrentPoints] = useState(10)
-	const [timeElapsed, setTimeElapsed] = useState(0)
 
 	const [launched, setLaunched] = useState(false)
 	const [entered, setEntered] = useState(false)
@@ -92,16 +94,9 @@ export const Controller = () => {
 	const [finished, setFinished] = useState(false)
 
 	useEffect(() => {
-		window.setTimeout(() => {
-			setTimeElapsed(timeElapsed + 1)
-		}, 1000);
-	})
-
-	useEffect(() => {
 		if (quiz.tags) setCurrentQuestionNo(quiz.tags.length + 1)
 		else setCurrentQuestionNo(1)
 		setPassed(0)
-		setTimeElapsed(0)
 	}, [quiz.tags])
 
 	useEffect(() => {
@@ -233,6 +228,8 @@ export const Controller = () => {
 		setHintRevealed(false)
 		WebSckts.sendAndReceive(Action.NEXT, JSON.stringify(snap), Action.S_NEXT, (response) => {
 			const res = JSON.parse(response)
+			console.log(res)
+			console.log(snap)
 			if (res.quiz_id === snap.quiz_id && res.last_question_id === snap.question_id) {
 				setQuestion(res.question)
 				setCurrentTeamId(res.team_s_turn)
@@ -260,30 +257,64 @@ export const Controller = () => {
 		setFinished(true)
 	}
 
+	const queryRules = () => {
+	}
+
+	const queryGuide = () => {
+	}
+
+	const queryLink = () => {
+	}
+
+	const renderState = <State teams={teams} currentTeamId={currentTeamId} />
+
+	const renderControlsLeft = <div className='board__controls'>
+		<div className='board__controls--right'>
+			<Query label={"Rules"} onClick={queryRules} />
+			<Query label={"Guide"} onClick={queryGuide} />
+		</div>
+		<div className='board__controls--right'>
+			<Query label={"Link"} onClick={queryLink} />
+			<Query label={"Extend"} onClick={queryExtend} />
+		</div>
+	</div>
+
+	const renderControlsRight = <div className='board__controls'>
+		<div className='board__controls--right'>
+			<Query label={"Hint"} onClick={queryHint} hidden={role !== ROLE_QUIZMASTER} />
+			<Query label={"Pass"} onClick={queryPass} hidden={role !== ROLE_QUIZMASTER} />
+		</div>
+		<div className='board__controls--right'>
+			<Query label={"Right"} onClick={queryRight} />
+			<Query label={"Next"} onClick={queryNext} />
+		</div>
+	</div>
+
+	const Board = <div className='board__wrapper'>
+		<Header />
+		<p className=''>{player.name}</p>
+		<div className='board__columns'>
+			<div className='board__column board__column--left'>
+				<p className='board__quizid'>{quiz.id}</p>
+				<p className='board__info'>{`${currentQuestionNo} - ${currentRound}`}</p>
+				<div className='board__questions'>{question.statements.map(line => <p className='board__questions--line'>{line}</p>)}</div>
+				{renderControlsLeft}
+			</div>
+			<div className='board__column board__column--right'>
+				{renderState}
+				<div className='board__answers'>
+					<p className='board__answer'>{answerRevealed && answer}</p>
+					<p className='board__hint'>{hintRevealed && hint}</p>
+				</div>
+				{role === ROLE_QUIZMASTER && renderControlsRight}
+			</div>
+		</div>
+	</div>
+
 	const body = () => {
 		// if (scoreboard) return <Scoreboard teams={quiz.teams} close={close} visibility={!ready} />
 		if (finished) return <Landing launch={launch} />
-		if (ready) return <Board
-			quiz={quiz}
-			teams={teams}
-			currentTeamId={currentTeamId}
-			player={player}
-			role={role}
-			currentRound={currentRound}
-			extendRound={queryExtend}
-			timeElapsed={timeElapsed}
-			question={question}
-			currentQuestionNo={currentQuestionNo}
-			answer={answer.answer}
-			answerRevealed={answerRevealed}
-			hint={hint}
-			hintRevealed={hintRevealed}
-			hintQuestion={queryHint}
-			passQuestion={queryPass}
-			nextQuestion={queryNext}
-			rightQuestion={queryRight}
-			gameOver={finish}
-		/>
+		if (ready) return Board
 		if (entered) return <Lobby start={start} quiz={quiz} teams={teams} playerId={player.id} />
 		if (launched) return <Credentials enter={formEntered} type={formType} />
 		return <Landing launch={launch} />
