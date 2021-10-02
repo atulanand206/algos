@@ -10,6 +10,12 @@ export type Player = {
     // scores: Score
 }
 
+export type TeamMini = {
+    id: string
+    name: string
+    score: number
+}
+
 export type Team = {
     id: string
     name: string
@@ -27,7 +33,7 @@ export type Game = {
     id: string
     quizmaster: Player
     tags: string[]
-    teams: Team[]
+    teams: TeamMini[]
     specs: Specs
 }
 
@@ -39,6 +45,7 @@ export type Question = {
 
 export type Answer = {
     id: string
-    questionId: string
+    question_id: string
     answer: string
+    hint: string
 }

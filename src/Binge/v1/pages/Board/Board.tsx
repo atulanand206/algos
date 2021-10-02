@@ -1,38 +1,46 @@
 import { useEffect, useState } from 'react'
-import { Query, QueryType } from '../../components/Query/Query'
+import { Query } from '../../components/Query/Query'
 import { State } from '../../components/State/State'
 import Scoreboard from '../../../Scoreboard/Scoreboard'
 import './Board.scss'
 import { ROLE_AUDIENCE, ROLE_PLAYER, ROLE_QUIZMASTER } from '../../../Features/Features'
 import { Header } from '../../components/Header/Header'
 import Games from '../../data/game.json'
-import { Game, Player } from '../../utils/_interfaces'
+import { Answer, Game, Player, Question, Team } from '../../utils/_interfaces'
 import { format } from '../../utils/_helpers'
+import { WebSckts } from '../../utils/_websockets'
+import { Action } from '../../utils/Action'
 
 type Props = {
   quiz: Game
+  teams: Team[]
+  currentTeamId: string
   player: Player
   role: string
+  question: Question
+  setQuiz: (quiz: Game) => void
+  setQuestion: (question: Question) => void
   gameOver: () => void
 }
 
 export const Board = (props: Props) => {
 
-  const [attempts, setAttempts] = useState(Games.attempts)
-  const [players, setPlayers] = useState(Games.players)
-  const [questions, setQuestions] = useState(Games.questions)
-
-  const [role, setRole] = useState(ROLE_QUIZMASTER)
-  const [revealed, setRevealed] = useState(false)
-  const [gameOver, setGameOver] = useState(false)
+  const [role] = useState(props.role)
+  const [teams] = useState(props.teams)
   const [rounds, setRounds] = useState(2)
-  const [roundOpener, setRoundOpener] = useState(0)
+  const [question] = useState(props.question)
+  const [answer, setAnswer] = useState('')
+  const [hint, setHint] = useState('')
+
+  const [currentQuestionNo, setCurrentQuestionNo] = useState(0)
+  const [answerRevealed, setAnswerRevealed] = useState(false)
+  const [hintRevealed, setHintRevealed] = useState(false)
   const [currentRound, setCurrentRound] = useState(1)
+  const [passed, setPassed] = useState(0)
   const [currentPoints, setCurrentPoints] = useState(10)
-  const [currentQuestionNo, setCurrentQuestionNo] = useState(1)
-  const [currentQuestionId, setCurrentQuestionId] = useState(0)
-  const [currentTeamId, setCurrentTeamId] = useState(0)
-  const [timeStart, setTimeStart] = useState(new Date())
+  const [roundOpenerTeamIdx, setRoundOpenerTeamIdx] = useState(0)
+
+  const [currentTeamId, setCurrentTeamId] = useState(props.currentTeamId)
   const [timeElapsed, setTimeElapsed] = useState(0)
 
   useEffect(() => {
@@ -42,116 +50,109 @@ export const Board = (props: Props) => {
   })
 
   useEffect(() => {
-    setTimeElapsed((new Date().getSeconds() - timeStart.getSeconds()))
-  }, [timeStart])
+    if (props.quiz.tags) setCurrentQuestionNo(props.quiz.tags.length + 1)
+    else setCurrentQuestionNo(1)
+    setPassed(0)
+    setTimeElapsed(0)
+  }, [props.quiz.tags])
 
-  const [question, setQuestion] = useState(questions[currentQuestionId].question)
-  const [answer, setAnswer] = useState(questions[currentQuestionId].answer)
-  const [hint, setHint] = useState(questions[currentQuestionId].hint)
+  const [snap, setSnap] = useState({
+    quiz_id: '',
+    team_s_turn: '',
+    question_id: ''
+  })
 
   useEffect(() => {
-    setQuestion(questions[currentQuestionId].question)
-    setAnswer(questions[currentQuestionId].answer)
-    setHint(questions[currentQuestionId].hint)
-  }, [questions, currentQuestionId])
+    return setSnap({ quiz_id: props.quiz.id, team_s_turn: currentTeamId, question_id: question.id })
+  }, [props.quiz.id, question.id, currentTeamId])
 
-  const over = () => {
-    setGameOver(true)
-  }
-
-  const nextPlayer = () => (currentTeamId + 1) % players.length
-
-  const queryRight = () => {
-    if (questions.length === currentQuestionId + 1) {
-      over()
-    } else {
-      players[currentTeamId].scores.current += currentPoints
-      setPlayers(players)
-      attempts.concat({ player: currentTeamId, question: currentQuestionId, points: currentPoints })
-      setAttempts(attempts)
+  const currentTeamIdx = () => {
+    for (var i = 0; i < teams.length; i++) {
+      if (teams[i].id === currentTeamId)
+        return i
     }
-  }
-
-  const queryReject = () => {
-    if (questions.length === currentQuestionId + 1) {
-      over()
-    } else {
-      setRoundOpener(nextPlayer())
-      setCurrentTeamId(nextPlayer())
-    }
-  }
-
-  const queryPass = () => {
-    if (questions.length === currentQuestionId + 1) {
-      over()
-    } else {
-      if (nextPlayer() === roundOpener) {
-        if (currentRound === rounds) {
-          queryReject()
-        } else {
-          setCurrentRound(currentRound + 1)
-          setCurrentTeamId(nextPlayer())
-        }
-      } else {
-        setCurrentTeamId(nextPlayer())
-      }
-    }
-  }
-
-  const queryNext = () => {
-    setCurrentQuestionId(currentQuestionId + 1)
-    setRoundOpener(nextPlayer())
-    setCurrentTeamId(nextPlayer())
+    return -1
   }
 
   const queryHint = () => {
-    //todo: fake
-    setRole(ROLE_AUDIENCE)
-    setRole(ROLE_PLAYER)
-    setQuestions(questions)
+    WebSckts.sendAndReceive(Action.HINT, JSON.stringify(snap), Action.S_HINT, (response) => {
+      const res = JSON.parse(response)
+      console.log(res)
+      if (res.quiz_id === snap.quiz_id && res.question_id === snap.question_id) {
+        console.log(res)
+        setHint(res.hint)
+        setHintRevealed(true)
+      }
+    })
   }
 
-  const queryReveal = () => {
-    setRevealed(true)
+  const queryRight = () => {
+    WebSckts.sendAndReceive(Action.RIGHT, JSON.stringify(snap), Action.S_RIGHT, (response) => {
+      const res = JSON.parse(response)
+      console.log(res)
+      if (res.quiz_id === snap.quiz_id && res.question_id === snap.question_id) {
+        console.log(res)
+        setAnswer(res.answer)
+        setAnswerRevealed(true)
+      }
+    })
   }
 
-  const queryHide = () => {
-    setRevealed(false)
+  const queryPass = () => {
+    if (passed === rounds * teams.length) return
+    WebSckts.sendAndReceive(Action.PASS, JSON.stringify(snap), Action.S_PASS, (response) => {
+      const res = JSON.parse(response)
+      if (res.quiz_id === snap.quiz_id && res.question_id === snap.question_id) {
+        setPassed(passed + 1)
+        setCurrentTeamId(res.team_s_turn)
+      }
+    })
   }
 
-  const toggleHint = () => {
-    if (revealed) queryHide()
-    else queryReveal()
+  const queryNext = () => {
+    WebSckts.sendAndReceive(Action.NEXT, JSON.stringify(snap), Action.S_NEXT, (response) => {
+      const res = JSON.parse(response)
+      if (res.quiz_id === snap.quiz_id && res.last_question_id === snap.question_id) {
+        props.setQuestion(res.question)
+        setRoundOpenerTeamIdx(res.team_s_turn)
+        setCurrentTeamId(res.team_s_turn)
+      }
+    })
+  }
+
+  const queryRules = () => {
+  }
+
+  const queryGuide = () => {
+  }
+
+  const queryLink = () => {
   }
 
   const queryExtend = () => {
-    setRounds(rounds + 1)
   }
 
-  const queryScore = () => {
-  }
-
-  const renderState = <State teams={props.quiz.teams} currentTeamId={currentTeamId} />
+  const renderState = <State teams={props.teams} currentTeamId={currentTeamIdx()} />
 
   const renderControlsLeft = <div className='board__controls'>
     <div className='board__controls--right'>
-      <Query queryType={QueryType.RULES} onQuery={queryRight} />
-      <Query queryType={QueryType.GUIDE} onQuery={queryPass} />
+      <Query label={"Rules"} onClick={queryRules} />
+      <Query label={"Guide"} onClick={queryGuide} />
     </div>
     <div className='board__controls--right'>
-      <Query queryType={QueryType.EXTEND} onQuery={queryExtend} />
-      <Query queryType={QueryType.LINK} onQuery={queryNext} />
+      <Query label={"Extend"} onClick={queryExtend} />
+      <Query label={"Link"} onClick={queryLink} />
     </div>
   </div>
 
   const renderControlsRight = <div className='board__controls'>
     <div className='board__controls--right'>
-      <Query queryType={QueryType.HINT} onQuery={toggleHint} />
-      <Query queryType={QueryType.PASS} onQuery={queryPass} />
+      <Query label={"Hint"} onClick={queryHint} hidden={role !== ROLE_QUIZMASTER} />
+      <Query label={"Pass"} onClick={queryPass} hidden={role !== ROLE_QUIZMASTER} />
     </div>
     <div className='board__controls--right'>
-      <Query queryType={QueryType.RIGHT} onQuery={queryRight} />
-      <Query queryType={QueryType.NEXT} onQuery={queryNext} />
+      <Query label={"Right"} onClick={queryRight} />
+      <Query label={"Next"} onClick={queryNext} />
     </div>
   </div>
 
@@ -163,16 +164,16 @@ export const Board = (props: Props) => {
         <div className='board__column board__column--left'>
           <p className='board__quizid'>{props.quiz.id}</p>
           <p className='board__info'>{`${currentQuestionNo} - ${currentRound} - ${timeElapsed}`}</p>
-          <div className='board__questions'>{question.map(line => <p className='board__questions--line'>{line}</p>)}</div>
+          <div className='board__questions'>{question.statements.map(line => <p className='board__questions--line'>{line}</p>)}</div>
           {renderControlsLeft}
         </div>
         <div className='board__column board__column--right'>
           {renderState}
           <div className='board__answers'>
-            <p className='board__answer'>{answer}</p>
-            <p className='board__hint'>{hint}</p>
+            <p className='board__answer'>{answerRevealed && answer}</p>
+            <p className='board__hint'>{hintRevealed && hint}</p>
           </div>
-          {renderControlsRight}
+          {role === ROLE_QUIZMASTER && renderControlsRight}
         </div>
       </div>
     </div>

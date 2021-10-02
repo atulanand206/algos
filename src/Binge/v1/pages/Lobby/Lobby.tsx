@@ -8,6 +8,7 @@ import './Lobby.scss'
 
 type Props = {
   quiz: Game
+  teams: Team[]
   playerId: string
   start: () => void
 }
@@ -44,7 +45,7 @@ export const Lobby = (props: Props) => {
   }
 
   const filled = () => {
-    return props.quiz.teams.filter((team) => remainingItems(team).length === 0).length === props.quiz.teams.length;
+    return props.teams.filter((team) => remainingItems(team).length === 0).length === props.quiz.teams.length;
   }
 
   const empty = (team: Team) => {
@@ -62,7 +63,7 @@ export const Lobby = (props: Props) => {
       <p className='lobby__quiz--id--label'>Quiz Id</p>
       <p className='lobby__quiz--id--value' onClick={quizIdCopied}>{props.quiz.id}</p>
       <div className='lobby__teams'>
-        {props.quiz.teams.map((team) =>
+        {props.teams.map((team) =>
           <div className='lobby__team'>
             <p className={classNames('lobby__team--name', playerInTeam(team) && 'lobby__team--name--editable')}>{team.name}</p>
             {team.players.map((player) =>
