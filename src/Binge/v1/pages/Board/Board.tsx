@@ -1,11 +1,10 @@
-import { useState } from 'react'
-import { QueryBoard, QueryType } from '../../../Query/Query'
+import { useEffect, useState } from 'react'
+import { Query, QueryType } from '../../components/Query/Query'
 import { State } from '../../../State/State'
 import Scoreboard from '../../../Scoreboard/Scoreboard'
-import Prompt from '../../../Prompt/Prompt'
 import './Board.scss'
 import { ROLE_AUDIENCE, ROLE_PLAYER, ROLE_QUIZMASTER } from '../../../Features/Features'
-import { Header } from '../../../Header/Header'
+import { Header } from '../../components/Header/Header'
 import Games from '../../data/game.json'
 import { Game } from '../../utils/_interfaces'
 
@@ -30,7 +29,14 @@ export const Board = (props: Props) => {
   const [currentPoints, setCurrentPoints] = useState(10)
   const [currentQuestionId, setCurrentQuestionId] = useState(0)
   const [currentPlayerId, setCurrentPlayerId] = useState(0)
-  const [bonus, setBonus] = useState(10)
+
+  const [question, setQuestion] = useState(questions[currentQuestionId].question)
+  const [answer, setAnswer] = useState(questions[currentQuestionId].answer)
+
+  useEffect(() => {
+    setQuestion(questions[currentQuestionId].question)
+    setAnswer(questions[currentQuestionId].answer)
+  }, [questions, currentQuestionId])
 
   const over = () => {
     setGameOver(true)
@@ -93,67 +99,53 @@ export const Board = (props: Props) => {
     setRevealed(false)
   }
 
+  const toggleHint = () => {
+    if (revealed) queryHide()
+    else queryReveal()
+  }
+
   const queryExtend = () => {
     setRounds(rounds + 1)
-    setBonus(0)
   }
 
   const queryScore = () => {
   }
 
-  const queryReduce = () => {
-    if (currentPoints === 10) setCurrentPoints(5)
-    else setCurrentPoints(2)
-  }
-
-  const queryBonus = () => {
-    players[currentPlayerId].scores.current += bonus
-    setPlayers(players)
-  }
-
-  const query = (queryType: QueryType) => {
-    switch (queryType) {
-      case QueryType.APPROVE: queryApprove(); break;
-      case QueryType.EXTEND: queryExtend(); break;
-      case QueryType.SCORE: queryScore(); break;
-      case QueryType.REJECT: queryReject(); break;
-      case QueryType.PASS: queryPass(); break;
-      case QueryType.REDUCE_MAX: queryReduce(); break;
-      case QueryType.BONUS: queryBonus(); break;
-      case QueryType.HINT: queryHint(); break;
-      case QueryType.REVEAL: queryReveal(); break;
-      case QueryType.HIDE: queryHide(); break;
-      default:
-    }
-  }
-
   const renderState = <State players={players} currentPlayerId={currentPlayerId} />
 
-  const renderPrompt = <Prompt
-    question={questions[currentQuestionId].question}
-    answer={questions[currentQuestionId].answer}
-    visibility={true}
-    revealed={revealed} />
+  const renderControlsLeft = <div className='board__controls'>
+    <Query queryType={QueryType.HINT} onQuery={function (queryType: QueryType): void {
+      toggleHint()
+    }} />
+    <Query queryType={QueryType.EXTEND} onQuery={function (queryType: QueryType): void {
+      queryExtend()
+    }} />
+  </div>
 
-  const renderQueryBoard = () => {
-    switch (role) {
-      case ROLE_QUIZMASTER:
-        return <QueryBoard onQuery={query} />
-      default:
-        return (<div></div>)
-    }
-  }
-
-
+  const renderControlsRight = <div className='board__controls'>
+    <Query queryType={QueryType.APPROVE} onQuery={function (queryType: QueryType): void {
+      queryApprove()
+    }} />
+    <Query queryType={QueryType.PASS} onQuery={function (queryType: QueryType): void {
+      queryPass()
+    }} />
+  </div>
 
   return (
     <div className='board__wrapper'>
       <Header />
-      {renderPrompt}
-      {renderState}
-      {renderQueryBoard()}
+      <div className='board__columns'>
+        <div className='board__column board__column--left'>
+          <p className='board__quizid'>{props.quiz.id}</p>
+          {question.map(line => <p className='prompt__line'>{line}</p>)}
+          {renderControlsLeft}
+        </div>
+        <div className='board__column board__column--right'>
+          {renderState}
+          <div className='board__answer'>{answer}</div>
+          {renderControlsRight}
+        </div>
+      </div>
     </div>
   )
-
-
 }

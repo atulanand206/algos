@@ -2,11 +2,24 @@
 
 .board {
   &__wrapper {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    // align-items: center;
-    // justify-content: center;
-    background: $color_background;
+    padding-inline: 8em;
+
+    & > * {
+      color: $color_white;
+    }
+  }
+
+  &__columns {
+    @include grid-columns;
+  }
+
+  &__board__column {
+    &--right {
+      justify-content: right;
+    }
+  }
+
+  &__controls {
+    @include grid-columns;
   }
 }

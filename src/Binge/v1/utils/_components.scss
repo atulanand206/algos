@@ -40,6 +40,12 @@
   flex-direction: row;
 }
 
+@mixin grid-columns {
+  display: grid;
+  grid-auto-columns: minmax(0, 1fr);
+  grid-auto-flow: column;
+}
+
 @mixin header {
   text-align: center;
   font-size: $fnt_normal;

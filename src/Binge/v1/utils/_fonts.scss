@@ -2,6 +2,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Pacifico&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Sedgwick+Ave+Display&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Merriweather&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Scada&display=swap");
 
 $font_btn: 1.4em;
 $fnt_normal: 2em;
@@ -19,5 +20,5 @@ $fnt_xlarge: 10em;
 
 * {
     @include no-selection;
-    font-family: "Raleway", sans-serif;
+    font-family: "Scada", sans-serif;
 }

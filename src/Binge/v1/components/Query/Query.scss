@@ -1,5 +1,4 @@
-@import "src/utils/colors";
-@import "src/utils/fonts";
+@import "../../utils/components";
 
 .query {
     &__board {
@@ -18,5 +17,6 @@
 
     &__button {
         margin: 1em;
+        @include action-button;
     }
 }

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { Box } from "../../components/Box/Box"
 import { Form } from "../../components/Form/Form"
+import { Header } from "../../components/Header/Header"
 import './Credentials.scss'
 
 type Props = {
@@ -88,7 +89,7 @@ export const Credentials = (props: Props) => {
 
 	return (
 		<div className='credentials__wrapper'>
-			<p className='credentials__logo'>Binquiz</p>
+			<Header />
 			{form()}
 			<Box height='8em' />
 		</div>

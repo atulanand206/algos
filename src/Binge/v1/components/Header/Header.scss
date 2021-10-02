@@ -1,0 +1,11 @@
+@import "../../utils/components";
+.header {
+	&__logo {
+		&--normal {
+			@include logo-normal;
+		}
+		&--large {
+			@include logo-large;
+		}
+	}
+}
