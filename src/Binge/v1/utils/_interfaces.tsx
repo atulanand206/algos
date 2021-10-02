@@ -34,7 +34,6 @@ export type Game = {
     teams: TeamMini[]
     specs: Specs
     team_s_turn: string
-    ready: boolean
 }
 
 export type Question = {

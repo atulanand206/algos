@@ -68,7 +68,7 @@ export const Lobby = (props: Props) => {
           </div>)}
       </div>
       <Box height='4em' />
-      <button key='lobby' className='lobby__button' disabled={!props.quiz.ready} onClick={start}>{!props.quiz.ready ? 'waiting...' : 'start'}</button>
+      <button key='lobby' className='lobby__button' disabled={!filled()} onClick={start}>{!filled() ? 'waiting...' : 'start'}</button>
     </div>
   )
 }
