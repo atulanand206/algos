@@ -1,5 +1,4 @@
 import classNames from "classnames"
-import { useState } from "react"
 import { Box } from "../../components/Box/Box"
 import { Popover } from "../../components/Popover/Popover"
 import { TextField } from "../../components/TextField/TextField"
@@ -14,8 +13,6 @@ type Props = {
 }
 
 export const Lobby = (props: Props) => {
-
-  const [action, setAction] = useState('waiting...')
 
   const start = () => {
     if (!filled()) return;
@@ -40,7 +37,6 @@ export const Lobby = (props: Props) => {
 
   const remainingItems = (team: Team) => {
     const x = Array(props.quiz.specs.players - team.players.length)
-    console.log(x)
     return x
   }
 
@@ -72,7 +68,7 @@ export const Lobby = (props: Props) => {
           </div>)}
       </div>
       <Box height='4em' />
-      <button key='lobby' className='lobby__button' disabled={!filled()} onClick={start}>{!filled() ? 'waiting...' : 'start'}</button>
+      <button key='lobby' className='lobby__button' disabled={!props.quiz.ready} onClick={start}>{!props.quiz.ready ? 'waiting...' : 'start'}</button>
     </div>
   )
 }

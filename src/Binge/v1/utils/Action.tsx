@@ -9,8 +9,6 @@ export enum Action {
   RIGHT,
   PASS,
   NEXT,
-  Reveal,
-  Attempt,
   Score,
   Over,
   Extend,

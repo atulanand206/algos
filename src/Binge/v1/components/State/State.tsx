@@ -1,5 +1,5 @@
 import classNames from 'classnames'
-import { Team } from '../../utils/_interfaces'
+import { TeamMini } from '../../utils/_interfaces'
 import './State.scss'
 
 type AvatarProps = {
@@ -18,16 +18,16 @@ const Avatar = (props: AvatarProps) => {
 }
 
 type Props = {
-	teams: Team[]
-	currentTeamId: number
+	teams: TeamMini[]
+	currentTeamId: string
 }
 
 export const State = (props: Props) => {
 	return (
 		<div className='state__container'>
-			{props.teams.map((_, ix) => <Avatar name={_.name}
-				score={_.score}
-				active={ix === props.currentTeamId} />)}
+			{props.teams.map((ix) => <Avatar name={ix.name}
+				score={ix.score}
+				active={ix.id === props.currentTeamId} />)}
 		</div>
 	)
 }
