@@ -1,5 +1,4 @@
-@import "src/utils/colors";
-@import "src/utils/fonts";
+@import "../../utils/components";
 
 .state {
     &__container {
@@ -10,7 +9,7 @@
 
     &__team {
         width: 25%;
-        padding-block: 2em;
+        padding-block: 1em;
 
         &--name {
             margin: 0;
@@ -20,7 +19,7 @@
 
         &--active {
             border: 2px solid $color_white;
-            border-radius: 16em;
+            border-radius: 8em;
         }
     }
 }

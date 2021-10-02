@@ -1,16 +1,17 @@
 import { useEffect, useState } from 'react'
 import { Query, QueryType } from '../../components/Query/Query'
-import { State } from '../../../State/State'
+import { State } from '../../components/State/State'
 import Scoreboard from '../../../Scoreboard/Scoreboard'
 import './Board.scss'
 import { ROLE_AUDIENCE, ROLE_PLAYER, ROLE_QUIZMASTER } from '../../../Features/Features'
 import { Header } from '../../components/Header/Header'
 import Games from '../../data/game.json'
-import { Game } from '../../utils/_interfaces'
+import { Game, Player } from '../../utils/_interfaces'
 import { format } from '../../utils/_helpers'
 
 type Props = {
   quiz: Game
+  player: Player
   role: string
   gameOver: () => void
 }
@@ -157,6 +158,7 @@ export const Board = (props: Props) => {
   return (
     <div className='board__wrapper'>
       <Header />
+      <p className=''>{props.player.name}</p>
       <div className='board__columns'>
         <div className='board__column board__column--left'>
           <p className='board__quizid'>{props.quiz.id}</p>
