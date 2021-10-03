@@ -56,6 +56,10 @@ export const Lobby = (props: Props) => {
   }
 
   console.log(props.role)
+  const waiting = () => {
+    if (filled()) return <p className='lobby__quiz--id--label'>waiting...</p>
+    else return <></>
+  }
   return (
     <div className='lobby__wrapper'>
       <p className='lobby__logo'>Binquiz</p>
@@ -71,11 +75,13 @@ export const Lobby = (props: Props) => {
           </div>)}
       </div>
       <Box height='4em' />
+      {waiting}
       <Query
-        label={!filled() ? 'waiting...' : 'start'}
-        hidden={filled() && props.role !== ROLE_QUIZMASTER}
-        disabled={!filled() || (filled() && props.role !== ROLE_QUIZMASTER)}
-        onClick={start}></Query>
+        label={!filled() ? 'waiting...' : (props.role === ROLE_QUIZMASTER) ? 'start' : ''}
+        visible={!(filled() && props.role !== ROLE_QUIZMASTER)}
+        onClick={() => {
+          if (filled()) start()
+        }}></Query>
     </div>
   )
 }

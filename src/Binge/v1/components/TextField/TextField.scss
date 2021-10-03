@@ -8,6 +8,7 @@
 
   &__value {
     @include no-decoration;
+    font-size: $font_btn;
     width: 100%;
     color: $color_white;
     text-align: center;

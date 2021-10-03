@@ -1,8 +1,17 @@
 @import "../../utils/components";
 
+.scoreboard {
+    &__wrapper {
+        @include flex-vertical-center;
+        height: 200px;
+    }
+}
+
 .table {
     @include flex-horizonal-center;
     background: transparent;
+    @include scrollbar;
+    padding: 0.25em;
 
     & > *,
     & > * > * {

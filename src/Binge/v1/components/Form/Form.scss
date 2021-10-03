@@ -3,6 +3,7 @@
 .form {
   &__wrapper {
     @include flex-vertical-center;
+    width: 40vw;
 
     & > * {
       margin-block: 1em;

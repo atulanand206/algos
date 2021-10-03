@@ -2,17 +2,16 @@ import './Query.scss'
 
 type QueryProps = {
 	label: string
-	disabled?: boolean
-	hidden?: boolean
+	visible?: boolean
 	onClick: () => void
 }
 
 export const Query = (props: QueryProps) => {
+	if (!props.visible) return <div></div>
 	return (
 		<button
 			className='query__button'
-			disabled={props.disabled}
-			hidden={props.hidden}
+			hidden={props.visible}
 			onClick={props.onClick}>{props.label}</button>
 	)
 }

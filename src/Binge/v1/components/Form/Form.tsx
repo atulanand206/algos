@@ -16,7 +16,7 @@ export const Form = (props: Props) => {
     <div className='form__wrapper'>
       <div className='form__header'>{props.header}</div>
       {props.fields.map((entry) => <TextInput key={entry} placeholder={entry} reset={props.reset} onChange={(event) => props.onChange(entry, event.target.value)} />)}
-      <div className='form__buttons'>{props.actions.map((action) => <Query key={action} label={action} onClick={() => props.onSubmit(action)}></Query>)}</div>
+      <div className='form__buttons'>{props.actions.map((action) => <Query key={action} visible={true} label={action} onClick={() => props.onSubmit(action)}></Query>)}</div>
     </div>
   )
 }

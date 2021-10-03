@@ -43,12 +43,12 @@
 
   &__questions {
     @include scrollbar;
-    @include container;
+    height: 350px;
   }
 
   &__answers {
     @include grid-rows;
-    @include container;
+    height: 200px;
     align-items: center;
   }
 

@@ -1,8 +1,10 @@
-import { Team } from '../../utils/_interfaces'
+import classNames from 'classnames'
+import { Score, Team } from '../../utils/_interfaces'
 import './Scoreboard.scss'
 
 type Props = {
   teams: Team[]
+  score: Score
 }
 
 type TableProps = {
@@ -30,19 +32,17 @@ const Table = (props: TableProps) => {
 
 const Scoreboard = (props: Props) => {
 
-  return <Table teams={props.teams} />
-  // return (
-  //   <div className={classNames(
-  //     'scoreboard__wrapper',
-  //     'scoreboard__wrapper-visible')} >
-  //     <div className='scoreboard__foreground'>
-  //       <p className='scoreboard__header'>Scoreboard</p>
-  //       <div className='scoreboard__close'>
-  //         <Button variant='contained' color='primary'>Close</Button>
-  //       </div>
-  //     </div>
-  //   </div>
-  // )
+  var teams = props.teams.map((team) => {
+    return team
+  })
+
+  return (
+    <div className={classNames(
+      'scoreboard__wrapper',
+      'scoreboard__wrapper-visible')} >
+      <Table teams={teams} />
+    </div>
+  )
 }
 
 export default Scoreboard

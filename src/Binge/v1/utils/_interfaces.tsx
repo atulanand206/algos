@@ -1,8 +1,3 @@
-export type Score = {
-    current: number
-    overall: number
-}
-
 export type Player = {
     id: string
     name: string
@@ -33,24 +28,28 @@ export type Game = {
     tags: string[]
     teams: TeamMini[]
     specs: Specs
-    team_s_turn: string
-}
-
-export type Question = {
-    id: string
-    statements: string[]
-    tag: string
 }
 
 export type Answer = {
     id: string
     question_id: string
-    answer: string
-    hint: string
+    answer: string[]
+    hints: string[]
 }
 
 export type Snap = {
     quiz_id: string
+    round_no: number
+    question_no: number
     question_id: string
     team_s_turn: string
+    event_type: string
+    score: number
+    timestamp: string
+    content: string[]
+}
+
+export type Score = {
+    quiz_id: string
+    snapshots: Snap[]
 }
