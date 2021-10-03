@@ -1,0 +1,27 @@
+@import "../../utils/components";
+
+.table {
+    @include flex-horizonal-center;
+    background: transparent;
+
+    & > *,
+    & > * > * {
+        background: transparent;
+    }
+
+    &--card {
+        margin: 0.5em;
+        border: 1px solid $color_white;
+    }
+
+    &--row {
+        @include flex-horizonal-center;
+        margin-block: 1em;
+    }
+
+    &--cell {
+        width: 4em;
+        text-align: center;
+        margin-inline: 1em;
+    }
+}

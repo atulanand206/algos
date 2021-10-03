@@ -9,6 +9,10 @@ type QueryProps = {
 
 export const Query = (props: QueryProps) => {
 	return (
-		<button className='query__button' onClick={props.onClick}>{props.label}</button>
+		<button
+			className='query__button'
+			disabled={props.disabled}
+			hidden={props.hidden}
+			onClick={props.onClick}>{props.label}</button>
 	)
 }

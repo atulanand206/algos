@@ -7,10 +7,11 @@ import './Controller.scss'
 import './../pages/Board/Board.scss'
 import { Lobby } from '../pages/Lobby/Lobby'
 import { ROLE_AUDIENCE, ROLE_PLAYER, ROLE_QUIZMASTER } from '../../Features/Features'
-import Scoreboard from '../../Scoreboard/Scoreboard'
+import Scoreboard from '../components/Scoreboard/Scoreboard'
 import { Header } from '../components/Header/Header'
 import { Query } from '../components/Query/Query'
 import { State } from '../components/State/State'
+import { Player, Team } from '../utils/_interfaces'
 
 export const Controller = () => {
 
@@ -58,6 +59,7 @@ export const Controller = () => {
 		ready: false
 	})
 	const [teams, setTeams] = useState([])
+	const [playersTeamId, setPlayersTeamId] = useState('')
 	const [currentTeamId, setCurrentTeamId] = useState('')
 	const [question, setQuestion] = useState({
 		id: "",
@@ -85,13 +87,20 @@ export const Controller = () => {
 	const [answerRevealed, setAnswerRevealed] = useState(false)
 	const [hintRevealed, setHintRevealed] = useState(false)
 	const [currentRound, setCurrentRound] = useState(1)
-	const [currentPoints, setCurrentPoints] = useState(10)
 
 	const [launched, setLaunched] = useState(false)
 	const [entered, setEntered] = useState(false)
 	const [ready, setReady] = useState(false)
-	const [scoreboard, setScoreboard] = useState(false)
 	const [finished, setFinished] = useState(false)
+
+	useEffect(() => {
+		handlersQuestions()
+	})
+
+	useEffect(() => {
+		const tms: Team[] = teams.filter((team: Team) => team.players.map((playr: Player) => playr.id === player.id))
+		if (tms && tms.length === 1) setPlayersTeamId(tms[0].id)
+	}, [player.id, teams])
 
 	useEffect(() => {
 		if (quiz.tags) setCurrentQuestionNo(quiz.tags.length + 1)
@@ -108,6 +117,7 @@ export const Controller = () => {
 	}
 
 	const formEntered = (action: string, entries: Map<string, string>) => {
+		console.log(action, entries)
 		switch (formType) {
 			case Form_Credentials: createPlayer(action, entries); break;
 			case Form_QuizMaster: createQuiz(entries); break;
@@ -116,17 +126,22 @@ export const Controller = () => {
 		}
 	}
 
-	const createPlayer = (action: string, entries: Map<string, string>) => {
-		const name = entries.get(Entry_Name) || ''
-		const email = entries.get(Entry_Handle) || ''
-		const obj = { id: '1', name: name, email: email }
-		WebSckts.sendAndReceive(Action.BEGIN, JSON.stringify(obj), Action.S_PLAYER, (response: string) => {
+	const handlerPlayer = (action: string, email: string) => {
+		WebSckts.register(Action.S_PLAYER, (response: string) => {
 			const res = JSON.parse(response)
 			if (res.email === email) {
 				setPlayer(res)
 				onPlayerCreated(action)
 			}
 		})
+	}
+
+	const createPlayer = (action: string, entries: Map<string, string>) => {
+		const name = entries.get(Entry_Name) || ''
+		const email = entries.get(Entry_Handle) || ''
+		const obj = { id: '1', name: name, email: email }
+		handlerPlayer(action, email)
+		WebSckts.send(Action.BEGIN, JSON.stringify(obj))
 	}
 
 	const onPlayerCreated = (action: string) => {
@@ -145,6 +160,17 @@ export const Controller = () => {
 		}
 	}
 
+	const handlerQuizmaster = () => {
+		WebSckts.register(Action.S_GAME, (response: string) => {
+			const res = JSON.parse(response)
+			if (res.quiz.quizmaster.id === player.id) {
+				setQuiz(res.quiz)
+				setTeams(res.teams)
+				setEntered(true)
+			}
+		})
+	}
+
 	const createQuiz = (entries: Map<string, string>) => {
 		const specs = {
 			teams: parseInt(entries.get(Entry_TeamsInAQuiz) || '4'),
@@ -152,12 +178,16 @@ export const Controller = () => {
 			questions: parseInt(entries.get(Entry_Questions_Count) || '20')
 		}
 		const obj = { quizmaster: player, specs: specs }
-		WebSckts.sendAndReceive(Action.SPECS, JSON.stringify(obj), Action.S_GAME, (response: string) => {
+		handlerQuizmaster()
+		WebSckts.send(Action.SPECS, JSON.stringify(obj))
+	}
+
+	const handlerJoinPlayer = (quizId: string) => {
+		WebSckts.register(Action.S_GAME, (response: string) => {
 			const res = JSON.parse(response)
-			if (res.quiz.quizmaster.id === player.id) {
+			if (res.quiz.id === quizId) {
 				setQuiz(res.quiz)
 				setTeams(res.teams)
-				setCurrentTeamId(res.teams[0].id)
 				setEntered(true)
 			}
 		})
@@ -166,7 +196,12 @@ export const Controller = () => {
 	const joinPlayer = (entries: Map<string, string>) => {
 		const quizId = entries.get(Entry_QuizId) || ''
 		const obj = { person: player, quiz_id: quizId }
-		WebSckts.sendAndReceive(Action.JOIN, JSON.stringify(obj), Action.S_GAME, (response: string) => {
+		handlerJoinPlayer(quizId)
+		WebSckts.send(Action.JOIN, JSON.stringify(obj))
+	}
+
+	const handlerAudience = (quizId: string) => {
+		WebSckts.register(Action.S_GAME, (response: string) => {
 			const res = JSON.parse(response)
 			if (res.quiz.id === quizId) {
 				setQuiz(res.quiz)
@@ -179,74 +214,92 @@ export const Controller = () => {
 	const joinAudience = (entries: Map<string, string>) => {
 		const quizId = entries.get(Entry_QuizId) || ''
 		const obj = { person: player, quiz_id: quizId }
-		WebSckts.sendAndReceive(Action.WATCH, JSON.stringify(obj), Action.S_GAME, (response: string) => {
-			const res = JSON.parse(response)
-			if (res.quiz.id === quizId) {
-				setQuiz(res.quiz)
-				setTeams(res.teams)
-				setEntered(true)
-			}
-		})
+		handlerAudience(quizId)
+		WebSckts.send(Action.WATCH, JSON.stringify(obj))
 	}
 
-	const start = () => {
-		const obj = { quiz_id: quiz.id }
-		WebSckts.sendAndReceive(Action.START, JSON.stringify(obj), Action.S_START, (response: string) => {
+	const handlersQuestions = () => {
+		WebSckts.register(Action.S_START, (response: string) => {
 			const res = JSON.parse(response)
 			if (res.quiz_id === quiz.id) {
 				setQuestion(res.question)
 				setTeams(res.teams)
 				setReady(true)
+				setCurrentTeamId(res.team_s_turn)
+				setCurrentQuestionNo(res.question_no)
+				setCurrentRound(res.round_no)
 			}
 		})
-	}
-
-	const queryHint = () => {
-		WebSckts.sendAndReceive(Action.HINT, JSON.stringify(snap), Action.S_HINT, (response) => {
+		WebSckts.register(Action.S_HINT, (response) => {
 			const res = JSON.parse(response)
 			if (res.quiz_id === snap.quiz_id && res.question_id === snap.question_id) {
 				console.log(res)
 				setHint(res.hint)
 				setHintRevealed(true)
+				setCurrentTeamId(res.team_s_turn)
+				setCurrentQuestionNo(res.question_no)
+				setCurrentRound(res.round_no)
 			}
 		})
-	}
-
-	const queryRight = () => {
-		WebSckts.sendAndReceive(Action.RIGHT, JSON.stringify(snap), Action.S_RIGHT, (response) => {
+		WebSckts.register(Action.S_PASS, (response) => {
+			const res = JSON.parse(response)
+			if (res.quiz_id === snap.quiz_id && res.question_id === snap.question_id) {
+				setPassed(passed + 1)
+				setCurrentTeamId(res.team_s_turn)
+				setCurrentQuestionNo(res.question_no)
+				setCurrentRound(res.round_no)
+			}
+		})
+		WebSckts.register(Action.S_RIGHT, (response) => {
 			const res = JSON.parse(response)
 			if (res.quiz_id === snap.quiz_id && res.question_id === snap.question_id) {
 				console.log(res)
 				setAnswer(res.answer)
 				setAnswerRevealed(true)
+				setCurrentTeamId(res.team_s_turn)
+				setCurrentQuestionNo(res.question_no)
+				setCurrentRound(res.round_no)
 			}
 		})
-	}
-
-	const queryNext = () => {
-		setAnswerRevealed(false)
-		setHintRevealed(false)
-		WebSckts.sendAndReceive(Action.NEXT, JSON.stringify(snap), Action.S_NEXT, (response) => {
+		WebSckts.register(Action.S_NEXT, (response) => {
 			const res = JSON.parse(response)
 			console.log(res)
 			console.log(snap)
 			if (res.quiz_id === snap.quiz_id && res.last_question_id === snap.question_id) {
+				setAnswerRevealed(false)
+				setHintRevealed(false)
 				setQuestion(res.question)
 				setCurrentTeamId(res.team_s_turn)
+				setCurrentQuestionNo(res.question_no)
+				setCurrentRound(res.round_no)
 			}
+		})
+		WebSckts.register(Action.S_SCORE, (response) => {
+			console.log(response)
+			const res = JSON.parse(response)
+			console.log(res)
 		})
 	}
 
+	const start = () => {
+		const obj = { quiz_id: quiz.id }
+		WebSckts.send(Action.START, JSON.stringify(obj))
+	}
+
+	const queryHint = () => {
+		WebSckts.send(Action.HINT, JSON.stringify(snap))
+	}
+
+	const queryRight = () => {
+		WebSckts.send(Action.RIGHT, JSON.stringify(snap))
+	}
+
+	const queryNext = () => {
+		WebSckts.send(Action.NEXT, JSON.stringify(snap))
+	}
+
 	const queryPass = () => {
-		if (passed === rounds * teams.length) return
-		if (passed % teams.length === 0) setCurrentRound(currentRound + 1)
-		WebSckts.sendAndReceive(Action.PASS, JSON.stringify(snap), Action.S_PASS, (response) => {
-			const res = JSON.parse(response)
-			if (res.quiz_id === snap.quiz_id && res.question_id === snap.question_id) {
-				setPassed(passed + 1)
-				setCurrentTeamId(res.team_s_turn)
-			}
-		})
+		WebSckts.send(Action.PASS, JSON.stringify(snap))
 	}
 
 	const queryExtend = () => {
@@ -266,6 +319,14 @@ export const Controller = () => {
 	const queryLink = () => {
 	}
 
+	const queryScore = () => {
+		WebSckts.send(Action.SCORE, JSON.stringify({ quiz_id: quiz.id }))
+	}
+
+	const quizIdCopied = () => {
+		navigator.clipboard.writeText(quiz.id)
+	}
+
 	const renderState = <State teams={teams} currentTeamId={currentTeamId} />
 
 	const renderControlsLeft = <div className='board__controls'>
@@ -282,7 +343,7 @@ export const Controller = () => {
 	const renderControlsRight = <div className='board__controls'>
 		<div className='board__controls--right'>
 			<Query label={"Hint"} onClick={queryHint} hidden={role !== ROLE_QUIZMASTER} />
-			<Query label={"Pass"} onClick={queryPass} hidden={role !== ROLE_QUIZMASTER} />
+			<Query label={"Pass"} onClick={queryPass} hidden={role !== ROLE_PLAYER || currentTeamId !== playersTeamId} />
 		</div>
 		<div className='board__controls--right'>
 			<Query label={"Right"} onClick={queryRight} />
@@ -292,16 +353,18 @@ export const Controller = () => {
 
 	const Board = <div className='board__wrapper'>
 		<Header />
-		<p className=''>{player.name}</p>
+		<p className='board__name'>{player.name}</p>
 		<div className='board__columns'>
 			<div className='board__column board__column--left'>
-				<p className='board__quizid'>{quiz.id}</p>
+				<p className='board__quizid' onClick={quizIdCopied}>Quiz id: {quiz.id}</p>
 				<p className='board__info'>{`${currentQuestionNo} - ${currentRound}`}</p>
 				<div className='board__questions'>{question.statements.map(line => <p className='board__questions--line'>{line}</p>)}</div>
 				{renderControlsLeft}
 			</div>
 			<div className='board__column board__column--right'>
+				<Query label={"Score"} onClick={queryScore} />
 				{renderState}
+				<Scoreboard teams={teams} />
 				<div className='board__answers'>
 					<p className='board__answer'>{answerRevealed && answer}</p>
 					<p className='board__hint'>{hintRevealed && hint}</p>
@@ -312,10 +375,14 @@ export const Controller = () => {
 	</div>
 
 	const body = () => {
-		// if (scoreboard) return <Scoreboard teams={quiz.teams} close={close} visibility={!ready} />
-		if (finished) return <Landing launch={launch} />
+		if (finished) return <Landing launch={finish} />
 		if (ready) return Board
-		if (entered) return <Lobby start={start} quiz={quiz} teams={teams} playerId={player.id} />
+		if (entered) return <Lobby
+			start={start}
+			quiz={quiz}
+			role={role}
+			teams={teams}
+			playerId={player.id} />
 		if (launched) return <Credentials enter={formEntered} type={formType} />
 		return <Landing launch={launch} />
 	}

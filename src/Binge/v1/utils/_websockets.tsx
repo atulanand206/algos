@@ -22,21 +22,25 @@ export class WebSckts {
     WebSckts._instance = this
   }
 
-  private static register(action: Action, handler: (msg: string) => void) {
+  public static register(action: Action, handler: (msg: string) => void) {
     this._instance.handlers.set(Action.toString(action), handler)
   }
 
-  private static send(message: string) {
+  private static sendMessage(message: string) {
     if (this._instance === undefined) return
     if (this.isConnected()) this._instance.client.send(message)
   }
 
   public static sendAndReceive(requestAction: Action, requestObj: string, responseAction: Action, onResponse: (response: string) => void) {
-    const request = { action: Action.toString(requestAction), content: requestObj.toString() }
     WebSckts.register(responseAction, (response) => {
       onResponse(response)
     })
-    WebSckts.send(JSON.stringify(request))
+    WebSckts.send(requestAction, requestObj);
+  }
+
+  public static send(requestAction: Action, requestObj: string) {
+    const request = { action: Action.toString(requestAction), content: requestObj.toString() };
+    WebSckts.sendMessage(JSON.stringify(request));
   }
 
   private init() {

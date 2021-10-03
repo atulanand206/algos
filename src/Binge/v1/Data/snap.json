@@ -1,0 +1,15 @@
+{
+  "quiz_id": "c5c38aca-881c-4025-8aee-96bfb8b57b9c",
+  "snapshots": [
+    {
+      "quiz_id": "c5c38aca-881c-4025-8aee-96bfb8b57b9c",
+      "round_no": 1,
+      "question_no": 1,
+      "question_id": "4910b256-3307-4f44-a7b1-41ec1dcc6a25",
+      "team_s_turn": "4bcdcfbf-335c-4346-8e0f-9b09ba82777a",
+      "event_type": "START",
+      "score": 0,
+      "timestamp": "2021-10-03 21:40:55.1060995 +0530 IST m=+77.136966701"
+    }
+  ]
+}

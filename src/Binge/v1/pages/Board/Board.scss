@@ -9,7 +9,12 @@
     }
   }
 
-  &__quizid,
+  &__quizid {
+    font-size: $font_btn;
+    @include blink;
+  }
+
+  &__name,
   &__info,
   &__questions--line,
   &__answer,

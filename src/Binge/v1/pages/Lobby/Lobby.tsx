@@ -1,12 +1,15 @@
 import classNames from "classnames"
+import { ROLE_QUIZMASTER } from "../../../Features/Features"
 import { Box } from "../../components/Box/Box"
 import { Popover } from "../../components/Popover/Popover"
+import { Query } from "../../components/Query/Query"
 import { TextField } from "../../components/TextField/TextField"
 import { Game, Player, Team } from "../../utils/_interfaces"
 import './Lobby.scss'
 
 type Props = {
   quiz: Game
+  role: string
   teams: Team[]
   playerId: string
   start: () => void
@@ -47,12 +50,12 @@ export const Lobby = (props: Props) => {
   const empty = (team: Team) => {
     var s = []
     for (var i = 0; i < remainingItems(team).length; i++) {
-      console.log('dsadas')
       s.push(<Popover content={renderPlayer(emptyPlayer(), props)} />)
     }
     return s
   }
 
+  console.log(props.role)
   return (
     <div className='lobby__wrapper'>
       <p className='lobby__logo'>Binquiz</p>
@@ -68,7 +71,11 @@ export const Lobby = (props: Props) => {
           </div>)}
       </div>
       <Box height='4em' />
-      <button key='lobby' className='lobby__button' disabled={!filled()} onClick={start}>{!filled() ? 'waiting...' : 'start'}</button>
+      <Query
+        label={!filled() ? 'waiting...' : 'start'}
+        hidden={filled() && props.role !== ROLE_QUIZMASTER}
+        disabled={!filled() || (filled() && props.role !== ROLE_QUIZMASTER)}
+        onClick={start}></Query>
     </div>
   )
 }
