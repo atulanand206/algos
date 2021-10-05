@@ -27,6 +27,7 @@ export type Game = {
     quizmaster: Player
     tags: string[]
     specs: Specs
+    active: boolean
 }
 
 export type Answer = {

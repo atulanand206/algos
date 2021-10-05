@@ -57,7 +57,7 @@ export const Controller = () => {
 				"score": 1
 			}],
 		team_s_turn: "08287ec4-7875-4d51-afe1-2eeace78d4d1",
-		ready: false
+		active: false
 	})
 	const [teams, setTeams] = useState([])
 	const [playersTeamId, setPlayersTeamId] = useState('')
@@ -176,8 +176,18 @@ export const Controller = () => {
 			if (res.quiz.id === quizId) {
 				setQuiz(res.quiz)
 				setTeams(res.teams)
-				setPlayersTeamId(res.player_team_id)
-				setEntered(true)
+				if (res.quiz.quizmaster.id === player.id) {
+					setRole(ROLE_QUIZMASTER)
+				} else {
+					setPlayersTeamId(res.player_team_id)
+				}
+				if (res.quiz.active) {
+					setSnap(res.snapshot)
+					setQuestion(res.snapshot.content)
+					setReady(true)
+				} else {
+					setEntered(true)
+				}
 			}
 		})
 	}
@@ -195,6 +205,8 @@ export const Controller = () => {
 			if (res.quiz.id === quizId) {
 				setQuiz(res.quiz)
 				setTeams(res.teams)
+				setSnap(res.snapshot)
+				setQuestion(res.snapshot.content)
 				setEntered(true)
 			}
 		})
@@ -270,6 +282,7 @@ export const Controller = () => {
 	}
 
 	const queryRight = () => {
+		console.log(snap)
 		WebSckts.send(Action.RIGHT, JSON.stringify(snap))
 	}
 

@@ -65,6 +65,7 @@ export const Lobby = (props: Props) => {
       <p className='lobby__logo'>Binquiz</p>
       <p className='lobby__quiz--id--label'>Quiz Id</p>
       <p className='lobby__quiz--id--value' onClick={quizIdCopied}>{props.quiz.id}</p>
+      <p className='lobby__quiz--id--label'>{props.quiz.quizmaster.name}</p>
       <div className='lobby__teams'>
         {props.teams.map((team) =>
           <div className='lobby__team'>
