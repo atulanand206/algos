@@ -12,6 +12,8 @@ export enum Action {
   SCORE,
   Over,
   Extend,
+  ACTIVE,
+  S_ACTIVE,
   S_GAME,
   S_PLAYER,
   S_START,

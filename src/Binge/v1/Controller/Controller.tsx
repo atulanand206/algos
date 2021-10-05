@@ -91,6 +91,7 @@ export const Controller = () => {
 	const [finished] = useState(false)
 
 	useEffect(() => {
+		handlerActiveQuiz()
 		handlersQuestions()
 	})
 
@@ -120,6 +121,12 @@ export const Controller = () => {
 			onFailure={responseGoogle}
 			cookiePolicy={'single_host_origin'}
 		/>
+	}
+	
+	const handlerActiveQuiz = () => {
+		WebSckts.register(Action.S_ACTIVE, (response: string) => {
+			console.log(response)
+		})
 	}
 
 	const handlerPlayer = (email: string) => {
@@ -181,9 +188,9 @@ export const Controller = () => {
 				} else {
 					setPlayersTeamId(res.player_team_id)
 				}
+				setSnap(res.snapshot)
+				setQuestion(res.snapshot.content)
 				if (res.quiz.active) {
-					setSnap(res.snapshot)
-					setQuestion(res.snapshot.content)
 					setReady(true)
 				} else {
 					setEntered(true)
@@ -277,6 +284,10 @@ export const Controller = () => {
 		WebSckts.send(Action.START, JSON.stringify(obj))
 	}
 
+	const queryActive = () => {
+		WebSckts.send(Action.ACTIVE, "")
+	}
+
 	const queryHint = () => {
 		WebSckts.send(Action.HINT, JSON.stringify(snap))
 	}
@@ -291,6 +302,7 @@ export const Controller = () => {
 	}
 
 	const queryPass = () => {
+		console.log(snap)
 		WebSckts.send(Action.PASS, JSON.stringify(snap))
 	}
 
@@ -299,6 +311,7 @@ export const Controller = () => {
 	}
 
 	const queryRules = () => {
+		queryActive()
 	}
 
 	const queryGuide = () => {
