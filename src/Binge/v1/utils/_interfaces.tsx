@@ -26,7 +26,6 @@ export type Game = {
     id: string
     quizmaster: Player
     tags: string[]
-    teams: TeamMini[]
     specs: Specs
 }
 
@@ -52,4 +51,13 @@ export type Snap = {
 export type Score = {
     quiz_id: string
     snapshots: Snap[]
+}
+
+export type GoogleProfile = {
+    email: string
+    familyName: string
+    givenName: string
+    googleId: string
+    imageUrl: string
+    name: string
 }

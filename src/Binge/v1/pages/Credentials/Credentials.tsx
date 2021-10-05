@@ -48,8 +48,8 @@ export const Credentials = (props: Props) => {
 
 	const credentialsForm = <Form
 		reset={formReset}
-		header={Header_Credentials}
-		fields={[Entry_Handle, Entry_Name]}
+		header={''}
+		fields={[]}
 		actions={[Action_Create, Action_Join, Action_Watch]}
 		onSubmit={submit}
 		onChange={onChange} />

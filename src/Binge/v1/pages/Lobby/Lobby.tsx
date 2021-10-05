@@ -44,13 +44,13 @@ export const Lobby = (props: Props) => {
   }
 
   const filled = () => {
-    return props.teams.filter((team) => remainingItems(team).length === 0).length === props.quiz.teams.length;
+    return props.teams.filter((team) => remainingItems(team).length === 0).length === props.quiz.specs.teams;
   }
 
   const empty = (team: Team) => {
     var s = []
     for (var i = 0; i < remainingItems(team).length; i++) {
-      s.push(<Popover content={renderPlayer(emptyPlayer(), props)} />)
+      s.push(<Popover key={i} content={renderPlayer(emptyPlayer(), props)} />)
     }
     return s
   }

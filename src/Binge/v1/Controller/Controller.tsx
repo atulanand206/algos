@@ -1,17 +1,18 @@
 import { useEffect, useState } from 'react'
-import { Credentials, Form_Credentials, Form_QuizMaster, Form_Player, Form_Audience, Entry_Name, Entry_Handle, Action_Create, Action_Join, Action_Watch, Entry_TeamsInAQuiz, Entry_PlayersInATeam, Entry_Questions_Count, Entry_QuizId } from '../pages/Credentials/Credentials'
-import { Landing } from '../pages/Landing/Landing'
+import GoogleLogin from 'react-google-login';
+import { Credentials, Form_Credentials, Form_QuizMaster, Form_Player, Form_Audience, Action_Create, Action_Join, Action_Watch, Entry_TeamsInAQuiz, Entry_PlayersInATeam, Entry_Questions_Count, Entry_QuizId } from '../pages/Credentials/Credentials'
 import { WebSckts } from '../utils/_websockets'
 import { Action } from "../utils/Action"
 import './Controller.scss'
 import './../pages/Board/Board.scss'
+import './../pages/Landing/Landing.scss'
 import { Lobby } from '../pages/Lobby/Lobby'
 import { ROLE_AUDIENCE, ROLE_PLAYER, ROLE_QUIZMASTER } from '../../Features/Features'
 import Scoreboard from '../components/Scoreboard/Scoreboard'
 import { Header } from '../components/Header/Header'
 import { Query } from '../components/Query/Query'
 import { State } from '../components/State/State'
-import { Player, Team } from '../utils/_interfaces'
+import { Box } from '../components/Box/Box';
 
 export const Controller = () => {
 
@@ -87,54 +88,48 @@ export const Controller = () => {
 	const [launched, setLaunched] = useState(false)
 	const [entered, setEntered] = useState(false)
 	const [ready, setReady] = useState(false)
-	const [finished, setFinished] = useState(false)
+	const [finished] = useState(false)
 
 	useEffect(() => {
 		handlersQuestions()
 	})
 
-	useEffect(() => {
-		console.log(teams)
-		const tms: Team[] = teams.filter((team: Team) => {
-			const tp = team.players.filter((playr: Player) => playr.id === player.id)
-			team.players = tp
-			return team
-		}).filter((team: Team) => team.players.length !== 0)
-		console.log(tms)
-		console.log(player)
-		if (tms && tms.length === 1) setPlayersTeamId(tms[0].id)
-	}, [player, teams])
-
-	const launch = () => {
-		setLaunched(true)
-	}
-
 	const formEntered = (action: string, entries: Map<string, string>) => {
-		console.log(action, entries)
 		switch (formType) {
-			case Form_Credentials: createPlayer(action, entries); break;
+			case Form_Credentials: onPlayerCreated(action); break;
 			case Form_QuizMaster: createQuiz(entries); break;
 			case Form_Player: joinPlayer(entries); break;
 			case Form_Audience: joinAudience(entries); break;
 		}
 	}
 
-	const handlerPlayer = (action: string, email: string) => {
+	const responseGoogle = (response: any) => {
+		console.log(response)
+		const profile = response.profileObj
+		const obj = { id: profile.googleId, name: profile.name, email: profile.email }
+		handlerPlayer(profile.email)
+		WebSckts.send(Action.BEGIN, JSON.stringify(obj))
+	}
+
+	const glogin = () => {
+		return <GoogleLogin
+			clientId={`${process.env.REACT_APP_GOOGLE_CLIENT_ID}`}
+			buttonText="Let's Begin!"
+			fetchBasicProfile
+			onSuccess={responseGoogle}
+			onFailure={responseGoogle}
+			cookiePolicy={'single_host_origin'}
+		/>
+	}
+
+	const handlerPlayer = (email: string) => {
 		WebSckts.register(Action.S_PLAYER, (response: string) => {
 			const res = JSON.parse(response)
 			if (res.email === email) {
 				setPlayer(res)
-				onPlayerCreated(action)
+				setLaunched(true)
 			}
 		})
-	}
-
-	const createPlayer = (action: string, entries: Map<string, string>) => {
-		const name = entries.get(Entry_Name) || ''
-		const email = entries.get(Entry_Handle) || ''
-		const obj = { id: '1', name: name, email: email }
-		handlerPlayer(action, email)
-		WebSckts.send(Action.BEGIN, JSON.stringify(obj))
 	}
 
 	const onPlayerCreated = (action: string) => {
@@ -181,6 +176,7 @@ export const Controller = () => {
 			if (res.quiz.id === quizId) {
 				setQuiz(res.quiz)
 				setTeams(res.teams)
+				setPlayersTeamId(res.player_team_id)
 				setEntered(true)
 			}
 		})
@@ -289,10 +285,6 @@ export const Controller = () => {
 		setRounds(rounds + 1)
 	}
 
-	const finish = () => {
-		setFinished(true)
-	}
-
 	const queryRules = () => {
 	}
 
@@ -376,8 +368,18 @@ export const Controller = () => {
 		</div>
 	</div>
 
+	const Landing = () => {
+		return (
+			<div className='landing__wrapper'>
+				<p className='landing__logo'>Binquiz</p>
+				{glogin()}
+				<Box height='16em' />
+			</div>
+		)
+	}
+
 	const body = () => {
-		if (finished) return <Landing launch={finish} />
+		if (finished) return <Landing />
 		if (ready) return Board
 		if (entered) return <Lobby
 			start={start}
@@ -386,7 +388,7 @@ export const Controller = () => {
 			teams={teams}
 			playerId={player.id} />
 		if (launched) return <Credentials enter={formEntered} type={formType} />
-		return <Landing launch={launch} />
+		return <Landing />
 	}
 
 	return (
