@@ -347,6 +347,10 @@ export const Controller = () => {
 		return role === ROLE_QUIZMASTER
 	}
 
+	const removePunctuations = (str: string) => {
+		return str.replace('["-.,:;!@#$%^&*()_+="]', "").toUpperCase()
+	}
+
 	const renderState = <State teams={teams} currentTeamId={snap.team_s_turn} />
 
 	const renderControlsLeft = <div className='board__controls'>
@@ -376,7 +380,7 @@ export const Controller = () => {
 		<p className='board__name'>{player.name}</p>
 		<div className='board__columns'>
 			<div className='board__column board__column--left'>
-				<p className='board__quizid' onClick={quizIdCopied}>Quiz id: {quiz.id}</p>
+				<p className='board__quizid' onClick={quizIdCopied}>Quiz id: {removePunctuations(quiz.id)}</p>
 				<p className='board__info'>{`${snap.question_no} - ${snap.round_no}`}</p>
 				<div className='board__questions'>{question.map(line => <p className='board__questions--line'>{line}</p>)}</div>
 				{renderControlsLeft}

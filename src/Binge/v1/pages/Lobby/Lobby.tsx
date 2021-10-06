@@ -60,12 +60,16 @@ export const Lobby = (props: Props) => {
     if (filled()) return <p className='lobby__quiz--id--label'>waiting...</p>
     else return <></>
   }
+  
+	const removePunctuations = (str: string) => {
+		return str.replace('["-.,:;!@#$%^&*()_+="]', "").toUpperCase()
+	}
+
   return (
     <div className='lobby__wrapper'>
       <p className='lobby__logo'>Binquiz</p>
-      <p className='lobby__quiz--id--label'>Quiz Id</p>
-      <p className='lobby__quiz--id--value' onClick={quizIdCopied}>{props.quiz.id}</p>
-      <p className='lobby__quiz--id--label'>{props.quiz.quizmaster.name}</p>
+      <p className='lobby__quiz--id--value' onClick={quizIdCopied}>Quiz Id: {removePunctuations(props.quiz.id)}</p>
+      <p className='lobby__quiz--id--label'>Quizmaster: {props.quiz.quizmaster.name}</p>
       <div className='lobby__teams'>
         {props.teams.map((team) =>
           <div className='lobby__team'>
