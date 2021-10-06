@@ -1,0 +1,142 @@
+{
+  "id": "d473427a-848c-4f77-a167-9f2ef684aad0",
+  "teams": [
+    {
+      "id": "08287ec4-7875-4d51-afe1-2eeace78d4d1",
+      "name": "Team 0",
+      "players": [
+        {
+          "id": "ef60f971-f5ff-4772-9e83-ea6e65af2061",
+          "name": "James",
+          "email": "cat@ge.com"
+        },
+        {
+          "id": "5b0471c-5193-4707-b17b-9ad7f5628926",
+          "name": "Michael",
+          "email": "cat@gc.com"
+        },
+        {
+          "id": "5b0471ce-5193-4707-b17b-9ad7f5628926",
+          "name": "Michael",
+          "email": "cat@gc.com"
+        },
+        {
+          "id": "5b0471ce-5193-4707-b17b-9ad7f5628926",
+          "name": "Michael",
+          "email": "cat@gc.com"
+        },
+        {
+          "id": "5b0471ce-5193-4707-b17b-9ad7f5628926",
+          "name": "Michael",
+          "email": "cat@gc.com"
+        }
+      ]
+    },
+    {
+      "id": "87f7caa5-4736-4310-9bd7-07ac3ddd219d",
+      "name": "Team 1",
+      "players": [
+        {
+          "id": "ef60f971-f5ff-4772-9e83-ea6e65af2061",
+          "name": "Bond",
+          "email": "cat@ge.com"
+        },
+        {
+          "id": "5b0471ce-5193-4707-b17b-9ad7f5628926",
+          "name": "Williams",
+          "email": "cat@gc.com"
+        },
+        {
+          "id": "5b0471ce-5193-4707-b17b-9ad7f5628926",
+          "name": "Michael",
+          "email": "cat@gc.com"
+        },
+        {
+          "id": "5b0471ce-5193-4707-b17b-9ad7f5628926",
+          "name": "Michael",
+          "email": "cat@gc.com"
+        },
+        {
+          "id": "5b0471ce-5193-4707-b17b-9ad7f5628926",
+          "name": "Michael",
+          "email": "cat@gc.com"
+        }
+      ]
+    },
+    {
+      "id": "526f4127-8c47-49ec-a269-9da781a1a148",
+      "name": "Team 2",
+      "players": [
+        {
+          "id": "ef60f971-f5ff-4772-9e83-ea6e65af2061",
+          "name": "James",
+          "email": "cat@ge.com"
+        },
+        {
+          "id": "5b0471ce-5193-4707-b17b-9ad7f5628926",
+          "name": "James",
+          "email": "cat@gc.com"
+        },
+        {
+          "id": "5b0471ce-5193-4707-b17b-9ad7f5628926",
+          "name": "Michael",
+          "email": "cat@gc.com"
+        },
+        {
+          "id": "5b0471ce-5193-4707-b17b-9ad7f5628926",
+          "name": "Michael",
+          "email": "cat@gc.com"
+        },
+        {
+          "id": "5b0471ce-5193-4707-b17b-9ad7f5628926",
+          "name": "Michael",
+          "email": "cat@gc.com"
+        }
+      ]
+    },
+    {
+      "id": "ba1d1f67-83b4-422d-863b-74336b8f7575",
+      "name": "Team 3",
+      "players": [
+        {
+          "id": "ef60f971-f5ff-4772-9e83-ea6e65af2061",
+          "name": "James",
+          "email": "cat@ge.com"
+        },
+        {
+          "id": "5b0471ce-5193-4707-b17b-9ad7f5628926",
+          "name": "James",
+          "email": "cat@gc.com"
+        },
+        {
+          "id": "5b0471ce-5193-4707-b17b-9ad7f5628926",
+          "name": "Michael",
+          "email": "cat@gc.com"
+        },
+        {
+          "id": "5b0471ce-5193-4707-b17b-9ad7f5628926",
+          "name": "Michael",
+          "email": "cat@gc.com"
+        },
+        {
+          "id": "5b0471ce-5193-4707-b17b-9ad7f5628926",
+          "name": "Michael",
+          "email": "cat@gc.com"
+        }
+      ]
+    }
+  ],
+  "quizmaster": {
+    "id": "5b0471ce-5193-4707-b17b-9ad7f5628926",
+    "name": "James",
+    "email": "cat@gc.com"
+  },
+  "tags": [
+    "58546356-f7eb-4580-9b11-9553a2904268",
+    "fad1f57b-5fa7-46cd-b7fd-d07c75c337e7",
+    "c47cfd75-947d-48f5-92fb-35f2364f1fc4",
+    "ba9de0e6-c3b1-4d06-a5c4-de6db35cb99b",
+    "019c66d4-e606-43a2-9985-8af735c5b354",
+    "6685b05d-9808-41d6-8a61-c21b7374070d"
+  ]
+}
