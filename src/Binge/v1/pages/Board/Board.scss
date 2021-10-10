@@ -2,6 +2,7 @@
 
 .board {
   &__wrapper {
+    height: 100%;
     padding-inline: 8em;
 
     & > * {
@@ -25,7 +26,7 @@
 
   &__columns {
     @include grid-columns;
-    height: 70vh;
+    height: 85%;
   }
 
   &__column {
@@ -36,14 +37,14 @@
     &--right {
       & > p,
       & > * > p {
-        text-align: center;
+        text-align: right;
       }
     }
   }
 
   &__questions {
     @include scrollbar;
-    height: 350px;
+    height: 80%;
   }
 
   &__answers {

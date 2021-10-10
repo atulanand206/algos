@@ -188,9 +188,9 @@ export const Controller = () => {
 				} else {
 					setPlayersTeamId(res.player_team_id)
 				}
-				setSnap(res.snapshot)
-				setQuestion(res.snapshot.content)
 				if (res.quiz.active) {
+					setSnap(res.snapshot)
+					setQuestion(res.snapshot.content)
 					setReady(true)
 				} else {
 					setEntered(true)
@@ -368,8 +368,6 @@ export const Controller = () => {
 		<div className='board__controls--right'>
 			<Query label={"Hint"} onClick={queryHint} visible={visHint()} />
 			<Query label={"Pass"} onClick={queryPass} visible={visPass()} />
-		</div>
-		<div className='board__controls--right'>
 			<Query label={"Right"} onClick={queryRight} visible={visRight()} />
 			<Query label={"Next"} onClick={queryNext} visible={visNext()} />
 		</div>
@@ -377,21 +375,18 @@ export const Controller = () => {
 
 	const Board = <div className='board__wrapper'>
 		<Header />
-		<p className='board__name'>{player.name}</p>
 		<div className='board__columns'>
 			<div className='board__column board__column--left'>
-				<p className='board__quizid' onClick={quizIdCopied}>Quiz id: {removePunctuations(quiz.id)}</p>
 				<p className='board__info'>{`${snap.question_no} - ${snap.round_no}`}</p>
 				<div className='board__questions'>{question.map(line => <p className='board__questions--line'>{line}</p>)}</div>
-				{renderControlsLeft}
+				<p className='board__hint'>{hintRevealed && hint}</p>
 			</div>
 			<div className='board__column board__column--right'>
-				<Query label={"Score"} onClick={queryScore} />
+				<p className='board__name'>{player.name}</p>
+				<p className='board__quizid' onClick={quizIdCopied}>Quiz id: {removePunctuations(quiz.id)}</p>
 				{renderState}
-				<Scoreboard teams={teams} score={score} />
 				<div className='board__answers'>
 					<p className='board__answer'>{answerRevealed && answer}</p>
-					<p className='board__hint'>{hintRevealed && hint}</p>
 				</div>
 				{renderControlsRight}
 			</div>

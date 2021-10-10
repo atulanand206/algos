@@ -2,10 +2,11 @@
 
 .state {
     &__container {
-        @include flex-horizonal-center;
+        @include flex-vertical-center;
     }
 
     &__team {
+        @include flex-horizonal-center;
         width: 25%;
         padding-block: 1em;
 
