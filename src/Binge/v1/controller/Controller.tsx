@@ -212,9 +212,13 @@ export const Controller = () => {
 			if (res.quiz.id === quizId) {
 				setQuiz(res.quiz)
 				setTeams(res.teams)
-				setSnap(res.snapshot)
-				setQuestion(res.snapshot.content)
-				setEntered(true)
+				if (res.quiz.active) {
+					setSnap(res.snapshot)
+					setQuestion(res.snapshot.content)
+					setReady(true)
+				} else {
+					setEntered(true)
+				}
 			}
 		})
 	}
