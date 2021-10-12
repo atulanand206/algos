@@ -127,6 +127,10 @@ export const Controller = () => {
 		WebSckts.register(Action.S_ACTIVE, (response: string) => {
 			console.log(response)
 		})
+		WebSckts.register(Action.S_REFRESH, (response: string) => {
+			const obj = { person: player, quiz_id: quiz.id }
+			WebSckts.send(Action.REFRESH,  JSON.stringify(obj))
+		})
 	}
 
 	const handlerPlayer = (email: string) => {

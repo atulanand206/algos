@@ -12,6 +12,7 @@ export enum Action {
   SCORE,
   Over,
   Extend,
+  REFRESH,
   ACTIVE,
   S_ACTIVE,
   S_GAME,
@@ -25,6 +26,7 @@ export enum Action {
   S_Question,
   S_Answer,
   S_Over,
+  S_REFRESH,
   Failure
 }
 
