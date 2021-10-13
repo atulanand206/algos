@@ -46,7 +46,9 @@ export type Snap = {
     event_type: string
     score: number
     timestamp: string
-    content: string[]
+    question: string[]
+    answer: string[]
+    hint: string[]
 }
 
 export type Score = {

@@ -1,18 +1,63 @@
 @import "../../utils/components";
 
+
 .board {
   &__wrapper {
-    height: 100%;
     padding-inline: 2em;
-
+    overflow: hidden;
     & > * {
       color: $color_white;
+    }
+  }
+
+  &__dets {
+    @include flex-vertical-center;
+    background: $color_footer_bkg;
+    width: 100%;;
+    
+    &--sub {
+      gap: 1em;
+      @include flex-horizonal-center;
+    }
+
+    &--fixed {
+      @include fixed;
+      top: 0;
+    }
+
+    &--sticky {
+      background: transparent;
+      position: sticky;
+      top: 0;
+      height: 14em;
+    }
+  }
+
+  &__body {
+    overflow-x: hidden;
+    overflow-y: scroll;
+  }
+
+  &__footer {
+    background: $color_footer_bkg;
+
+    &--fixed {
+      @include fixed;
+      bottom: 0;
+    }
+
+    &--sticky {
+      background: transparent;
+      position: sticky;
+      bottom: 0;
+      height: 5em;
     }
   }
 
   &__quizid {
     font-size: $font_btn;
     @include blink;
+    cursor: pointer;
   }
 
   &__questions--line {
@@ -28,9 +73,6 @@
     font-size: $fnt_normal;
   }
 
-  &__dets {
-    @include flex-horizonal-center
-  }
 
   &__column {
     height: 100%;
@@ -51,7 +93,6 @@
 
   &__answers {
     @include grid-rows;
-    height: 200px;
     align-items: center;
   }
 

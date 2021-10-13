@@ -1,6 +1,7 @@
 @import "../../utils/components";
 
 .lobby {
+  @include cont;
   &__wrapper {
     @include flex-vertical-center;
   }

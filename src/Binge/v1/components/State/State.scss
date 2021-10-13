@@ -5,20 +5,40 @@
         @include flex-vertical-center;
     }
 
+    &__header {
+        margin: 0;
+        letter-spacing: 1em;
+        font-size: $fnt_normal;
+    }
+
     &__team {
-        @include flex-horizonal-center;
-        width: 25%;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
         padding-block: 1em;
 
-        &--name {
+        & > * {
             margin: 0;
+            text-align: left;
             font-size: $fnt_normal;
-            text-align: center;
         }
 
-        &--active {
-            border: 2px solid $color_white;
-            border-radius: 8em;
+        &--name {
+            text-align: left;
         }
+
+        &--score {
+            text-align: right;
+        }
+
+        &--turn {
+            text-align: right;
+            font-size: $font_btn;
+        }
+    }
+
+    &__table {
+        width: 95%;
+        display: grid;
+        grid-auto-rows: auto;
     }
 }

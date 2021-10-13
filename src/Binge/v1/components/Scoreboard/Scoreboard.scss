@@ -26,6 +26,7 @@
     &--row {
         @include flex-horizonal-center;
         margin-block: 1em;
+        width: 100%;
     }
 
     &--cell {
