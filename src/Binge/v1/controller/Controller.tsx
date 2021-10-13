@@ -13,6 +13,7 @@ import { Header } from '../components/Header/Header'
 import { Query } from '../components/Query/Query'
 import { State } from '../components/State/State'
 import { Box } from '../components/Box/Box';
+import { Divider } from '../components/Divider/Divider';
 
 export const Controller = () => {
 
@@ -344,7 +345,8 @@ export const Controller = () => {
 		console.log(role)
 		console.log(snap)
 		console.log(playersTeamId)
-		return role === ROLE_PLAYER && snap.team_s_turn === playersTeamId
+		// return role === ROLE_PLAYER && snap.team_s_turn === playersTeamId
+		return true
 	}
 
 	const visRight = () => {
@@ -381,21 +383,32 @@ export const Controller = () => {
 		</div>
 	</div>
 
-	const Board = <div className='board__wrapper'>
+const Board = <div className='board__wrapper'>
 		<Header />
 		<div className='board__columns'>
-			<div className='board__column board__column--left'>
+			<div className='board__dets'>
 				<p className='board__info'>{`${snap.question_no} - ${snap.round_no}`}</p>
-				<div className='board__questions'>{question.map(line => <p className='board__questions--line'>{line}</p>)}</div>
-				<p className='board__hint'>{hintRevealed && hint}</p>
-			</div>
-			<div className='board__column board__column--right'>
 				<p className='board__name'>{player.name}</p>
 				<p className='board__quizid' onClick={quizIdCopied}>Quiz id: {removePunctuations(quiz.id)}</p>
+			</div>
+			<Divider />
+			<div className='board__column board__column--left'>
+				<div className='board__questions'>{question.map(line => <p className='board__questions--line'>{line}</p>)}</div>
+			</div>
+			<Divider />
+			<div className='board__column board__column--left'>
+				<p className='board__hint'>{hintRevealed && hint}</p>
+			</div>
+			<Divider />
+			<div className='board__answers'>
+				<p className='board__answer'>{answerRevealed && answer}</p>
+			</div>
+			<Divider />
+			<div className='board__column board__column--right'>
 				{renderState}
-				<div className='board__answers'>
-					<p className='board__answer'>{answerRevealed && answer}</p>
-				</div>
+			</div>
+			<Divider />
+			<div className='board__column board__column--right'>
 				{renderControlsRight}
 			</div>
 		</div>

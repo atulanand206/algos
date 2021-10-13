@@ -82,3 +82,10 @@
     background: $color_white;
   }
 }
+
+@mixin cont {
+  &__wrapper {
+    height: 100vh;
+    @include flex-vertical-center;
+  }
+}

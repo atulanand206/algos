@@ -1,9 +1,7 @@
 @import "../../utils/components";
 
 .landing {
-    &__wrapper {
-        @include flex-vertical-center;
-    }
+    @include cont;
 
     &__logo {
         @include logo-large;

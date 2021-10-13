@@ -3,7 +3,7 @@
 .board {
   &__wrapper {
     height: 100%;
-    padding-inline: 8em;
+    padding-inline: 2em;
 
     & > * {
       color: $color_white;
@@ -15,6 +15,10 @@
     @include blink;
   }
 
+  &__questions--line {
+    @include font-content;
+  }
+
   &__name,
   &__info,
   &__questions--line,
@@ -24,9 +28,8 @@
     font-size: $fnt_normal;
   }
 
-  &__columns {
-    @include grid-columns;
-    height: 85%;
+  &__dets {
+    @include flex-horizonal-center
   }
 
   &__column {
@@ -44,7 +47,6 @@
 
   &__questions {
     @include scrollbar;
-    height: 80%;
   }
 
   &__answers {
