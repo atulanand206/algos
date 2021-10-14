@@ -1,4 +1,4 @@
-import { IMessageEvent, w3cwebsocket as W3CWebSocket } from "websocket";
+import { ICloseEvent, IMessageEvent, w3cwebsocket as W3CWebSocket } from "websocket";
 import { Action } from "./Action";
 
 type WebScktsMessage = {
@@ -31,13 +31,6 @@ export class WebSckts {
     if (this.isConnected()) this._instance.client.send(message)
   }
 
-  public static sendAndReceive(requestAction: Action, requestObj: string, responseAction: Action, onResponse: (response: string) => void) {
-    WebSckts.register(responseAction, (response) => {
-      onResponse(response)
-    })
-    WebSckts.send(requestAction, requestObj);
-  }
-
   public static send(requestAction: Action, requestObj: string) {
     const request = { action: Action.toString(requestAction), content: requestObj.toString() };
     WebSckts.sendMessage(JSON.stringify(request));
@@ -47,8 +40,9 @@ export class WebSckts {
     this.client.onopen = () => {
       console.log('WebSocket client connected');
     }
-    this.client.onclose = () => {
+    this.client.onclose = (event: ICloseEvent) => {
       console.log('WebSocket connection closed')
+      console.log(event)
     }
     this.client.onmessage = (message) => {
       this.onMessage(message)

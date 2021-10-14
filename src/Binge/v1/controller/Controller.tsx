@@ -37,28 +37,6 @@ export const Controller = () => {
 			questions: 4
 		},
 		tags: [''],
-		teams: [
-			{
-				"id": "08287ec4-7875-4d51-afe1-2eeace78d4d1",
-				"name": "Team 0",
-				"score": 1
-			},
-			{
-				"id": "87f7caa5-4736-4310-9bd7-07ac3ddd219d",
-				"name": "Team 1",
-				"score": 1
-			},
-			{
-				"id": "526f4127-8c47-49ec-a269-9da781a1a148",
-				"name": "Team 2",
-				"score": 1
-			},
-			{
-				"id": "ba1d1f67-83b4-422d-863b-74336b8f7575",
-				"name": "Team 3",
-				"score": 1
-			}],
-		team_s_turn: "08287ec4-7875-4d51-afe1-2eeace78d4d1",
 		active: false
 	})
 	const [teams, setTeams] = useState([])
@@ -277,13 +255,14 @@ export const Controller = () => {
 			const res = JSON.parse(response)
 			if (res.quiz_id === snap.quiz_id && res.question_id === snap.question_id) {
 				setSnap(res)
+				setTeams(res.teams)
 				setAnswer(res.answer)
 				setAnswerRevealed(true)
 			}
 		})
 		WebSckts.register(Action.S_NEXT, (response) => {
 			const res = JSON.parse(response)
-			if (res.quiz_id === snap.quiz_id && res.last_question_id === snap.question_id) {
+			if (res.quiz_id === snap.quiz_id) {
 				setSnap(res)
 				setQuestion(res.question)
 				setAnswerRevealed(false)
@@ -306,19 +285,23 @@ export const Controller = () => {
 	}
 
 	const queryHint = () => {
-		WebSckts.send(Action.HINT, JSON.stringify(snap))
+		const obj = { quiz_id: quiz.id, team_s_turn: snap.team_s_turn, question_id: snap.question_id }
+		WebSckts.send(Action.HINT, JSON.stringify(obj))
 	}
 
 	const queryRight = () => {
-		WebSckts.send(Action.RIGHT, JSON.stringify(snap))
+		const obj = { quiz_id: quiz.id, team_s_turn: snap.team_s_turn, question_id: snap.question_id }
+		WebSckts.send(Action.RIGHT, JSON.stringify(obj))
 	}
 
 	const queryNext = () => {
-		WebSckts.send(Action.NEXT, JSON.stringify(snap))
+		const obj = { quiz_id: quiz.id, team_s_turn: snap.team_s_turn, question_id: snap.question_id }
+		WebSckts.send(Action.NEXT, JSON.stringify(obj))
 	}
 
 	const queryPass = () => {
-		WebSckts.send(Action.PASS, JSON.stringify(snap))
+		const obj = { quiz_id: quiz.id, team_s_turn: snap.team_s_turn, question_id: snap.question_id }
+		WebSckts.send(Action.PASS, JSON.stringify(obj))
 	}
 
 	const queryExtend = () => {
@@ -355,11 +338,11 @@ export const Controller = () => {
 	}
 
 	const visRight = () => {
-		return role === ROLE_QUIZMASTER
+		return role === ROLE_QUIZMASTER && snap.event_type !== "RIGHT"
 	}
 
 	const visNext = () => {
-		return role === ROLE_QUIZMASTER
+		return role === ROLE_QUIZMASTER && snap.event_type === "RIGHT"
 	}
 
 	const removePunctuations = (str: string) => {
