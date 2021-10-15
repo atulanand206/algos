@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import GoogleLogin from 'react-google-login';
+import {BrowserRouter as Router, Route, Switch} from 'react-router-dom'
 import { Credentials, Form_Credentials, Form_QuizMaster, Form_Player, Form_Audience, Action_Create, Action_Join, Action_Watch, Entry_TeamsInAQuiz, Entry_PlayersInATeam, Entry_Questions_Count, Entry_QuizId } from '../pages/Credentials/Credentials'
 import { WebSckts } from '../utils/_websockets'
 import { Action } from "../utils/Action"
@@ -8,16 +8,16 @@ import './../pages/Board/Board.scss'
 import './../pages/Landing/Landing.scss'
 import { Lobby } from '../pages/Lobby/Lobby'
 import { ROLE_AUDIENCE, ROLE_PLAYER, ROLE_QUIZMASTER } from '../../Features/Features'
-import Scoreboard from '../components/Scoreboard/Scoreboard'
-import { Header } from '../components/Header/Header'
-import { Query } from '../components/Query/Query'
-import { State } from '../components/State/State'
-import { Box } from '../components/Box/Box';
-import { Divider } from '../components/Divider/Divider';
 import { Player, Team } from '../utils/_interfaces';
+import { Board } from '../pages/Board/Board';
+import { Landing } from '../pages/Landing/Landing';
+import React from 'react'
 
-export const Controller = () => {
+type Props = {
+	histor: History
+}
 
+export const Controller = (props: Props) => {
 	const [role, setRole] = useState(ROLE_AUDIENCE)
 	const [player, setPlayer] = useState({
 		id: "5b0471c-5193-4707-b17b-9ad7f5628926",
@@ -41,9 +41,6 @@ export const Controller = () => {
 	})
 	const [teams, setTeams] = useState([])
 	const [playersTeamId, setPlayersTeamId] = useState('')
-	const [question, setQuestion] = useState([''])
-	const [answer, setAnswer] = useState([""])
-	const [hint, setHint] = useState([''])
 	const [snap, setSnap] = useState({
 		quiz_id: '',
 		round_no: 1,
@@ -97,44 +94,7 @@ export const Controller = () => {
 			case Form_Audience: joinAudience(entries); break;
 		}
 	}
-
-	const responseGoogle = (response: any) => {
-		const profile = response.profileObj
-		const obj = { id: profile.googleId, name: profile.name, email: profile.email }
-		handlerPlayer(profile.email)
-		WebSckts.send(Action.BEGIN, JSON.stringify(obj))
-	}
-
-	const glogin = () => {
-		return <GoogleLogin
-			clientId={`${process.env.REACT_APP_GOOGLE_CLIENT_ID}`}
-			buttonText="Let's Begin!"
-			fetchBasicProfile
-			onSuccess={responseGoogle}
-			onFailure={responseGoogle}
-			cookiePolicy={'single_host_origin'}
-		/>
-	}
 	
-	const handlerActiveQuiz = () => {
-		WebSckts.register(Action.S_ACTIVE, (response: string) => {
-		})
-		WebSckts.register(Action.S_REFRESH, (response: string) => {
-			const obj = { person: player, quiz_id: quiz.id }
-			WebSckts.send(Action.REFRESH,  JSON.stringify(obj))
-		})
-	}
-
-	const handlerPlayer = (email: string) => {
-		WebSckts.register(Action.S_PLAYER, (response: string) => {
-			const res = JSON.parse(response)
-			if (res.email === email) {
-				setPlayer(res)
-				setLaunched(true)
-			}
-		})
-	}
-
 	const onPlayerCreated = (action: string) => {
 		switch (action) {
 			case Action_Create:
@@ -151,15 +111,132 @@ export const Controller = () => {
 		}
 	}
 
-	const handlerQuizmaster = () => {
-		WebSckts.register(Action.S_GAME, (response: string) => {
-			const res = JSON.parse(response)
-			if (res.quiz.quizmaster.id === player.id) {
+	const onResponsePlayer = (player: Player) => {
+		setPlayer(player)
+		setLaunched(true)
+	}
+
+	const onResponseCreateGame = (response: string) => {
+		const res = JSON.parse(response)
+		if (res.quiz.quizmaster.id === player.id) {
+			setQuiz(res.quiz)
+			setTeams(res.teams)
+			setEntered(true)
+		}
+	}
+
+	const onResponseJoinGame = (response: string, quizId: string) => {
+		const res = JSON.parse(response)
+			console.log(res)
+			if (res.quiz.id === quizId) {
 				setQuiz(res.quiz)
 				setTeams(res.teams)
+				if (res.quiz.quizmaster.id === player.id) {
+					setRole(ROLE_QUIZMASTER)
+				}
+				if (res.quiz.active) {
+					setSnap(res.snapshot)
+					setReady(true)
+				} else {
+					setEntered(true)
+				}
+			}
+	}
+	
+	const onResponseWatchGame = (response: string, quizId: string) => {
+		const res = JSON.parse(response)
+		if (res.quiz.id === quizId) {
+			setQuiz(res.quiz)
+			setTeams(res.teams)
+			if (res.quiz.active) {
+				setSnap(res.snapshot)
+				setReady(true)
+			} else {
 				setEntered(true)
 			}
-		})
+		}
+	}
+
+	const onResponseStart = (response: string) => {
+		const res = JSON.parse(response)
+		if (res.quiz_id === quiz.id) {
+			setTeams(res.teams)
+			setSnap(res.snapshot)
+			setReady(true)
+		}
+	}
+
+	const onResponseHint = (response: string) => {
+		const res = JSON.parse(response)
+		if (res.quiz_id === snap.quiz_id && res.question_id === snap.question_id) {
+			setSnap(res)
+			setHintRevealed(true)
+		}
+	}
+
+	const onResponsePass = (response: string) => {
+		const res = JSON.parse(response)
+		if (res.quiz_id === snap.quiz_id && res.question_id === snap.question_id) {
+			setSnap(res)
+		}
+	}
+
+	const onResponseRight = (response: string) => {
+		const res = JSON.parse(response)
+		if (res.quiz_id === snap.quiz_id && res.question_id === snap.question_id) {
+			setSnap(res)
+			setTeams(res.teams)
+			setAnswerRevealed(true)
+		}
+	}
+
+	const onResponseNext = (response: string) => {
+		const res = JSON.parse(response)
+		if (res.quiz_id === snap.quiz_id) {
+			setSnap(res)
+			setAnswerRevealed(false)
+			setHintRevealed(false)
+		}
+	}
+
+	const onResponseScore = (response: string) => {
+		const res = JSON.parse(response)
+		setScore(res)
+	}
+
+	const onResponseActive = (response: string) => {
+
+	}
+
+	const onResponseRefresh = () => {
+		const obj = { person: player, quiz_id: quiz.id }
+		WebSckts.send(Action.REFRESH,  JSON.stringify(obj))
+	}
+
+	const handlerActiveQuiz = () => {
+		WebSckts.register(Action.S_ACTIVE, onResponseActive)
+		WebSckts.register(Action.S_REFRESH, onResponseRefresh)
+	}
+
+	const handlerQuizmaster = () => {
+		WebSckts.register(Action.S_GAME, onResponseCreateGame)
+	}
+
+	const handlerJoinPlayer = (quizId: string) => {
+		WebSckts.register(Action.S_GAME, (res) => onResponseJoinGame(res, quizId))
+	}
+
+	const handlerAudience = (quizId: string) => {
+		WebSckts.register(Action.S_GAME, (res) => onResponseWatchGame(res, quizId))
+	}
+
+	const handlersQuestions = () => {
+		WebSckts.register(Action.S_START, onResponseStart)
+		WebSckts.register(Action.S_HINT, onResponseHint)
+		WebSckts.register(Action.S_PASS, onResponsePass)
+		WebSckts.register(Action.S_RIGHT, onResponseRight)
+		WebSckts.register(Action.S_NEXT, onResponseNext)
+		WebSckts.register(Action.S_SCORE, onResponseScore)
 	}
 
 	const createQuiz = (entries: Map<string, string>) => {
@@ -173,27 +250,6 @@ export const Controller = () => {
 		WebSckts.send(Action.SPECS, JSON.stringify(obj))
 	}
 
-	const handlerJoinPlayer = (quizId: string) => {
-		WebSckts.register(Action.S_GAME, (response: string) => {
-			const res = JSON.parse(response)
-			console.log(res)
-			if (res.quiz.id === quizId) {
-				setQuiz(res.quiz)
-				setTeams(res.teams)
-				if (res.quiz.quizmaster.id === player.id) {
-					setRole(ROLE_QUIZMASTER)
-				}
-				if (res.quiz.active) {
-					setSnap(res.snapshot)
-					setQuestion(res.snapshot.question)
-					setReady(true)
-				} else {
-					setEntered(true)
-				}
-			}
-		})
-	}
-
 	const joinPlayer = (entries: Map<string, string>) => {
 		const quizId = entries.get(Entry_QuizId) || ''
 		const obj = { person: player, quiz_id: quizId }
@@ -201,78 +257,11 @@ export const Controller = () => {
 		WebSckts.send(Action.JOIN, JSON.stringify(obj))
 	}
 
-	const handlerAudience = (quizId: string) => {
-		WebSckts.register(Action.S_GAME, (response: string) => {
-			const res = JSON.parse(response)
-			if (res.quiz.id === quizId) {
-				setQuiz(res.quiz)
-				setTeams(res.teams)
-				if (res.quiz.active) {
-					setSnap(res.snapshot)
-					setQuestion(res.snapshot.question)
-					setAnswer(res.snapshot.answer)
-					setHint(res.snapshot.hint)
-					setReady(true)
-				} else {
-					setEntered(true)
-				}
-			}
-		})
-	}
-
 	const joinAudience = (entries: Map<string, string>) => {
 		const quizId = entries.get(Entry_QuizId) || ''
 		const obj = { person: player, quiz_id: quizId }
 		handlerAudience(quizId)
 		WebSckts.send(Action.WATCH, JSON.stringify(obj))
-	}
-
-	const handlersQuestions = () => {
-		WebSckts.register(Action.S_START, (response: string) => {
-			const res = JSON.parse(response)
-			if (res.quiz_id === quiz.id) {
-				setTeams(res.teams)
-				setSnap(res.snapshot)
-				setQuestion(res.snapshot.question)
-				setReady(true)
-			}
-		})
-		WebSckts.register(Action.S_HINT, (response) => {
-			const res = JSON.parse(response)
-			if (res.quiz_id === snap.quiz_id && res.question_id === snap.question_id) {
-				setSnap(res)
-				setHint(res.hint)
-				setHintRevealed(true)
-			}
-		})
-		WebSckts.register(Action.S_PASS, (response) => {
-			const res = JSON.parse(response)
-			if (res.quiz_id === snap.quiz_id && res.question_id === snap.question_id) {
-				setSnap(res)
-			}
-		})
-		WebSckts.register(Action.S_RIGHT, (response) => {
-			const res = JSON.parse(response)
-			if (res.quiz_id === snap.quiz_id && res.question_id === snap.question_id) {
-				setSnap(res)
-				setTeams(res.teams)
-				setAnswer(res.answer)
-				setAnswerRevealed(true)
-			}
-		})
-		WebSckts.register(Action.S_NEXT, (response) => {
-			const res = JSON.parse(response)
-			if (res.quiz_id === snap.quiz_id) {
-				setSnap(res)
-				setQuestion(res.question)
-				setAnswerRevealed(false)
-				setHintRevealed(false)
-			}
-		})
-		WebSckts.register(Action.S_SCORE, (response) => {
-			const res = JSON.parse(response)
-			setScore(res)
-		})
 	}
 
 	const start = () => {
@@ -322,131 +311,69 @@ export const Controller = () => {
 		WebSckts.send(Action.SCORE, JSON.stringify({ quiz_id: quiz.id }))
 	}
 
-	const quizIdCopied = () => {
-		navigator.clipboard.writeText(quiz.id)
+	type SwitchProps = {
+
 	}
 
-	const visHint = () => {
-		return role === ROLE_QUIZMASTER
+	type SwitchState = {
+
 	}
 
-	const visPass = () => {
-		console.log(role)
-		console.log(snap)
-		console.log(playersTeamId)
-		return role === ROLE_PLAYER && snap.team_s_turn === playersTeamId	
-	}
+	class Switcher extends React.Component<SwitchProps, SwitchState> {
+		
+		handlerPlayer = (email: string) => {
+			WebSckts.register(Action.S_PLAYER, (response: string) => {
+				const res = JSON.parse(response)
+				if (res.email === email) {
+					onResponsePlayer(res)
+					console.log(res, this.context)
+					this.context.router.push('/reception')
+				}	
+			})
+		}
+		
+		onLoginSuccess = (obj: Player) => {
+			this.handlerPlayer(obj.email)
+			WebSckts.send(Action.BEGIN, JSON.stringify(obj))
+		}
 
-	const visRight = () => {
-		return role === ROLE_QUIZMASTER && snap.event_type !== "RIGHT"
-	}
-
-	const visNext = () => {
-		return role === ROLE_QUIZMASTER && snap.event_type === "RIGHT"
-	}
-
-	const removePunctuations = (str: string) => {
-		return str.replace('["-.,:;!@#$%^&*()_+="]', "").toUpperCase()
-	}
-
-	const renderState = <State teams={teams} currentTeamId={snap.team_s_turn} />
-
-	const renderControlsLeft = <div className='board__controls'>
-		<div className='board__controls--right'>
-			<Query label={"Rules"} onClick={queryRules} visible={true} />
-			<Query label={"Guide"} onClick={queryGuide} visible={true} />
-		</div>
-		<div className='board__controls--right'>
-			<Query label={"Link"} onClick={queryLink} visible={true} />
-			<Query label={"Extend"} onClick={queryExtend} visible={true} />
-		</div>
-	</div>
-
-	const renderControlsRight = <div className='board__controls'>
-		<div className='board__controls--right'>
-			<Query label={"Hint"} onClick={queryHint} visible={visHint()} />
-			<Query label={"Pass"} onClick={queryPass} visible={visPass()} />
-			<Query label={"Right"} onClick={queryRight} visible={visRight()} />
-			<Query label={"Next"} onClick={queryNext} visible={visNext()} />
-		</div>
-	</div>
-
-	const HeaderFixed = <div className='board__dets board__dets--fixed'>
-		<Header />
-		<div className='board__dets--sub'>
-			<p className='board__info'>{`${snap.question_no} - ${snap.round_no}`}</p>
-			<p className='board__name'>{player.name}</p>
-			<p className='board__quizid' onClick={quizIdCopied}>Quiz id: {removePunctuations(quiz.id)}</p>
-		</div>
-	</div>
-
-	const HeaderSticky = <div className='board__dets board__dets--sticky' />
-
-	const FooterFixed = <div className='board__footer board__footer--fixed'>
-		<div className='board__column board__column--right'>
-			{renderControlsRight}
-		</div>
-	</div>
-
-	const FooterSticky = <div className='board__footer board__footer--sticky' />
-
-	const Board = <div className='board__wrapper'>
-	
-		{HeaderFixed}
-		{FooterFixed}
-
-		{HeaderSticky}
-			
-		<div className='board__body'>
-			<Divider />		
-			<div className='board__column board__column--left'>
-				<div className='board__questions'>{question && question.map(line => <p className='board__questions--line'>{line}</p>)}</div>
-			</div>
-			<Divider />
-			<div className='board__column board__column--left'>
-				<p className='board__hint'>{hintRevealed && hint}</p>
-			</div>
-			<Divider />
-			<div className='board__answers'>
-				<p className='board__answer'>{answerRevealed && answer}</p>
-			</div>
-			<Divider />
-			<div className='board__column board__column--right'>
-				{renderState}
-			</div>
-			<Divider />
-		</div>
-
-		{FooterSticky}
-	
-	</div>
-
-	const Landing = () => {
-		return (
-			<div className='landing__wrapper'>
-				<p className='landing__logo'>Binquiz</p>
-				{glogin()}
-				<Box height='16em' />
-			</div>
+		render = () => (
+			<Router>
+				<div>
+					<Switch >
+						<Route path="/reception" render={() => <Credentials 
+									enter={formEntered} 
+									type={formType} />} />
+						<Route path='/quiz' render={() => <Board
+									role={role}
+									teams={teams}
+									playersTeamId={playersTeamId} 
+									currentTeamId={snap.team_s_turn}	
+									snap={snap} 
+									answerRevealed={answerRevealed} 
+									hintRevealed={hintRevealed}  
+									queryHint={queryHint}
+									queryNext={queryNext}
+									queryPass={queryPass}
+									queryRight={queryRight}
+									playerName={player.name} />} />
+						<Route path='/lobby' render={() => <Lobby
+									start={start}
+									quiz={quiz}
+									role={role}
+									teams={teams}
+									playerId={player.id} />} />
+						<Route exact path="/" render={() => <Landing 
+									onLoginSuccess={this.onLoginSuccess}/>} />
+					</Switch>
+				</div>
+			</Router>
 		)
-	}
-
-	const body = () => {
-		if (finished) return <Landing />
-		if (ready) return Board
-		if (entered) return <Lobby
-			start={start}
-			quiz={quiz}
-			role={role}
-			teams={teams}
-			playerId={player.id} />
-		if (launched) return <Credentials enter={formEntered} type={formType} />
-		return <Landing />
 	}
 
 	return (
 		<div className='quiz__wrapper'>
-			{body()}
+			<Switcher />
 		</div>
 	)
 }
