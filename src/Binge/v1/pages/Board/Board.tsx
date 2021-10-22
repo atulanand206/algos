@@ -21,7 +21,7 @@ export const Board = (props: BoardProps) => {
 	}
 
 	const visPass = () => {
-		return DataStoreManager._instance.dataStore.role === ROLE_PLAYER && DataStoreManager._instance.dataStore.snapshot.team_s_turn === DataStoreManager._instance.dataStore.getPlayersTeamId	
+		return DataStoreManager._instance.dataStore.role === ROLE_PLAYER && DataStoreManager._instance.dataStore.snapshot.team_s_turn === DataStoreManager._instance.dataStore.getPlayersTeamId
 	}
 
 	const visRight = () => {
@@ -42,17 +42,17 @@ export const Board = (props: BoardProps) => {
 	}
 
 	const queryRight = () => {
-    const obj = { action: Action.RIGHT, snapshot: DataStoreManager._instance.dataStore.snapshotRequest }
+		const obj = { action: Action.RIGHT, snapshot: DataStoreManager._instance.dataStore.snapshotRequest }
 		WebSckts.send(Action.RIGHT, JSON.stringify(obj))
 	}
 
 	const queryNext = () => {
-    const obj = { action: Action.NEXT, snapshot: DataStoreManager._instance.dataStore.snapshotRequest }
+		const obj = { action: Action.NEXT, snapshot: DataStoreManager._instance.dataStore.snapshotRequest }
 		WebSckts.send(Action.NEXT, JSON.stringify(obj))
 	}
 
 	const queryPass = () => {
-    const obj = { action: Action.PASS, snapshot: DataStoreManager._instance.dataStore.snapshotRequest }
+		const obj = { action: Action.PASS, snapshot: DataStoreManager._instance.dataStore.snapshotRequest }
 		WebSckts.send(Action.PASS, JSON.stringify(obj))
 	}
 
@@ -91,19 +91,19 @@ export const Board = (props: BoardProps) => {
 		</div>
 	</div>
 
-  const HeaderSticky = <div className='board__dets board__dets--sticky' />
+	const HeaderSticky = <div className='board__dets board__dets--sticky' />
 
-  const FooterSticky = <div className='board__footer board__footer--sticky' />
-	
+	const FooterSticky = <div className='board__footer board__footer--sticky' />
+
 	return <div className='board__wrapper'>
 
 		{HeaderFixed}
 		{FooterFixed}
 
 		{HeaderSticky}
-			
+
 		<div className='board__body'>
-			<Divider />		
+			<Divider />
 			<div className='board__column board__column--left'>
 				<div className='board__questions'>{DataStoreManager._instance.dataStore.snapshot.question && DataStoreManager._instance.dataStore.snapshot.question.map(line => <p className='board__questions--line'>{line}</p>)}</div>
 			</div>

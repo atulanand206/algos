@@ -11,11 +11,11 @@ type AvatarProps = {
 
 const Avatar = (props: AvatarProps) => {
 	return (
-		<div key={props.name} 
-			className={classNames('state__team', 
+		<div key={props.name}
+			className={classNames('state__team',
 				props.active && 'state__team--active')}>
 			<p className='state__team--name'>{props.name}</p>
-				<p className='state__team--turn'>{props.active ? '...' : ''}</p>
+			<p className='state__team--turn'>{props.active ? '...' : ''}</p>
 			<p className='state__team--score'>{props.score}</p>
 		</div>
 	)

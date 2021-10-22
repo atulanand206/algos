@@ -9,29 +9,29 @@ type SwitchProps = {
 
 }
 
-export const Switcher = (props:SwitchProps) => {
+export const Switcher = (props: SwitchProps) => {
 
-	const history = useHistory();
+  const history = useHistory();
 
   useEffect(() => {
     history.push("/")
     console.log(history)
   })
-	
-	const onLoginSuccess = () => {
-		history.push('/reception')
-	}
 
-	return (
+  const onLoginSuccess = () => {
+    history.push('/reception')
+  }
+
+  return (
     <Router history={history} >
       <div>
         <Switch >
           <Route path="/reception" render={() => <Credentials />} />
           <Route path='/quiz' render={() => <Board />} />
           <Route path='/lobby' render={() => <Lobby />} />
-          <Route exact path="/" render={() => <Landing onLoginSuccess={onLoginSuccess}/>} />
+          <Route exact path="/" render={() => <Landing onLoginSuccess={onLoginSuccess} />} />
         </Switch>
       </div>
     </Router>
-	)
+  )
 }

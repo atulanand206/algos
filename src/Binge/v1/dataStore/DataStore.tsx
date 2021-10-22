@@ -4,19 +4,19 @@ import { Form_Audience } from "../pages/Credentials/Credentials";
 import { Game, Player, Snap, Team } from '../utils/_interfaces';
 
 export class DataStore {
-  
+
   static _instance: DataStore
 
   formType = Form_Audience
   role = ROLE_AUDIENCE
-	player = {
-		id: "",
-		name: "",
+  player = {
+    id: "",
+    name: "",
     email: ""
-	}
+  }
   snapshot = {
     quiz_id: '',
-		round_no: 1, 
+    round_no: 1,
     roster: [{
       id: "",
       name: "",
@@ -27,37 +27,37 @@ export class DataStore {
         email: ""
       }]
     }],
-		question_no: 1,
-		question_id: '',
-		team_s_turn: '',
-		event_type: '',
-		score: 0,
-		timestamp: '',
-		question: [''],
-		answer: [''],
-		hint: ['']
+    question_no: 1,
+    question_id: '',
+    team_s_turn: '',
+    event_type: '',
+    score: 0,
+    timestamp: '',
+    question: [''],
+    answer: [''],
+    hint: ['']
   }
   quiz = {
-		id: 'sdsadsadsads',
-		quizmaster: {
-			id: '',
-			name: '',
-			email: ''
-		},
-		specs: {
-			teams: 4,
-			players: 4,
-			questions: 4
-		},
-		tags: [''],
-		active: false
-	}
-	launched = false
-	entered = false
-	ready = false
-	finished = false
-	answerRevealed = false
-	hintRevealed = false
+    id: 'sdsadsadsads',
+    quizmaster: {
+      id: '',
+      name: '',
+      email: ''
+    },
+    specs: {
+      teams: 4,
+      players: 4,
+      questions: 4
+    },
+    tags: [''],
+    active: false
+  }
+  launched = false
+  entered = false
+  ready = false
+  finished = false
+  answerRevealed = false
+  hintRevealed = false
 
   constructor() {
     makeAutoObservable(this)
@@ -70,7 +70,7 @@ export class DataStore {
   setFormType(formType: string) {
     this.formType = formType
   }
-  
+
   setRole(role: string) {
     this.role = role
   }
@@ -102,11 +102,11 @@ export class DataStore {
   get getPlayersTeamId() {
     if (this.role === ROLE_PLAYER) {
       var tems = this.snapshot.roster.filter((team: Team) => team.players.filter((playr: Player) => playr.id === this.player.id).length === 1)
-        if (tems.length === 1) {
-          var tem: Team = tems[0]
-          return tem.id
-        }
+      if (tems.length === 1) {
+        var tem: Team = tems[0]
+        return tem.id
       }
+    }
     return ""
   }
 
@@ -129,7 +129,7 @@ export class DataStore {
   setReady(ready: boolean) {
     this.ready = ready
   }
-  
+
   setFinished(finished: boolean) {
     this.finished = finished
   }

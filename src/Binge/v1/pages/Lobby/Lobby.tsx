@@ -54,10 +54,10 @@ export const Lobby = (props: Props) => {
     if (filled()) return <p className='lobby__quiz--id--label'>waiting...</p>
     else return <></>
   }
-  
-	const removePunctuations = (str: string) => {
-		return str.replace('["-.,:;!@#$%^&*()_+="]', "").toUpperCase()
-	}
+
+  const removePunctuations = (str: string) => {
+    return str.replace('["-.,:;!@#$%^&*()_+="]', "").toUpperCase()
+  }
 
   return (
     <div className='lobby__wrapper'>

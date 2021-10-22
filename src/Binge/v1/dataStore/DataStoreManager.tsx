@@ -7,18 +7,18 @@ import { DataStore } from "./DataStore"
 
 export class DataStoreManager {
 
-  static _instance: DataStoreManager
+	static _instance: DataStoreManager
 
-  dataStore: DataStore = new DataStore()
+	dataStore: DataStore = new DataStore()
 
-  constructor() {
-    if (DataStoreManager._instance) {
-      return DataStoreManager._instance
-    }
-    DataStoreManager._instance = this
-  }
+	constructor() {
+		if (DataStoreManager._instance) {
+			return DataStoreManager._instance
+		}
+		DataStoreManager._instance = this
+	}
 
-  formEntered(action: string, entries: Map<string, string>) {
+	formEntered(action: string, entries: Map<string, string>) {
 		switch (this.dataStore.formType) {
 			case Form_Credentials: this.onPlayerCreated(action); break;
 			case Form_QuizMaster: this.createQuiz(entries); break;
@@ -26,8 +26,8 @@ export class DataStoreManager {
 			case Form_Audience: this.joinAudience(entries); break;
 		}
 	}
-	
-	onPlayerCreated(action: string){
+
+	onPlayerCreated(action: string) {
 		switch (action) {
 			case Action_Create:
 				this.dataStore.setFormType(Form_QuizMaster)
@@ -35,7 +35,7 @@ export class DataStoreManager {
 				break
 			case Action_Join:
 				this.dataStore.setFormType(Form_Player)
-        this.dataStore.setRole(ROLE_PLAYER)
+				this.dataStore.setRole(ROLE_PLAYER)
 				break
 			case Action_Watch:
 				this.dataStore.setFormType(Form_Audience)
@@ -43,7 +43,7 @@ export class DataStoreManager {
 		}
 	}
 
-  onResponsePlayer(player: Player) {
+	onResponsePlayer(player: Player) {
 		this.dataStore.setPlayer(player)
 		this.dataStore.setLaunched(true)
 	}
@@ -58,20 +58,20 @@ export class DataStoreManager {
 
 	onResponseJoinGame(response: string, quizId: string) {
 		const res = JSON.parse(response)
-			console.log(res)
-			if (DataStoreManager._instance.canAcceptQuizSnapshot(res)) {
-				if (res.quiz.quizmaster.id === this.dataStore.player.id) {
-					this.dataStore.setRole(ROLE_QUIZMASTER)
-				}
-				if (res.quiz.active) {
-					this.dataStore.setSnapshot(res)
-					this.dataStore.setReady(true)
-				} else {
-					this.dataStore.setEntered(true)
-				}
+		console.log(res)
+		if (DataStoreManager._instance.canAcceptQuizSnapshot(res)) {
+			if (res.quiz.quizmaster.id === this.dataStore.player.id) {
+				this.dataStore.setRole(ROLE_QUIZMASTER)
 			}
+			if (res.quiz.active) {
+				this.dataStore.setSnapshot(res)
+				this.dataStore.setReady(true)
+			} else {
+				this.dataStore.setEntered(true)
+			}
+		}
 	}
-	
+
 	onResponseWatchGame(response: string, quizId: string) {
 		const res = JSON.parse(response)
 		if (DataStoreManager._instance.canAcceptQuizSnapshot(res)) {
@@ -94,30 +94,30 @@ export class DataStoreManager {
 
 	onResponseRefresh() {
 		const obj = { person: DataStore._instance.player, quiz_id: DataStore._instance.quiz.id }
-		WebSckts.send(Action.REFRESH,  JSON.stringify(obj))
+		WebSckts.send(Action.REFRESH, JSON.stringify(obj))
 	}
-  
-  handlerPlayer(email: string, x: () => void) {
-    WebSckts.register(Action.S_PLAYER, (response: string) => {
-      const res = JSON.parse(response)
-      if (res.email === email) {
-        this.onResponsePlayer(res)
-        console.log(res)
-        x()
-      }	
-    })
-  }
 
-  onLoginSuccess (player: Player, x: () => void){
-    this.handlerPlayer(player.email, x)
-    const obj = {action: Action.BEGIN, person: player}
-    WebSckts.send(Action.BEGIN, JSON.stringify(obj))
-  }
+	handlerPlayer(email: string, x: () => void) {
+		WebSckts.register(Action.S_PLAYER, (response: string) => {
+			const res = JSON.parse(response)
+			if (res.email === email) {
+				this.onResponsePlayer(res)
+				console.log(res)
+				x()
+			}
+		})
+	}
 
-  handlers() {
-    this.handlerActiveQuiz()
-    this.handlersQuestions()
-  }
+	onLoginSuccess(player: Player, x: () => void) {
+		this.handlerPlayer(player.email, x)
+		const obj = { action: Action.BEGIN, person: player }
+		WebSckts.send(Action.BEGIN, JSON.stringify(obj))
+	}
+
+	handlers() {
+		this.handlerActiveQuiz()
+		this.handlersQuestions()
+	}
 
 	handlerActiveQuiz() {
 		WebSckts.register(Action.S_ACTIVE, this.onResponseActive)
@@ -151,7 +151,7 @@ export class DataStoreManager {
 			players: parseInt(entries.get(Entry_PlayersInATeam) || '4'),
 			questions: parseInt(entries.get(Entry_Questions_Count) || '20')
 		}
-		const obj = { action:Action.SPECS, person: this.dataStore.player, specs: specs }
+		const obj = { action: Action.SPECS, person: this.dataStore.player, specs: specs }
 		this.handlerQuizmaster()
 		WebSckts.send(Action.SPECS, JSON.stringify(obj))
 	}
@@ -171,7 +171,7 @@ export class DataStoreManager {
 	}
 
 	start() {
-    const obj = { action: Action.START, snapshot: this.dataStore.snapshotRequest }
+		const obj = { action: Action.START, snapshot: this.dataStore.snapshotRequest }
 		WebSckts.send(Action.START, JSON.stringify(obj))
 	}
 
@@ -196,51 +196,51 @@ export class DataStoreManager {
 		WebSckts.send(Action.SCORE, JSON.stringify({ action: Action.SCORE, quiz_id: this.dataStore.quiz.id }))
 	}
 
-  onResponseStart(response: string) {
-    const res = JSON.parse(response)
-    if (this.canAcceptQuizSnapshot(res)) {
-      this.dataStore.setSnapshot(res)
-      this.dataStore.setReady(true)
-    }
-  }
+	onResponseStart(response: string) {
+		const res = JSON.parse(response)
+		if (this.canAcceptQuizSnapshot(res)) {
+			this.dataStore.setSnapshot(res)
+			this.dataStore.setReady(true)
+		}
+	}
 
-  onResponseHint(response: string) {
-    const res = JSON.parse(response)
-    if (this.canAcceptQuestionSnapshot(res)) {
-      this.dataStore.setSnapshot(res)
-      this.dataStore.setHintRevealed(true)
-    }
-  }
+	onResponseHint(response: string) {
+		const res = JSON.parse(response)
+		if (this.canAcceptQuestionSnapshot(res)) {
+			this.dataStore.setSnapshot(res)
+			this.dataStore.setHintRevealed(true)
+		}
+	}
 
-  onResponsePass(response: string) {
-    const res = JSON.parse(response)
-    if (this.canAcceptQuestionSnapshot(res)) {
-      this.dataStore.setSnapshot(res)
-    }
-  }
+	onResponsePass(response: string) {
+		const res = JSON.parse(response)
+		if (this.canAcceptQuestionSnapshot(res)) {
+			this.dataStore.setSnapshot(res)
+		}
+	}
 
-  onResponseRight(response: string) {
-    const res = JSON.parse(response)
-    if (this.canAcceptQuestionSnapshot(res)) {
-      this.dataStore.setSnapshot(res)
-      this.dataStore.setAnswerRevealed(true)
-    }
-  }
+	onResponseRight(response: string) {
+		const res = JSON.parse(response)
+		if (this.canAcceptQuestionSnapshot(res)) {
+			this.dataStore.setSnapshot(res)
+			this.dataStore.setAnswerRevealed(true)
+		}
+	}
 
-  onResponseNext(response: string) {
-    const res = JSON.parse(response)
-    if (this.canAcceptQuizSnapshot(res)) {
-      this.dataStore.setSnapshot(res)
-      this.dataStore.setAnswerRevealed(false)
-      this.dataStore.setHintRevealed(false)
-    }
-  }
+	onResponseNext(response: string) {
+		const res = JSON.parse(response)
+		if (this.canAcceptQuizSnapshot(res)) {
+			this.dataStore.setSnapshot(res)
+			this.dataStore.setAnswerRevealed(false)
+			this.dataStore.setHintRevealed(false)
+		}
+	}
 
-  canAcceptQuizSnapshot(response: Snap): boolean {
-    return response.quiz_id === this.dataStore.quizId
-  }
+	canAcceptQuizSnapshot(response: Snap): boolean {
+		return response.quiz_id === this.dataStore.quizId
+	}
 
-  canAcceptQuestionSnapshot(response: Snap): boolean {
-    return response.quiz_id === this.dataStore.quizId && response.question_id === this.dataStore.questionId
-  }
+	canAcceptQuestionSnapshot(response: Snap): boolean {
+		return response.quiz_id === this.dataStore.quizId && response.question_id === this.dataStore.questionId
+	}
 }

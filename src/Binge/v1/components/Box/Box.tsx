@@ -3,5 +3,5 @@ type Props = {
 }
 
 export const Box = (props: Props) => {
-  return <div style={{height: props.height}} />
+  return <div style={{ height: props.height }} />
 }

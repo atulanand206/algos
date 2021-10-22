@@ -6,11 +6,11 @@ type Props = {
 }
 
 export const Controller = (props: Props) => {
-	
-  useEffect(() => {
+
+	useEffect(() => {
 		DataStoreManager._instance.handlers()
 	})
-		
+
 	return (
 		<Switcher />
 	)
