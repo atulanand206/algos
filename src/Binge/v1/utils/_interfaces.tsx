@@ -16,6 +16,13 @@ export type Team = {
     players: Player[]
 }
 
+export type TeamRoster = {
+    id: string
+    name: string
+    score: number
+    players: Player[]
+}
+
 export type Specs = {
     teams: number
     players: number
@@ -40,6 +47,7 @@ export type Answer = {
 export type Snap = {
     quiz_id: string
     round_no: number
+    roster: TeamRoster[]
     question_no: number
     question_id: string
     team_s_turn: string

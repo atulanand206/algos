@@ -1,12 +1,11 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { Box } from "../../components/Box/Box"
 import { Form } from "../../components/Form/Form"
 import { Header } from "../../components/Header/Header"
+import { DataStoreManager } from "../../dataStore/DataStoreManager"
 import './Credentials.scss'
 
 type Props = {
-	type: string
-	enter: (action: string, entries: Map<string, string>) => void
 }
 
 export const Header_Credentials = 'credentials?'
@@ -30,12 +29,12 @@ export const Credentials = (props: Props) => {
 	const [entries, setEntries] = useState(new Map())
 	const [formReset, setFormReset] = useState(false)
 
-	useEffect(() => {
-		setFormReset(true)
-	}, [props.type])
+	// useEffect(() => {
+	// 	setFormReset(true)
+	// }, [props.type])
 
 	const submit = (action: string) => {
-		props.enter(action, entries)
+		DataStoreManager._instance.formEntered(action, entries)
 		entries.clear()
 		setEntries(entries)
 	}
@@ -79,7 +78,7 @@ export const Credentials = (props: Props) => {
 		onChange={onChange} />
 
 	const form = () => {
-		switch (props.type) {
+		switch (DataStoreManager._instance.dataStore.formType) {
 			case Form_Credentials: return credentialsForm
 			case Form_QuizMaster: return quizMasterSpecsForm
 			case Form_Player: return playerSpecsForm
