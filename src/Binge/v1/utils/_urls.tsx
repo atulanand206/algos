@@ -4,27 +4,17 @@ export type BQUrl = {
 
 export class Urls {
 
-  static toReception() {
-    window.location.href = '/reception'
-  }
+  static toReception = () => this.toPage('/reception')
 
-  static toLobby() {
-    window.location.href = '/lobby'
-  }
+  static toLobby = () => this.toPage('/lobby')
 
-  static toQuiz() {
-    window.location.href = '/quiz'
-  }
+  static toQuiz = () => this.toPage('/quiz')
 
-  static toCreate() {
-    window.location.href = '/create'
-  }
+  static toCreate = () => this.toPage('/create')
 
-  static toJoin() {
-    window.location.href = '/join'
-  }
+  static toJoin = () => this.toPage('/join')
 
-  static toWatch() {
-    window.location.href = '/watch'
-  }
+  static toWatch= () => this.toPage('/watch')
+
+  static toPage = (url: string) => window.location.href = url
 }
