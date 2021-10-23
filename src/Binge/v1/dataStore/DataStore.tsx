@@ -60,10 +60,10 @@ export class DataStore {
   hintRevealed = false
 
   constructor() {
-    makeAutoObservable(this)
     if (DataStore._instance) {
       return DataStore._instance
     }
+    makeAutoObservable(this)
     DataStore._instance = this
   }
 
@@ -79,6 +79,9 @@ export class DataStore {
     this.player = player
   }
 
+  get getPlayer() {
+    return this.player
+  }
   setQuiz(quiz: Game) {
     this.quiz = quiz
   }

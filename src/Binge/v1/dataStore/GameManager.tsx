@@ -1,29 +1,30 @@
+import { toJS } from "mobx"
 import { ROLE_PLAYER, ROLE_QUIZMASTER } from "../../Features/Features"
-import { Entry_TeamsInAQuiz, Entry_PlayersInATeam, Entry_Questions_Count, Entry_QuizId, Action_Create, Action_Join, Action_Watch, Form_Audience, Form_Credentials, Form_Player, Form_QuizMaster } from "../pages/Credentials/Credentials"
+import { Entry_TeamsInAQuiz, Entry_PlayersInATeam, Entry_Questions_Count, Entry_QuizId, Action_Create, Action_Join, Action_Watch, Form_Audience, Form_Player, Form_QuizMaster } from "../pages/Credentials/Credentials"
 import { Action } from "../utils/Action"
 import { Player, Snap } from "../utils/_interfaces"
+import { Urls } from "../utils/_urls"
 import { WebSckts } from "../utils/_websockets"
 import { DataStore } from "./DataStore"
 
-export class DataStoreManager {
+export class GameManager {
 
-	static _instance: DataStoreManager
+	static _instance: GameManager
 
 	dataStore: DataStore = new DataStore()
 
 	constructor() {
-		if (DataStoreManager._instance) {
-			return DataStoreManager._instance
+		if (GameManager._instance) {
+			return GameManager._instance
 		}
-		DataStoreManager._instance = this
+		GameManager._instance = this
 	}
 
 	formEntered(action: string, entries: Map<string, string>) {
-		switch (this.dataStore.formType) {
-			case Form_Credentials: this.onPlayerCreated(action); break;
-			case Form_QuizMaster: this.createQuiz(entries); break;
-			case Form_Player: this.joinPlayer(entries); break;
-			case Form_Audience: this.joinAudience(entries); break;
+		switch (action) {
+			case Action_Create: this.createQuiz(entries); break;
+			case Action_Join: this.joinPlayer(entries); break;
+			case Action_Watch: this.joinAudience(entries); break;
 		}
 	}
 
@@ -32,58 +33,49 @@ export class DataStoreManager {
 			case Action_Create:
 				this.dataStore.setFormType(Form_QuizMaster)
 				this.dataStore.setRole(ROLE_QUIZMASTER)
+				Urls.toCreate()
 				break
 			case Action_Join:
 				this.dataStore.setFormType(Form_Player)
 				this.dataStore.setRole(ROLE_PLAYER)
+				Urls.toJoin()
 				break
 			case Action_Watch:
 				this.dataStore.setFormType(Form_Audience)
+				Urls.toWatch()
 				break
 		}
 	}
 
 	onResponsePlayer(player: Player) {
+		console.log(player)
 		this.dataStore.setPlayer(player)
-		this.dataStore.setLaunched(true)
+		Urls.toReception()
 	}
 
 	onResponseCreateGame(response: string) {
 		const res = JSON.parse(response)
 		if (res.quiz.quizmaster.id === this.dataStore.player.id) {
 			this.dataStore.setSnapshot(res)
-			this.dataStore.setEntered(true)
+			Urls.toLobby()
 		}
 	}
 
 	onResponseJoinGame(response: string, quizId: string) {
 		const res = JSON.parse(response)
 		console.log(res)
-		if (DataStoreManager._instance.canAcceptQuizSnapshot(res)) {
+		if (GameManager._instance.canAcceptQuizSnapshot(res)) {
 			if (res.quiz.quizmaster.id === this.dataStore.player.id) {
 				this.dataStore.setRole(ROLE_QUIZMASTER)
 			}
 			if (res.quiz.active) {
 				this.dataStore.setSnapshot(res)
-				this.dataStore.setReady(true)
+				Urls.toQuiz()
 			} else {
-				this.dataStore.setEntered(true)
+				Urls.toLobby()
 			}
 		}
 	}
-
-	onResponseWatchGame(response: string, quizId: string) {
-		const res = JSON.parse(response)
-		if (DataStoreManager._instance.canAcceptQuizSnapshot(res)) {
-			if (res.quiz.active) {
-				this.dataStore.setSnapshot(res)
-				this.dataStore.setReady(true)
-			} else {
-				this.dataStore.setEntered(true)
-			}
-		}
-	}
-
 
 	onResponseScore(response: string) {
 	}
@@ -93,24 +85,23 @@ export class DataStoreManager {
 	}
 
 	onResponseRefresh() {
-		const obj = { person: DataStore._instance.player, quiz_id: DataStore._instance.quiz.id }
+		const obj = { action: Action.toString(Action.REFRESH), person: DataStore._instance.player, quiz_id: DataStore._instance.quiz.id }
 		WebSckts.send(Action.REFRESH, JSON.stringify(obj))
 	}
 
-	handlerPlayer(email: string, x: () => void) {
+	handlerPlayer(email: string) {
 		WebSckts.register(Action.S_PLAYER, (response: string) => {
 			const res = JSON.parse(response)
+			console.log(res)
 			if (res.email === email) {
 				this.onResponsePlayer(res)
-				console.log(res)
-				x()
 			}
 		})
 	}
 
-	onLoginSuccess(player: Player, x: () => void) {
-		this.handlerPlayer(player.email, x)
-		const obj = { action: Action.BEGIN, person: player }
+	onLoginSuccess(player: Player) {
+		this.handlerPlayer(player.email)
+		const obj = { action: Action.toString(Action.BEGIN), person: player }
 		WebSckts.send(Action.BEGIN, JSON.stringify(obj))
 	}
 
@@ -133,7 +124,7 @@ export class DataStoreManager {
 	}
 
 	handlerAudience(quizId: string) {
-		WebSckts.register(Action.S_GAME, (res) => this.onResponseWatchGame(res, quizId))
+		WebSckts.register(Action.S_GAME, (res) => this.onResponseJoinGame(res, quizId))
 	}
 
 	handlersQuestions() {
@@ -151,32 +142,33 @@ export class DataStoreManager {
 			players: parseInt(entries.get(Entry_PlayersInATeam) || '4'),
 			questions: parseInt(entries.get(Entry_Questions_Count) || '20')
 		}
-		const obj = { action: Action.SPECS, person: this.dataStore.player, specs: specs }
+		const obj = { action: Action.toString(Action.SPECS), person: toJS(this.dataStore.player), specs: specs }
+		console.log(obj)
 		this.handlerQuizmaster()
 		WebSckts.send(Action.SPECS, JSON.stringify(obj))
 	}
 
 	joinPlayer(entries: Map<string, string>) {
 		const quizId = entries.get(Entry_QuizId) || ''
-		const obj = { action: Action.JOIN, person: this.dataStore.player, quiz_id: quizId }
+		const obj = { action: Action.toString(Action.JOIN), person: this.dataStore.player, quiz_id: quizId }
 		this.handlerJoinPlayer(quizId)
 		WebSckts.send(Action.JOIN, JSON.stringify(obj))
 	}
 
 	joinAudience(entries: Map<string, string>) {
 		const quizId = entries.get(Entry_QuizId) || ''
-		const obj = { action: Action.WATCH, person: this.dataStore.player, quiz_id: quizId }
+		const obj = { action: Action.toString(Action.WATCH), person: this.dataStore.player, quiz_id: quizId }
 		this.handlerAudience(quizId)
 		WebSckts.send(Action.WATCH, JSON.stringify(obj))
 	}
 
 	start() {
-		const obj = { action: Action.START, snapshot: this.dataStore.snapshotRequest }
+		const obj = { action: Action.toString(Action.START), snapshot: this.dataStore.snapshotRequest }
 		WebSckts.send(Action.START, JSON.stringify(obj))
 	}
 
 	queryActive() {
-		WebSckts.send(Action.ACTIVE, JSON.stringify({ action: Action.ACTIVE }))
+		WebSckts.send(Action.ACTIVE, JSON.stringify({ action: Action.toString(Action.ACTIVE) }))
 	}
 
 	queryExtend() {
@@ -193,7 +185,7 @@ export class DataStoreManager {
 	}
 
 	queryScore() {
-		WebSckts.send(Action.SCORE, JSON.stringify({ action: Action.SCORE, quiz_id: this.dataStore.quiz.id }))
+		WebSckts.send(Action.SCORE, JSON.stringify({ action: Action.toString(Action.SCORE), quiz_id: this.dataStore.quiz.id }))
 	}
 
 	onResponseStart(response: string) {

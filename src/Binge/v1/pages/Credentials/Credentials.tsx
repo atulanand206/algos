@@ -2,7 +2,7 @@ import { useState } from "react"
 import { Box } from "../../components/Box/Box"
 import { Form } from "../../components/Form/Form"
 import { Header } from "../../components/Header/Header"
-import { DataStoreManager } from "../../dataStore/DataStoreManager"
+import { GameManager } from "../../dataStore/GameManager"
 import './Credentials.scss'
 
 type Props = {
@@ -24,17 +24,13 @@ export const Form_QuizMaster = 'quizmaster'
 export const Form_Player = 'player'
 export const Form_Audience = 'audience'
 
-export const Credentials = (props: Props) => {
-
+export const Reception = (props: Props) => {
+	
 	const [entries, setEntries] = useState(new Map())
 	const [formReset, setFormReset] = useState(false)
 
-	// useEffect(() => {
-	// 	setFormReset(true)
-	// }, [props.type])
-
 	const submit = (action: string) => {
-		DataStoreManager._instance.formEntered(action, entries)
+		GameManager._instance.onPlayerCreated(action)
 		entries.clear()
 		setEntries(entries)
 	}
@@ -53,6 +49,32 @@ export const Credentials = (props: Props) => {
 		onSubmit={submit}
 		onChange={onChange} />
 
+	return (
+		<div className='credentials__wrapper'>
+			<Header />
+			{credentialsForm}
+			<Box height='8em' />
+		</div>
+	)
+}
+
+export const QuizCreator = (props: Props) => {
+	
+	const [entries, setEntries] = useState(new Map())
+	const [formReset, setFormReset] = useState(false)
+
+	const submit = (action: string) => {
+		GameManager._instance.formEntered(action, entries)
+		entries.clear()
+		setEntries(entries)
+	}
+
+	const onChange = (entry: string, value: any) => {
+		setFormReset(false)
+		entries.set(entry, value)
+		setEntries(entries)
+	}
+
 	const quizMasterSpecsForm = <Form
 		reset={formReset}
 		header={Header_Specs}
@@ -60,6 +82,32 @@ export const Credentials = (props: Props) => {
 		actions={[Action_Create]}
 		onSubmit={submit}
 		onChange={onChange} />
+
+	return (
+		<div className='credentials__wrapper'>
+			<Header />
+			{quizMasterSpecsForm}
+			<Box height='8em' />
+		</div>
+	)
+}
+
+export const QuizJoiner = (props: Props) => {
+	
+	const [entries, setEntries] = useState(new Map())
+	const [formReset, setFormReset] = useState(false)
+
+	const submit = (action: string) => {
+		GameManager._instance.formEntered(action, entries)
+		entries.clear()
+		setEntries(entries)
+	}
+
+	const onChange = (entry: string, value: any) => {
+		setFormReset(false)
+		entries.set(entry, value)
+		setEntries(entries)
+	}
 
 	const playerSpecsForm = <Form
 		reset={formReset}
@@ -69,6 +117,33 @@ export const Credentials = (props: Props) => {
 		onSubmit={submit}
 		onChange={onChange} />
 
+
+	return (
+		<div className='credentials__wrapper'>
+			<Header />
+			{playerSpecsForm}
+			<Box height='8em' />
+		</div>
+	)
+}
+
+export const QuizWatcher = (props: Props) => {
+	
+	const [entries, setEntries] = useState(new Map())
+	const [formReset, setFormReset] = useState(false)
+
+	const submit = (action: string) => {
+		GameManager._instance.formEntered(action, entries)
+		entries.clear()
+		setEntries(entries)
+	}
+
+	const onChange = (entry: string, value: any) => {
+		setFormReset(false)
+		entries.set(entry, value)
+		setEntries(entries)
+	}
+
 	const audienceSpecsForm = <Form
 		reset={formReset}
 		header={Header_Specs}
@@ -77,19 +152,10 @@ export const Credentials = (props: Props) => {
 		onSubmit={submit}
 		onChange={onChange} />
 
-	const form = () => {
-		switch (DataStoreManager._instance.dataStore.formType) {
-			case Form_Credentials: return credentialsForm
-			case Form_QuizMaster: return quizMasterSpecsForm
-			case Form_Player: return playerSpecsForm
-			case Form_Audience: return audienceSpecsForm
-		}
-	}
-
 	return (
 		<div className='credentials__wrapper'>
 			<Header />
-			{form()}
+			{audienceSpecsForm}
 			<Box height='8em' />
 		</div>
 	)

@@ -1,37 +1,26 @@
-import { useEffect } from "react";
-import { useHistory, Router, Switch, Route } from "react-router-dom";
-import { Board } from "../pages/Board/Board";
-import { Credentials } from "../pages/Credentials/Credentials";
-import { Landing } from "../pages/Landing/Landing";
-import { Lobby } from "../pages/Lobby/Lobby";
+import { Switch, Route, BrowserRouter } from "react-router-dom"
+import { Board } from "../pages/Board/Board"
+import { QuizCreator, QuizJoiner, QuizWatcher, Reception } from "../pages/Credentials/Credentials"
+import { Landing } from "../pages/Landing/Landing"
+import { Lobby } from "../pages/Lobby/Lobby"
+import './../controller/Controller.scss'
 
-type SwitchProps = {
-
-}
+type SwitchProps = {}
 
 export const Switcher = (props: SwitchProps) => {
-
-  const history = useHistory();
-
-  useEffect(() => {
-    history.push("/")
-    console.log(history)
-  })
-
-  const onLoginSuccess = () => {
-    history.push('/reception')
-  }
-
   return (
-    <Router history={history} >
-      <div>
+    <div className='quiz__wrapper'>
+      <BrowserRouter >
         <Switch >
-          <Route path="/reception" render={() => <Credentials />} />
-          <Route path='/quiz' render={() => <Board />} />
-          <Route path='/lobby' render={() => <Lobby />} />
-          <Route exact path="/" render={() => <Landing onLoginSuccess={onLoginSuccess} />} />
+          <Route path="/reception" component={Reception} />
+          <Route path="/create" component={QuizCreator} />
+          <Route path="/join" component={QuizJoiner} />
+          <Route path="/watch" component={QuizWatcher} />
+          <Route path='/quiz' component={Board} />
+          <Route path='/lobby' component={Lobby} />
+          <Route exact path="/" component={Landing} />
         </Switch>
-      </div>
-    </Router>
+      </BrowserRouter>
+    </div>
   )
 }

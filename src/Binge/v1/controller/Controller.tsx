@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { DataStoreManager } from '../dataStore/DataStoreManager'
+import { GameManager } from '../dataStore/GameManager'
 import { Switcher } from '../Switcher/Switcher'
 
 type Props = {
@@ -8,7 +8,7 @@ type Props = {
 export const Controller = (props: Props) => {
 
 	useEffect(() => {
-		DataStoreManager._instance.handlers()
+		GameManager._instance.handlers()
 	})
 
 	return (

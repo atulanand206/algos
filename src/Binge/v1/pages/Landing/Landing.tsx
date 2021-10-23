@@ -1,10 +1,10 @@
 import { Box } from "@material-ui/core"
 import GoogleLogin from "react-google-login"
-import { DataStoreManager } from "../../dataStore/DataStoreManager"
+import { GameManager } from "../../dataStore/GameManager"
 import { Player } from "../../utils/_interfaces"
+import './Landing.scss'
 
 type LandingProps = {
-	onLoginSuccess: () => void
 }
 
 export const Landing = (props: LandingProps) => {
@@ -12,7 +12,8 @@ export const Landing = (props: LandingProps) => {
 	const responseGoogle = (response: any) => {
 		const profile = response.profileObj
 		const obj: Player = { id: profile.googleId, name: profile.name, email: profile.email }
-		DataStoreManager._instance.onLoginSuccess(obj, props.onLoginSuccess)
+		console.log(obj)
+		GameManager._instance.onLoginSuccess(obj)
 	}
 
 	const glogin = () => {
