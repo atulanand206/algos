@@ -1,8 +1,10 @@
 import { useState } from "react"
+import { useSnapshot } from "valtio"
 import { Box } from "../../components/Box/Box"
 import { Form } from "../../components/Form/Form"
 import { Header } from "../../components/Header/Header"
-import { GameManager } from "../../dataStore/GameManager"
+import * as GameManager from "../../dataStore/GameManager"
+import { state } from "../../state/State"
 import './Credentials.scss'
 
 type Props = {
@@ -26,11 +28,12 @@ export const Form_Audience = 'audience'
 
 export const Reception = (props: Props) => {
 	
+	const snap = useSnapshot(state)
 	const [entries, setEntries] = useState(new Map())
 	const [formReset, setFormReset] = useState(false)
 
 	const submit = (action: string) => {
-		GameManager._instance.onPlayerCreated(action)
+		GameManager.onPlayerCreated(snap, action)
 		entries.clear()
 		setEntries(entries)
 	}
@@ -60,11 +63,12 @@ export const Reception = (props: Props) => {
 
 export const QuizCreator = (props: Props) => {
 	
+	const snap = useSnapshot(state)
 	const [entries, setEntries] = useState(new Map())
 	const [formReset, setFormReset] = useState(false)
 
 	const submit = (action: string) => {
-		GameManager._instance.formEntered(action, entries)
+		GameManager.formEntered(snap, action, entries)
 		entries.clear()
 		setEntries(entries)
 	}
@@ -94,11 +98,12 @@ export const QuizCreator = (props: Props) => {
 
 export const QuizJoiner = (props: Props) => {
 	
+	const snap = useSnapshot(state)
 	const [entries, setEntries] = useState(new Map())
 	const [formReset, setFormReset] = useState(false)
 
 	const submit = (action: string) => {
-		GameManager._instance.formEntered(action, entries)
+		GameManager.formEntered(snap, action, entries)
 		entries.clear()
 		setEntries(entries)
 	}
@@ -129,11 +134,12 @@ export const QuizJoiner = (props: Props) => {
 
 export const QuizWatcher = (props: Props) => {
 	
+	const snap = useSnapshot(state)
 	const [entries, setEntries] = useState(new Map())
 	const [formReset, setFormReset] = useState(false)
 
 	const submit = (action: string) => {
-		GameManager._instance.formEntered(action, entries)
+		GameManager.formEntered(snap, action, entries)
 		entries.clear()
 		setEntries(entries)
 	}

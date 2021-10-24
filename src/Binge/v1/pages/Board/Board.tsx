@@ -1,35 +1,39 @@
 import { Divider } from "@material-ui/core"
-import { ROLE_QUIZMASTER, ROLE_PLAYER } from "../../../Features/Features"
+import { ROLE_QUIZMASTER, ROLE_PLAYER } from "../../features/Features"
 import { Header } from "../../components/Header/Header"
 import { Query } from "../../components/Query/Query"
 import { State } from "../../components/State/State"
-import { GameManager } from "../../dataStore/GameManager"
+import { snapshotRequest, getPlayersTeamId } from "../../dataStore/DataStore"
 import { Action } from "../../utils/Action"
 import { WebSckts } from "../../utils/_websockets"
+import { state } from "./../../state/State"
+import { useSnapshot } from "valtio"
 
 type BoardProps = {
 }
 
 export const Board = (props: BoardProps) => {
 
+	const snap = useSnapshot(state)
+
 	const quizIdCopied = () => {
-		navigator.clipboard.writeText(GameManager._instance.dataStore.snapshot.quiz_id)
+		navigator.clipboard.writeText(snap.snapshot.quiz_id)
 	}
 
 	const visHint = () => {
-		return GameManager._instance.dataStore.role === ROLE_QUIZMASTER
+		return snap.role === ROLE_QUIZMASTER
 	}
 
 	const visPass = () => {
-		return GameManager._instance.dataStore.role === ROLE_PLAYER && GameManager._instance.dataStore.snapshot.team_s_turn === GameManager._instance.dataStore.getPlayersTeamId
+		return snap.role === ROLE_PLAYER && snap.snapshot.team_s_turn === getPlayersTeamId(snap)
 	}
 
 	const visRight = () => {
-		return GameManager._instance.dataStore.role === ROLE_QUIZMASTER && GameManager._instance.dataStore.snapshot.event_type !== "RIGHT"
+		return snap.role === ROLE_QUIZMASTER && snap.snapshot.event_type !== "RIGHT"
 	}
 
 	const visNext = () => {
-		return GameManager._instance.dataStore.role === ROLE_QUIZMASTER && GameManager._instance.dataStore.snapshot.event_type === "RIGHT"
+		return snap.role === ROLE_QUIZMASTER && snap.snapshot.event_type === "RIGHT"
 	}
 
 	const removePunctuations = (str: string) => {
@@ -37,22 +41,22 @@ export const Board = (props: BoardProps) => {
 	}
 
 	const queryHint = () => {
-		const obj = { action: Action.toString(Action.HINT), snapshot: GameManager._instance.dataStore.snapshotRequest }
+		const obj = { action: Action.toString(Action.HINT), snapshot: snapshotRequest(snap) }
 		WebSckts.send(Action.HINT, JSON.stringify(obj))
 	}
 
 	const queryRight = () => {
-		const obj = { action: Action.toString(Action.RIGHT), snapshot: GameManager._instance.dataStore.snapshotRequest }
+		const obj = { action: Action.toString(Action.RIGHT), snapshot: snapshotRequest(snap) }
 		WebSckts.send(Action.RIGHT, JSON.stringify(obj))
 	}
 
 	const queryNext = () => {
-		const obj = { action: Action.toString(Action.NEXT), snapshot: GameManager._instance.dataStore.snapshotRequest }
+		const obj = { action: Action.toString(Action.NEXT), snapshot: snapshotRequest(snap) }
 		WebSckts.send(Action.NEXT, JSON.stringify(obj))
 	}
 
 	const queryPass = () => {
-		const obj = { action: Action.toString(Action.PASS), snapshot: GameManager._instance.dataStore.snapshotRequest }
+		const obj = { action: Action.toString(Action.PASS), snapshot: snapshotRequest(snap) }
 		WebSckts.send(Action.PASS, JSON.stringify(obj))
 	}
 
@@ -79,9 +83,9 @@ export const Board = (props: BoardProps) => {
 	const HeaderFixed = <div className='board__dets board__dets--fixed'>
 		<Header />
 		<div className='board__dets--sub'>
-			<p className='board__info'>{`${GameManager._instance.dataStore.snapshot.question_no} - ${GameManager._instance.dataStore.snapshot.round_no}`}</p>
-			<p className='board__name'>{GameManager._instance.dataStore.player.name}</p>
-			<p className='board__quizid' onClick={quizIdCopied}>Quiz id: {removePunctuations(GameManager._instance.dataStore.snapshot.quiz_id)}</p>
+			<p className='board__info'>{`${snap.snapshot.question_no} - ${snap.snapshot.round_no}`}</p>
+			<p className='board__name'>{snap.player.name}</p>
+			<p className='board__quizid' onClick={quizIdCopied}>Quiz id: {removePunctuations(snap.snapshot.quiz_id)}</p>
 		</div>
 	</div>
 
@@ -105,19 +109,19 @@ export const Board = (props: BoardProps) => {
 		<div className='board__body'>
 			<Divider />
 			<div className='board__column board__column--left'>
-				<div className='board__questions'>{GameManager._instance.dataStore.snapshot.question && GameManager._instance.dataStore.snapshot.question.map(line => <p className='board__questions--line'>{line}</p>)}</div>
+				<div className='board__questions'>{snap.snapshot.question && snap.snapshot.question.map(line => <p className='board__questions--line'>{line}</p>)}</div>
 			</div>
 			<Divider />
 			<div className='board__column board__column--left'>
-				<p className='board__hint'>{GameManager._instance.dataStore.hintRevealed && GameManager._instance.dataStore.snapshot.hint}</p>
+				<p className='board__hint'>{snap.hintRevealed && snap.snapshot.hint}</p>
 			</div>
 			<Divider />
 			<div className='board__answers'>
-				<p className='board__answer'>{GameManager._instance.dataStore.answerRevealed && GameManager._instance.dataStore.snapshot.answer}</p>
+				<p className='board__answer'>{snap.answerRevealed && snap.snapshot.answer}</p>
 			</div>
 			<Divider />
 			<div className='board__column board__column--right'>
-				<State teams={GameManager._instance.dataStore.snapshot.roster} currentTeamId={GameManager._instance.dataStore.snapshot.team_s_turn} />
+				<State teams={snap.snapshot.teams} currentTeamId={snap.snapshot.team_s_turn} />
 			</div>
 			<Divider />
 		</div>

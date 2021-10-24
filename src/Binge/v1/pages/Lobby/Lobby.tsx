@@ -1,33 +1,37 @@
 import classNames from "classnames"
-import { ROLE_QUIZMASTER } from "../../../Features/Features"
+import { ROLE_QUIZMASTER } from "../../features/Features"
 import { Box } from "../../components/Box/Box"
 import { Popover } from "../../components/Popover/Popover"
 import { Query } from "../../components/Query/Query"
 import { TextField } from "../../components/TextField/TextField"
-import { GameManager } from "../../dataStore/GameManager"
-import { Player, Team } from "../../utils/_interfaces"
+import * as GameManager from "../../dataStore/GameManager"
+import { Player, Team, TeamRoster } from "../../utils/_interfaces"
 import './Lobby.scss'
+import { useSnapshot } from "valtio"
+import { state } from "../../state/State"
 
 type Props = {
 }
 
 export const Lobby = (props: Props) => {
 
+  const snap = useSnapshot(state)
+
   const start = () => {
     if (!filled()) return;
-    GameManager._instance.start()
+    GameManager.start(snap)
   }
 
   const quizIdCopied = () => {
-    navigator.clipboard.writeText(GameManager._instance.dataStore.quiz.id)
+    navigator.clipboard.writeText(snap.quiz.id)
   }
 
   const renderPlayer = (player: Player, props: Props) => {
-    return <TextField key={player.email} value={player.name} editable={GameManager._instance.dataStore.player.id === player.id} />
+    return <TextField key={player.email} value={player.name} editable={snap.player.id === player.id} />
   }
 
   const playerInTeam = (team: Team) => {
-    return team.players.filter((player) => player.id === GameManager._instance.dataStore.player.id).length !== 0
+    return team.players.filter((player) => player.id === snap.player.id).length !== 0
   }
 
   const emptyPlayer = () => {
@@ -35,11 +39,11 @@ export const Lobby = (props: Props) => {
   }
 
   const remainingItems = (team: Team) => {
-    return GameManager._instance.dataStore.quiz.specs.players - team.players.length
+    return snap.quiz.specs.players - team.players.length
   }
 
   const filled = () => {
-    return GameManager._instance.dataStore.snapshot.roster.filter((team) => remainingItems(team) === 0).length === GameManager._instance.dataStore.quiz.specs.teams;
+    return snap.snapshot.teams.filter((team) => remainingItems(team) === 0).length === snap.quiz.specs.teams;
   }
 
   const empty = (team: Team) => {
@@ -59,25 +63,38 @@ export const Lobby = (props: Props) => {
     return str.replace('["-.,:;!@#$%^&*()_+="]', "").toUpperCase()
   }
 
+  const tm = (team: TeamRoster) => {
+    return team.players.map((player, ix) => <Popover content={renderPlayer(player, props)} key={`popover container ${ix}`} />)
+  }
+
+  const teamRoster = (team: TeamRoster) => {
+    return <div className='' key={`roster team ${team.id}`}>
+      {tm(team)}
+      {remainingItems(team) && empty(team).map(ent => ent)}
+    </div>
+  }
+
+  const roster = () => {
+    <div className='lobby__teams'>
+      {snap.snapshot.teams.map((team, ix) =>
+        <div className='lobby__team' key={`lobby ${ix}`}>
+          <p className={classNames('lobby__team--name', playerInTeam(team) && 'lobby__team--name--editable')}>{team.name}</p>
+          {teamRoster(team)}
+        </div>)}
+    </div>
+  }
+
   return (
     <div className='lobby__wrapper'>
       <p className='lobby__logo'>Binquiz</p>
-      <p className='lobby__quiz--id--value' onClick={quizIdCopied}>Quiz Id: {removePunctuations(GameManager._instance.dataStore.quiz.id)}</p>
-      <p className='lobby__quiz--id--label'>Quizmaster: {GameManager._instance.dataStore.quiz.quizmaster.name}</p>
-      <div className='lobby__teams'>
-        {GameManager._instance.dataStore.snapshot.roster.map((team) =>
-          <div className='lobby__team'>
-            <p className={classNames('lobby__team--name', playerInTeam(team) && 'lobby__team--name--editable')}>{team.name}</p>
-            {team.players.map((player) =>
-              <Popover content={renderPlayer(player, props)} />)}
-            {empty(team).map(ent => ent)}
-          </div>)}
-      </div>
+      <p className='lobby__quiz--id--value' onClick={quizIdCopied}>Quiz Id: {removePunctuations(snap.quiz.id)}</p>
+      <p className='lobby__quiz--id--label'>Quizmaster: {snap.quiz.quizmaster.name}</p>
+      {roster()}
       <Box height='4em' />
       {waiting}
       <Query
-        label={!filled() ? 'waiting...' : (GameManager._instance.dataStore.role === ROLE_QUIZMASTER) ? 'start' : ''}
-        visible={!(filled() && GameManager._instance.dataStore.role !== ROLE_QUIZMASTER)}
+        label={!filled() ? 'waiting...' : (snap.role === ROLE_QUIZMASTER) ? 'start' : ''}
+        visible={!(filled() && snap.role !== ROLE_QUIZMASTER)}
         onClick={() => {
           if (filled()) start()
         }}></Query>

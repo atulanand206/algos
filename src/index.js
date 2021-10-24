@@ -4,7 +4,6 @@ import './index.scss'
 import reportWebVitals from './reportWebVitals'
 import { Controller } from './Binge/v1/controller/Controller'
 import { WebSckts } from './Binge/v1/utils/_websockets'
-import { GameManager } from './Binge/v1/dataStore/GameManager'
 
 ReactDOM.render(
   <React.StrictMode>
@@ -14,7 +13,6 @@ ReactDOM.render(
 );
 
 new WebSckts()
-new GameManager()
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
