@@ -27,6 +27,7 @@ export type Specs = {
   teams: number;
   players: number;
   questions: number;
+  rounds: number;
 };
 
 export type Game = {

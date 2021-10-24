@@ -30,7 +30,8 @@ const state = proxy({
     timestamp: '',
     question: [''],
     answer: [''],
-    hint: ['']
+    hint: [''],
+    can_pass: false
   },
   quiz: {
     id: 'sdsadsadsads',
@@ -42,7 +43,8 @@ const state = proxy({
     specs: {
       teams: 4,
       players: 4,
-      questions: 4
+      questions: 4,
+      rounds: 2
     },
     tags: [''],
     active: false

@@ -26,7 +26,7 @@ export const Board = (props: BoardProps) => {
 	}
 
 	const visPass = () => {
-		return snap.role === ROLE_PLAYER && snap.snapshot.team_s_turn === getPlayersTeamId(snap) && snap.snapshot.event_type !== "RIGHT"
+		return snap.role === ROLE_PLAYER && snap.snapshot.team_s_turn === getPlayersTeamId(snap) && snap.snapshot.can_pass
 	}
 
 	const visRight = () => {

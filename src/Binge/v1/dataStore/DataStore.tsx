@@ -22,5 +22,5 @@ export const getPlayersTeamId = (snap: any) => {
 }
 
 export const snapshotRequest = (snap: any, action: Action) => {
-  return { action: Action.toString(action), quiz_id: snap.snapshot.quiz_id, team_s_turn: snap.snapshot.team_s_turn, question_id: snap.snapshot.question_id }
+  return { action: Action.toString(action), quiz_id: snap.snapshot.quiz_id, question_id: snap.snapshot.question_id }
 }
