@@ -1,4 +1,3 @@
-import { toJS } from "mobx"
 import { ROLE_PLAYER, ROLE_QUIZMASTER } from "../features/Features"
 import { Entry_TeamsInAQuiz, Entry_PlayersInATeam, Entry_Questions_Count, Entry_QuizId, Action_Create, Action_Join, Action_Watch } from "../pages/Credentials/Credentials"
 import { Action } from "../utils/Action"
@@ -40,25 +39,25 @@ export const onResponsePlayer = (snap: any, player: Player) => {
 export const onResponseCreateGame = (snap: any, response: string) => {
 	const res = JSON.parse(response)
 	if (res.quiz.quizmaster.id === snap.player.id) {
+		state.quiz = res.quiz
 		state.snapshot = res.snapshot
 		Urls.toLobby()
+		console.log(state)
 	}
 }
 
 export const onResponseJoinGame = (snap: any, response: string, quizId: string) => {
 	const res = JSON.parse(response)
 	console.log(res)
-	if (canAcceptQuizSnapshot(snap, res)) {
-		state.quiz = res.quiz
-		if (res.quiz.quizmaster.id === snap.player.id) {
-			state.role = ROLE_QUIZMASTER
-		}
-		if (res.quiz.active) {
-			state.snapshot = res.snapshot
-			Urls.toQuiz()
-		} else {
-			Urls.toLobby()
-		}
+	state.quiz = res.quiz
+	if (res.quiz.quizmaster.id === snap.player.id) {
+		state.role = ROLE_QUIZMASTER
+	}
+	state.snapshot = res.snapshot
+	if (res.quiz.active) {
+		Urls.toQuiz()
+	} else {
+		Urls.toLobby()
 	}
 }
 
@@ -101,23 +100,19 @@ export const handlerActiveQuiz = (snap: any) => {
 }
 
 export const handlerQuizmaster = (snap: any) => {
-	WebSckts.register(Action.S_GAME, (response: string) => onResponseCreateGame(snap, response))
+	WebSckts.register(Action.S_JOIN, (response: string) => onResponseCreateGame(snap, response))
 }
 
 export const handlerJoinPlayer = (snap: any, quizId: string) => {
-	WebSckts.register(Action.S_GAME, (res) => onResponseJoinGame(snap, res, quizId))
+	WebSckts.register(Action.S_JOIN, (res) => onResponseJoinGame(snap, res, quizId))
 }
 
 export const handlerAudience = (snap: any, quizId: string) => {
-	WebSckts.register(Action.S_GAME, (res) => onResponseJoinGame(snap, res, quizId))
+	WebSckts.register(Action.S_JOIN, (res) => onResponseJoinGame(snap, res, quizId))
 }
 
 export const handlersQuestions = (snap: any) => {
-	WebSckts.register(Action.S_START, (response: string) => onResponseStart(snap, response))
-	WebSckts.register(Action.S_HINT, (response: string) => onResponseHint(snap, response))
-	WebSckts.register(Action.S_PASS, (response: string) => onResponsePass(snap, response))
-	WebSckts.register(Action.S_RIGHT, (response: string) => onResponseRight(snap, response))
-	WebSckts.register(Action.S_NEXT, (response: string) => onResponseNext(snap, response))
+	WebSckts.register(Action.S_GAME, (response: string) => onResponse(snap, response))
 	WebSckts.register(Action.S_SCORE, (response: string) => onResponseScore(snap, response))
 }
 
@@ -127,7 +122,7 @@ export const createQuiz = (snap: any, entries: Map<string, string>) => {
 		players: parseInt(entries.get(Entry_PlayersInATeam) || '4'),
 		questions: parseInt(entries.get(Entry_Questions_Count) || '20')
 	}
-	const obj = { action: Action.toString(Action.SPECS), person: toJS(snap.player), specs: specs }
+	const obj = { action: Action.toString(Action.SPECS), person: snap.player, specs: specs }
 	console.log(obj)
 	handlerQuizmaster(snap)
 	WebSckts.send(Action.SPECS, JSON.stringify(obj))
@@ -148,7 +143,7 @@ export const joinAudience = (snap: any, entries: Map<string, string>) => {
 }
 
 export const start = (snap: any) => {
-	const obj = { action: Action.toString(Action.START), snapshot: snap.snapshotRequest }
+	const obj = { action: Action.toString(Action.START), quiz_id: snap.quiz.id }
 	WebSckts.send(Action.START, JSON.stringify(obj))
 }
 
@@ -173,50 +168,21 @@ export const queryScore = (snap: any) => {
 	WebSckts.send(Action.SCORE, JSON.stringify({ action: Action.toString(Action.SCORE), quiz_id: snap.quiz.id }))
 }
 
-export const onResponseStart = (snap: any, response: string) => {
+export const onResponse = (snap: any, response: string) => {
 	const res = JSON.parse(response)
-	if (canAcceptQuizSnapshot(snap, res)) {
-		state.snapshot = res
-		Urls.toQuiz()
-	}
-}
-
-export const onResponseHint = (snap: any, response: string) => {
-	const res = JSON.parse(response)
-	if (canAcceptQuestionSnapshot(snap, res)) {
-		state.snapshot = res
-		state.hintRevealed = true
-	}
-}
-
-export const onResponsePass = (snap: any, response: string) => {
-	const res = JSON.parse(response)
-	if (canAcceptQuestionSnapshot(snap, res)) {
-		state.snapshot = res
-	}
-}
-
-export const onResponseRight = (snap: any, response: string) => {
-	const res = JSON.parse(response)
-	if (canAcceptQuestionSnapshot(snap, res)) {
-		state.snapshot = res
-		state.answerRevealed = true
-	}
-}
-
-export const onResponseNext = (snap: any, response: string) => {
-	const res = JSON.parse(response)
-	if (canAcceptQuizSnapshot(snap, res)) {
-		state.snapshot = res
-		state.answerRevealed = false
-		state.hintRevealed = false
+	console.log(res, canAcceptQuizSnapshot(snap, res.snapshot))
+	if (canAcceptQuizSnapshot(snap, res.snapshot)) {
+		state.snapshot = res.snapshot
+		console.log(res)
+		switch (res.action) {
+			case Action.toString(Action.START): Urls.toQuiz(); break;
+			case Action.toString(Action.HINT): state.hintRevealed = true; break;
+			case Action.toString(Action.RIGHT): state.answerRevealed = true; break;
+			case Action.toString(Action.NEXT): state.answerRevealed = false; state.hintRevealed = false; break;
+		}
 	}
 }
 
 export const canAcceptQuizSnapshot = (snap: any, response: Snap): boolean => {
-	return response.quiz_id === snap.quizId
-}
-
-export const canAcceptQuestionSnapshot = (snap: any, response: Snap): boolean => {
-	return response.quiz_id === snap.quizId && response.question_id === snap.questionId
+	return response.quiz_id === snap.snapshot.quiz_id
 }

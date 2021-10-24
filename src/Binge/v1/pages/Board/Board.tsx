@@ -1,4 +1,3 @@
-import { Divider } from "@material-ui/core"
 import { ROLE_QUIZMASTER, ROLE_PLAYER } from "../../features/Features"
 import { Header } from "../../components/Header/Header"
 import { Query } from "../../components/Query/Query"
@@ -8,6 +7,8 @@ import { Action } from "../../utils/Action"
 import { WebSckts } from "../../utils/_websockets"
 import { state } from "./../../state/State"
 import { useSnapshot } from "valtio"
+import './Board.scss'
+import { Divider } from "../../components/Divider/Divider"
 
 type BoardProps = {
 }
@@ -21,11 +22,11 @@ export const Board = (props: BoardProps) => {
 	}
 
 	const visHint = () => {
-		return snap.role === ROLE_QUIZMASTER
+		return snap.role === ROLE_QUIZMASTER && snap.snapshot.event_type !== "RIGHT"
 	}
 
 	const visPass = () => {
-		return snap.role === ROLE_PLAYER && snap.snapshot.team_s_turn === getPlayersTeamId(snap)
+		return snap.role === ROLE_PLAYER && snap.snapshot.team_s_turn === getPlayersTeamId(snap) && snap.snapshot.event_type !== "RIGHT"
 	}
 
 	const visRight = () => {
@@ -41,23 +42,19 @@ export const Board = (props: BoardProps) => {
 	}
 
 	const queryHint = () => {
-		const obj = { action: Action.toString(Action.HINT), snapshot: snapshotRequest(snap) }
-		WebSckts.send(Action.HINT, JSON.stringify(obj))
+		WebSckts.send(Action.HINT, JSON.stringify(snapshotRequest(snap, Action.HINT)))
 	}
 
 	const queryRight = () => {
-		const obj = { action: Action.toString(Action.RIGHT), snapshot: snapshotRequest(snap) }
-		WebSckts.send(Action.RIGHT, JSON.stringify(obj))
+		WebSckts.send(Action.RIGHT, JSON.stringify(snapshotRequest(snap, Action.RIGHT)))
 	}
 
 	const queryNext = () => {
-		const obj = { action: Action.toString(Action.NEXT), snapshot: snapshotRequest(snap) }
-		WebSckts.send(Action.NEXT, JSON.stringify(obj))
+		WebSckts.send(Action.NEXT, JSON.stringify(snapshotRequest(snap, Action.NEXT)))
 	}
 
 	const queryPass = () => {
-		const obj = { action: Action.toString(Action.PASS), snapshot: snapshotRequest(snap) }
-		WebSckts.send(Action.PASS, JSON.stringify(obj))
+		WebSckts.send(Action.PASS, JSON.stringify(snapshotRequest(snap, Action.PASS)))
 	}
 
 	// const renderControlsLeft = <div className='board__controls'>
@@ -90,21 +87,12 @@ export const Board = (props: BoardProps) => {
 	</div>
 
 	const FooterFixed = <div className='board__footer board__footer--fixed'>
-		<div className='board__column board__column--right'>
-			{renderControlsRight}
-		</div>
+		{renderControlsRight}
 	</div>
-
-	const HeaderSticky = <div className='board__dets board__dets--sticky' />
-
-	const FooterSticky = <div className='board__footer board__footer--sticky' />
 
 	return <div className='board__wrapper'>
 
 		{HeaderFixed}
-		{FooterFixed}
-
-		{HeaderSticky}
 
 		<div className='board__body'>
 			<Divider />
@@ -126,7 +114,6 @@ export const Board = (props: BoardProps) => {
 			<Divider />
 		</div>
 
-		{FooterSticky}
-
+		{FooterFixed}
 	</div>
 }

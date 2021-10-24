@@ -3,7 +3,9 @@
 
 .board {
   &__wrapper {
-    padding-inline: 2em;
+    height: 100%;
+    display: grid;
+    grid-template-rows: 12em 1fr 4em;
     overflow: hidden;
     & > * {
       color: $color_white;
@@ -21,19 +23,12 @@
     }
 
     &--fixed {
-      @include fixed;
-      top: 0;
-    }
-
-    &--sticky {
-      background: transparent;
-      position: sticky;
-      top: 0;
-      height: 14em;
+      grid-row: 1 / 2;
     }
   }
 
   &__body {
+    padding-inline: 2em;
     overflow-x: hidden;
     overflow-y: scroll;
   }
@@ -42,15 +37,7 @@
     background: $color_footer_bkg;
 
     &--fixed {
-      @include fixed;
-      bottom: 0;
-    }
-
-    &--sticky {
-      background: transparent;
-      position: sticky;
-      bottom: 0;
-      height: 5em;
+      grid-row: -2 / -1;
     }
   }
 
@@ -75,7 +62,6 @@
 
 
   &__column {
-    height: 100%;
     width: 100%;
     display: grid;
 
@@ -98,9 +84,11 @@
 
   &__controls {
     @include grid-rows;
+    height: 100%;
     align-self: end;
 
     &--right {
+      height: 100%;
       @include grid-columns;
     }
   }

@@ -15,6 +15,7 @@ export enum Action {
   REFRESH,
   ACTIVE,
   S_ACTIVE,
+  S_JOIN,
   S_GAME,
   S_PLAYER,
   S_START,

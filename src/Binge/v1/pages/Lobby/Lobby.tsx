@@ -70,11 +70,11 @@ export const Lobby = (props: Props) => {
   const teamRoster = (team: TeamRoster) => {
     return <div className='' key={`roster team ${team.id}`}>
       {tm(team)}
-      {remainingItems(team) && empty(team).map(ent => ent)}
+      {empty(team).map(ent => ent)}
     </div>
   }
 
-  const roster = () => {
+  const roster = 
     <div className='lobby__teams'>
       {snap.snapshot.teams.map((team, ix) =>
         <div className='lobby__team' key={`lobby ${ix}`}>
@@ -82,14 +82,14 @@ export const Lobby = (props: Props) => {
           {teamRoster(team)}
         </div>)}
     </div>
-  }
 
   return (
     <div className='lobby__wrapper'>
       <p className='lobby__logo'>Binquiz</p>
       <p className='lobby__quiz--id--value' onClick={quizIdCopied}>Quiz Id: {removePunctuations(snap.quiz.id)}</p>
       <p className='lobby__quiz--id--label'>Quizmaster: {snap.quiz.quizmaster.name}</p>
-      {roster()}
+      <p className='lobby__quiz--id--label'>Player: {snap.player.name}</p>
+      {roster}
       <Box height='4em' />
       {waiting}
       <Query
