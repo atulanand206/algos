@@ -77,12 +77,20 @@ export const Board = (props: BoardProps) => {
 		</div>
 	</div>
 
-	const HeaderFixed = <div className='board__dets board__dets--fixed'>
-		<Header />
-		<div className='board__dets--sub'>
-			<p className='board__info'>{`${snap.snapshot.question_no} - ${snap.snapshot.round_no}`}</p>
-			<p className='board__name'>{snap.player.name}</p>
-			<p className='board__quizid' onClick={quizIdCopied}>Quiz id: {removePunctuations(snap.snapshot.quiz_id)}</p>
+
+	const HeaderFixed = <div className='board__header board__header--fixed'>
+		<div className='board__header--logo'><Header /></div>
+		<div className='board__header--block board__header--bottom board__header--left'>
+			<p className='board__header--value'>{snap.snapshot.question_no}</p>
+		</div>
+		<div className='board__header--block board__header--bottom board__header--right'>
+			<p className='board__header--value'>{snap.snapshot.round_no}</p>
+		</div>
+		<div className='board__header--block board__header--top board__header--right'>
+			<p className='board__header--value'>{snap.player.name}</p>
+		</div>
+		<div className='board__header--block board__header--top board__header--left'>
+			<p className='board__header--value' onClick={quizIdCopied}>{removePunctuations(snap.snapshot.quiz_id)}</p>
 		</div>
 	</div>
 
@@ -101,11 +109,11 @@ export const Board = (props: BoardProps) => {
 			</div>
 			<Divider />
 			<div className='board__column board__column--left'>
-				<p className='board__hint'>{snap.hintRevealed && snap.snapshot.hint}</p>
+				<p className='board__hint'>{snap.hintRevealed && snap.snapshot.hint.map(line => <p className='board__questions--line'>{line}</p>)}</p>
 			</div>
 			<Divider />
 			<div className='board__answers'>
-				<p className='board__answer'>{snap.answerRevealed && snap.snapshot.answer}</p>
+				<p className='board__answer'>{snap.answerRevealed && snap.snapshot.answer.map(line => <p className='board__questions--line'>{line}</p>)}</p>
 			</div>
 			<Divider />
 			<div className='board__column board__column--right'>

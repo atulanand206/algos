@@ -1,22 +1,49 @@
 @import "../../utils/components";
 
-
 .board {
   &__wrapper {
     height: 100%;
     display: grid;
-    grid-template-rows: 12em 1fr 4em;
+    grid-template-rows: 10em 1fr 4em;
     overflow: hidden;
     & > * {
       color: $color_white;
     }
   }
 
-  &__dets {
-    @include flex-vertical-center;
+  &__header {
+    display: grid;
+    grid-template-columns: 8em 1fr 8em;
+    grid-template-rows: 2em 1fr 3em;
+
     background: $color_footer_bkg;
     width: 100%;;
     
+    &--logo {
+      grid-row: 2 / -2;
+      grid-column: 2 / -2;
+    }
+
+    &--block {
+      margin: auto;
+    }
+
+    &--bottom {
+      grid-row: -2 / -1;
+    }
+
+    &--left {
+      grid-column: 1 / 2;
+    }
+
+    &--top {
+      grid-row: 1 / 2;
+    }
+
+    &--right {
+      grid-column: -2 / -1;
+    }
+  
     &--sub {
       gap: 1em;
       @include flex-horizonal-center;
