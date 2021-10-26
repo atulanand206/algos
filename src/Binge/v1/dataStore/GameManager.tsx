@@ -41,6 +41,7 @@ export const onResponseCreateGame = (snap: any, response: string) => {
 	if (res.quiz.quizmaster.id === snap.player.id) {
 		state.quiz = res.quiz
 		state.snapshot = res.snapshot
+		handlers(snap)
 		Urls.toLobby()
 		console.log(state)
 	}
@@ -54,6 +55,7 @@ export const onResponseJoinGame = (snap: any, response: string, quizId: string) 
 		state.role = ROLE_QUIZMASTER
 	}
 	state.snapshot = res.snapshot
+	handlers(snap)
 	if (res.quiz.active) {
 		Urls.toQuiz()
 	} else {
