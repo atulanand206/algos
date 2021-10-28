@@ -8,7 +8,6 @@ import { WebSckts } from "../../utils/_websockets"
 import { state } from "./../../state/State"
 import { useSnapshot } from "valtio"
 import './Board.scss'
-import { Divider } from "../../components/Divider/Divider"
 
 type BoardProps = {
 }
@@ -21,9 +20,9 @@ export const Board = (props: BoardProps) => {
 		navigator.clipboard.writeText(snap.snapshot.quiz_id)
 	}
 
-	const visHint = () => {
-		return snap.role === ROLE_QUIZMASTER && snap.snapshot.event_type !== "RIGHT"
-	}
+	// const visHint = () => {
+	// 	return snap.role === ROLE_QUIZMASTER && snap.snapshot.event_type !== "RIGHT"
+	// }
 
 	const visPass = () => {
 		return snap.role === ROLE_PLAYER && snap.snapshot.team_s_turn === getPlayersTeamId(snap) && snap.snapshot.can_pass
@@ -41,9 +40,9 @@ export const Board = (props: BoardProps) => {
 		return str.replace('["-.,:;!@#$%^&*()_+="]', "").toUpperCase()
 	}
 
-	const queryHint = () => {
-		WebSckts.send(Action.HINT, JSON.stringify(snapshotRequest(snap, Action.HINT)))
-	}
+	// const queryHint = () => {
+	// 	WebSckts.send(Action.HINT, JSON.stringify(snapshotRequest(snap, Action.HINT)))
+	// }
 
 	const queryRight = () => {
 		WebSckts.send(Action.RIGHT, JSON.stringify(snapshotRequest(snap, Action.RIGHT)))
@@ -57,28 +56,7 @@ export const Board = (props: BoardProps) => {
 		WebSckts.send(Action.PASS, JSON.stringify(snapshotRequest(snap, Action.PASS)))
 	}
 
-	// const renderControlsLeft = <div className='board__controls'>
-	// 	<div className='board__controls--right'>
-	// 		<Query label={"Rules"} onClick={queryRules} visible={true} />
-	// 		<Query label={"Guide"} onClick={queryGuide} visible={true} />
-	// 	</div>
-	// 	<div className='board__controls--right'>
-	// 		<Query label={"Link"} onClick={queryLink} visible={true} />
-	// 		<Query label={"Extend"} onClick={queryExtend} visible={true} />
-	// 	</div>
-	// </div>
-
-	const renderControlsRight = <div className='board__controls'>
-		<div className='board__controls--right'>
-			<Query label={"Hint"} onClick={queryHint} visible={visHint()} />
-			<Query label={"Pass"} onClick={queryPass} visible={visPass()} />
-			<Query label={"Right"} onClick={queryRight} visible={visRight()} />
-			<Query label={"Next"} onClick={queryNext} visible={visNext()} />
-		</div>
-	</div>
-
-
-	const HeaderFixed = <div className='board__header board__header--fixed'>
+	const Top = <div className='board__header board__header--fixed'>
 		<div className='board__header--logo'><Header /></div>
 		<div className='board__header--block board__header--bottom board__header--left'>
 			<p className='board__header--value'>{snap.snapshot.question_no}</p>
@@ -89,39 +67,36 @@ export const Board = (props: BoardProps) => {
 		<div className='board__header--block board__header--top board__header--right'>
 			<p className='board__header--value'>{snap.player.name}</p>
 		</div>
-		<div className='board__header--block board__header--top board__header--left'>
+		<div className='board__header--block board__header--top board__header--left board__header--quizid'>
 			<p className='board__header--value' onClick={quizIdCopied}>{removePunctuations(snap.snapshot.quiz_id)}</p>
 		</div>
 	</div>
 
-	const FooterFixed = <div className='board__footer board__footer--fixed'>
-		{renderControlsRight}
+	const Body = <div className='board__body'>
+		<div className='board__column'>
+			<div className='board__questions'>{snap.snapshot.question && snap.snapshot.question.map(line => <p className='board__questions--line'>{line}</p>)}</div>
+		</div>
+		{/* <div className='board__column'>
+			<p className='board__hint'>{snap.hintRevealed && snap.snapshot.hint.map(line => <p className='board__questions--line'>{line}</p>)}</p>
+		</div> */}
+		<div className='board__column'>
+			<p className='board__answer'>{snap.answerRevealed && snap.snapshot.answer.map(line => <p className='board__questions--line'>{line}</p>)}</p>
+		</div>
+		<div className='board__column board__column--right'>
+			<State teams={snap.snapshot.teams} currentTeamId={snap.snapshot.team_s_turn} />
+		</div>
+	</div>
+
+	const Bottom = <div className='board__footer board__footer--fixed'>
+			{/* <Query label={"Hint"} onClick={queryHint} visible={visHint()} /> */}
+			<Query label={"Pass"} onClick={queryPass} visible={visPass()} />
+			<Query label={"Right"} onClick={queryRight} visible={visRight()} />
+			<Query label={"Next"} onClick={queryNext} visible={visNext()} />
 	</div>
 
 	return <div className='board__wrapper'>
-
-		{HeaderFixed}
-
-		<div className='board__body'>
-			<Divider />
-			<div className='board__column board__column--left'>
-				<div className='board__questions'>{snap.snapshot.question && snap.snapshot.question.map(line => <p className='board__questions--line'>{line}</p>)}</div>
-			</div>
-			<Divider />
-			<div className='board__column board__column--left'>
-				<p className='board__hint'>{snap.hintRevealed && snap.snapshot.hint.map(line => <p className='board__questions--line'>{line}</p>)}</p>
-			</div>
-			<Divider />
-			<div className='board__answers'>
-				<p className='board__answer'>{snap.answerRevealed && snap.snapshot.answer.map(line => <p className='board__questions--line'>{line}</p>)}</p>
-			</div>
-			<Divider />
-			<div className='board__column board__column--right'>
-				<State teams={snap.snapshot.teams} currentTeamId={snap.snapshot.team_s_turn} />
-			</div>
-			<Divider />
-		</div>
-
-		{FooterFixed}
+		{Top}
+		{Body}
+		{Bottom}
 	</div>
 }

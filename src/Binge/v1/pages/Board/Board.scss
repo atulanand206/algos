@@ -17,7 +17,7 @@
     grid-template-rows: 2em 1fr 3em;
 
     background: $color_footer_bkg;
-    width: 100%;;
+    width: 100%;
     
     &--logo {
       grid-row: 2 / -2;
@@ -44,6 +44,10 @@
       grid-column: -2 / -1;
     }
   
+    &--quizid {
+      cursor: pointer;
+    }
+
     &--sub {
       gap: 1em;
       @include flex-horizonal-center;
@@ -55,17 +59,18 @@
   }
 
   &__body {
-    padding-inline: 2em;
     overflow-x: hidden;
-    overflow-y: scroll;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 6fr 1.5fr 3fr;
   }
 
   &__footer {
+    @include grid-columns;
+    grid-row: -2 / -1;
     background: $color_footer_bkg;
-
-    &--fixed {
-      grid-row: -2 / -1;
-    }
+    align-self: end;
+    height: 100%;
   }
 
   &__quizid {
@@ -87,36 +92,21 @@
     font-size: $fnt_normal;
   }
 
-
   &__column {
-    width: 100%;
+    grid-column: 1 / -1;
+    @include scrollbar;
     display: grid;
+    margin-inline: 1em;
+    margin-block: 0.5em;
+    padding: 1em;
+    background-color: rgba(255, 255, 255, .15);  
+    backdrop-filter: blur(2px);
 
     &--right {
       & > p,
       & > * > p {
         text-align: right;
       }
-    }
-  }
-
-  &__questions {
-    @include scrollbar;
-  }
-
-  &__answers {
-    @include grid-rows;
-    align-items: center;
-  }
-
-  &__controls {
-    @include grid-rows;
-    height: 100%;
-    align-self: end;
-
-    &--right {
-      height: 100%;
-      @include grid-columns;
     }
   }
 }

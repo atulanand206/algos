@@ -34,7 +34,7 @@ const state = proxy({
     can_pass: false
   },
   quiz: {
-    id: 'sdsadsadsads',
+    id: '',
     quizmaster: {
       id: '',
       name: '',
