@@ -1,13 +1,28 @@
 @import "../../utils/components";
 
 .landing {
-    @include cont;
 
-    &__logo {
-        @include logo-large;
+    &__wrapper {
+        max-width: 80%;
+        max-height: 80%;
+        display: grid;
+        grid-template-rows: 1fr 8fr 1fr;
+        grid-template-columns: 1fr 4fr 1fr;
+        align-items: center
     }
 
-    &__button {
+    &__header {
+        // first row of grid   
+        grid-row: 1/2;
+        // whole width as column
+        grid-column: 1/-1;
+    }
+
+    &__content {
         @include action-button;
+        // last row of grid 
+        grid-row: -2/-1;
+        // middle column 
+        grid-column: 2/3;
     }
 }

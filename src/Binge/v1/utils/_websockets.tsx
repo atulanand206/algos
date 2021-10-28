@@ -10,11 +10,12 @@ export class WebSckts {
 
   static _instance: WebSckts
   client: W3CWebSocket
+  websocketUrl: string = `${process.env.REACT_APP_WEBSOCKETS_SCHEME}://${window.location.hostname}:${5000}/ws`
 
   handlers = new Map()
 
   constructor() {
-    this.client = new W3CWebSocket(`ws://${window.location.hostname}:${5000}/ws`);
+    this.client = new W3CWebSocket(this.websocketUrl);
     this.init()
     if (WebSckts._instance) {
       return WebSckts._instance

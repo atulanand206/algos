@@ -11,7 +11,7 @@
 
 @mixin logo-large {
   @include logo;
-  font-size: $fnt_xlarge;
+  font-size: $fnt_large;
 }
 
 @mixin logo-normal {
