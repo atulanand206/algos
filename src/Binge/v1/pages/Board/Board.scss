@@ -48,8 +48,9 @@
     &__body {
         overflow-x: hidden;
         display: grid;
+        padding-block: 1em;
         grid-template-columns: 1fr;
-        grid-template-rows: 6fr 1.5fr 3fr;
+        grid-template-rows: fit-content(80ch) 1fr  fit-content(20ch) fit-content(30ch);
     }
     &__footer {
         @include grid-columns;
@@ -95,5 +96,9 @@
                 font-stretch: ultra-expanded;
             }
         }
+    }
+
+    &__questions {
+        min-height: 60%;
     }
 }

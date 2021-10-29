@@ -48,7 +48,7 @@
 
 @mixin grid-rows {
     display: grid;
-    grid-auto-columns: minmax(0, 1fr);
+    grid-auto-rows: minmax(0, 1fr);
     grid-auto-flow: row;
 }
 
