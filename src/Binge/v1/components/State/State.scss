@@ -2,6 +2,7 @@
 .state {
   &__container {
     // @include grid-rows;
+		position: relative;
     padding-inline: 1em;
     height: auto;
   }
@@ -36,10 +37,15 @@
   }
 
 	&__table {
+		position: absolute;
+		left: 1em;
+		right: 1em;
+		bottom: 4em;
 		display: grid;
 		grid-auto-rows: auto;
 		margin-inline: 1em;
-		padding: 1em;
+		overflow-y: scroll;
+		max-height: 10em;
 		height: auto;
 		border-radius: 1.75em;
 		background: radial-gradient(#423977, #191557);
@@ -47,17 +53,26 @@
 		transition: all .5s ease-in-out;
 
 		&--hidden {
+			position: absolute;
+			left: 1em;
+			right: 1em;
+			bottom: 0;
 			background: radial-gradient(#423977, #191557);
 			transform: scaleY(0); 
-			transition: all .5s ease-in-out;
-			transform-origin: left bottom;
+			height: 0;
+			transition-duration: .5s;
+
+			& > * > * {
+				opacity: 0;
+			}
 		}
 	}
 
   &__team {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    padding-block: 1em;
+    padding: 1em;
+		padding-inline: 2em;
 
     & > * {
       margin: 0;

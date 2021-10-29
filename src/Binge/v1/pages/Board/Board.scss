@@ -50,7 +50,7 @@
         display: grid;
         padding-block: 1em;
         grid-template-columns: 1fr;
-        grid-template-rows: fit-content(80ch) 1fr  fit-content(20ch) fit-content(30ch);
+        grid-template-rows: 1fr fit-content(8em) fit-content(1em);
     }
     &__footer {
         @include grid-columns;
@@ -78,9 +78,8 @@
     &__column {
         grid-column: 1 / -1;
         @include scrollbar;
-        display: grid;
         margin-inline: 1em;
-        margin-block: 0.5em;
+        margin-bottom: 1em;
         padding: 1em;
         background-color: rgba(255, 255, 255, .15);
         backdrop-filter: blur(2px);
@@ -96,9 +95,5 @@
                 font-stretch: ultra-expanded;
             }
         }
-    }
-
-    &__questions {
-        min-height: 60%;
     }
 }

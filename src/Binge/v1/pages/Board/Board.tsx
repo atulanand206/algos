@@ -77,8 +77,9 @@ export const Board = (props: BoardProps) => {
 		{/* <div className='board__column'>
 			<p className='board__hint'>{snap.hintRevealed && snap.snapshot.hint.map(line => <p className='board__questions--line'>{line}</p>)}</p>
 		</div> */}
-		<div></div>
-		{snap.answerRevealed ? <p className=' board__columnboard__answer'>{snap.snapshot.answer.map(line => <p className='board__questions--line'>{line}</p>)}</p> : <div></div>} 
+		{/* <div></div> */}
+		
+		{snap.answerRevealed ? <div className='board__column'><p className='board__answer'>{snap.snapshot.answer.map(line => <p className='board__questions--line'>{line}</p>)}</p></div> : <div></div>} 
 		<State teams={snap.snapshot.teams} currentTeamId={snap.snapshot.team_s_turn} />
 	</div>
 
