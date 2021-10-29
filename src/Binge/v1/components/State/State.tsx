@@ -28,6 +28,10 @@ type Props = {
 export const State = (props: Props) => {
 	return (
 		<div className='state__container'>
+			<div className='state__header'>
+				<p className='state__header--text'>Scores</p>
+			</div>
+			
 			<div className='state__table'>
 				{props.teams.map((ix) => <Avatar name={ix.name}
 					score={ix.score}

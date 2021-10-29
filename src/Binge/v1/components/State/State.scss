@@ -1,44 +1,47 @@
 @import "../../utils/components";
-
 .state {
     &__container {
-        @include flex-vertical-center;
+        @include grid-rows;
     }
-
     &__header {
         margin: 0;
         letter-spacing: 1em;
+        background: $color_white;
         font-size: $fnt_normal;
+        border-radius: 1em;
+        padding: 0.5em;
+        &--text {
+            font-size: $fnt_normal;
+            color: $color_header;
+            margin: 0;
+            text-align: center;
+        }
     }
-
     &__team {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         padding-block: 1em;
-
-        & > * {
+        &>* {
             margin: 0;
             text-align: left;
             font-size: $fnt_normal;
         }
-
         &--name {
             text-align: left;
         }
-
         &--score {
             text-align: right;
         }
-
         &--turn {
             text-align: right;
             font-size: $font_btn;
         }
     }
-
     &__table {
-        width: 95%;
         display: grid;
         grid-auto-rows: auto;
+        margin-inline: 1em;
+        padding: 1em;
+        background: radial-gradient(#712E81, #2F1753);
     }
 }
