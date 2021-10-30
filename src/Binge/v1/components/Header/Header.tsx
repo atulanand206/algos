@@ -1,12 +1,21 @@
-import './Header.scss'
+import "./Header.scss";
 
 type Props = {
-	large?: boolean
-}
+  large?: boolean;
+};
 
 export const Header = (props: Props) => {
-	const classN = props.large ? 'header__logo header__logo--large' : 'header__logo header__logo--normal'
-	return (
-		<p className={classN}>Binquiz</p>
-	)
-}
+  return (
+    <div className="logo">
+      <b>
+        <span>b</span>
+        <span>in</span>
+        <span>q</span>
+        <span>u</span>
+        <span>i</span>
+        <span>z</span>
+      </b>
+    </div>
+    // <p className='logo'>Binquiz</p>
+  );
+};

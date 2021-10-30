@@ -58,13 +58,13 @@ export const Board = (props: BoardProps) => {
 
 	const Top = <div className='board__header board__header--fixed'>
 		<div className='board__header--logo'><Header /></div>
-		<div className='board__header--block board__header--bottom board__header--left'>
-			<p className='board__header--value'>{snap.snapshot.question_no}</p>
+		<div className='board__header--block board__header--top board__header--right'>
+			<p className='board__header--value'>Question {snap.snapshot.question_no}</p>
 		</div>
 		<div className='board__header--block board__header--bottom board__header--right'>
-			<p className='board__header--value'>{snap.snapshot.round_no}</p>
+			<p className='board__header--value'>Round {snap.snapshot.round_no}</p>
 		</div>
-		<div className='board__header--block board__header--top board__header--right'>
+		<div className='board__header--block board__header--bottom board__header--left'>
 			<p className='board__header--value'>{snap.player.name}</p>
 		</div>
 		<div className='board__header--block board__header--top board__header--left board__header--quizid'>
@@ -79,7 +79,7 @@ export const Board = (props: BoardProps) => {
 		</div> */}
 		{/* <div></div> */}
 		
-		{snap.answerRevealed ? <div className='board__column'><p className='board__answer'>{snap.snapshot.answer.map(line => <p className='board__questions--line'>{line}</p>)}</p></div> : <div></div>} 
+		{snap.answerRevealed ? <div className='board__column'><p className='board__answer'>{snap.snapshot.answer.map(line => <p className='board__answers--line'>{line}</p>)}</p></div> : <div></div>} 
 		<State teams={snap.snapshot.teams} currentTeamId={snap.snapshot.team_s_turn} />
 	</div>
 

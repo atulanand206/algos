@@ -11,7 +11,7 @@
     margin: 0;
     height: 2em;
     letter-spacing: 1em;
-    background: $color_white;
+    background: $color_black;
     font-size: $fnt_normal;
     border-radius: 1em;
     padding: 0.5em;
@@ -19,7 +19,7 @@
     display: grid;
     grid-template-columns: 1rem 1fr 1rem;
 
-    &--text {
+		&--text {
       grid-row: 1 / -1;
       grid-column: 2/3;
       font-size: $fnt_normal;
@@ -48,7 +48,8 @@
 		max-height: 10em;
 		height: auto;
 		border-radius: 1.75em;
-		background: radial-gradient(#423977, #191557);
+		// background: radial-gradient(#093145, #191557);
+		background: $color_black;
 		transform: scaleY(1);
 		transition: all .5s ease-in-out;
 
@@ -57,7 +58,8 @@
 			left: 1em;
 			right: 1em;
 			bottom: 0;
-			background: radial-gradient(#423977, #191557);
+			// background: radial-gradient(#423977, #191557);
+			background: $color_black;
 			transform: scaleY(0); 
 			height: 0;
 			transition-duration: .5s;
