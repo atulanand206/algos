@@ -3,6 +3,7 @@
 @import "buttons";
 @import "animations";
 @import "wrappers";
+@import "glow";
 
 @mixin logo-large {
     @include logo;
@@ -50,6 +51,11 @@
 @mixin header {
     text-align: center;
     font-size: $fnt_normal;
+    color: $color_white;
+}
+
+@mixin header-left {
+    text-align: left;
     color: $color_white;
 }
 

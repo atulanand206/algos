@@ -76,6 +76,16 @@
     padding: 1em;
 		padding-inline: 2em;
 
+		&--current {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+
+			& > * {
+				text-align: center;
+				grid-row: 1/-1;
+			}
+		}
+
     & > * {
       margin: 0;
       text-align: left;

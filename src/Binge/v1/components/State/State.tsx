@@ -33,6 +33,12 @@ export const State = (props: Props) => {
 	const toggle = (show: boolean) => {
 		setShow(show)
 	}
+
+	const currentTeamScore = props.teams.find(team => team.id === props.currentTeamId)?.score || 0
+
+	const currentTeamPresentInTeams = props.teams.find(team => team.id === props.currentTeamId)
+	
+	const currentTeamRankAfterSortingTeams = currentTeamPresentInTeams ? props.teams.findIndex(team => team.id === props.currentTeamId) + 1 : 0 
 	
 	const arrow = show 
 		?	<i className="fa fa-arrow-up state__header--icon" onClick={() => toggle(false)}></i> 
@@ -40,7 +46,7 @@ export const State = (props: Props) => {
 	
 	return (
 		<div className='state__container'>
-			<div className={show ? 'state__table' : 'state__table--hidden'}>
+			{/* <div className={show ? 'state__table' : 'state__table--hidden'}>
 				{props.teams.map((ix) => <Avatar name={ix.name}
 					score={ix.score}
 					active={ix.id === props.currentTeamId} />)}
@@ -48,6 +54,10 @@ export const State = (props: Props) => {
 			<div className='state__header'>
 				<p className='state__header--text'>scores</p>
 				{arrow}
+			</div> */}
+			<div className='state__team--current'>
+				<p className='state__item'>Score {currentTeamScore}</p>
+				<p className='state__item'>Rank {currentTeamRankAfterSortingTeams}</p>
 			</div>
 		</div>
 	)

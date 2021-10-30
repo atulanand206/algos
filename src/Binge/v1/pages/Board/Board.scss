@@ -3,39 +3,46 @@
     &__wrapper {
         height: 100%;
         background: $color_background;
-         background-image: url('./../../../../images/background.svg');
+        background-image: url('./../../../../images/background.svg');
         display: grid;
-        grid-template-rows: 10em 1fr 4em;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 5em 3em 3em 1fr 4em 5em;
         overflow: hidden;
         &>* {
+            grid-column: 1/-1;
             color: $color_white;
         }
     }
     &__header {
-        display: grid;
-        padding-top: 1em;
-        grid-template-columns: 8em 1fr 8em;
-        grid-template-rows: 1fr 2em 3em ;
-        background: $color_footer_bkg;
+        
         width: 100%;
+        &--background {
+            height: 100%;
+            grid-row: 1 / 4;
+            grid-column: 1 / -1;
+            background: $color_footer_bkg;
+        }
         &--logo {
             grid-row: 1 / 2;
-            grid-column: 2 / -2;
+            grid-column: 1 / -1;
         }
         &--block {
             margin: auto;
+            width: 100%;
         }
         &--bottom {
-            grid-row: -2 / -1;
+            grid-row: 3 / 4;
         }
         &--left {
             grid-column: 1 / 2;
+            text-align: left;
         }
         &--top {
-            grid-row: 2 / -2;
+            grid-row: 2 / 3;
         }
         &--right {
             grid-column: -2 / -1;
+            text-align: right;
         }
         &--quizid {
             cursor: pointer;
@@ -44,26 +51,26 @@
             gap: 1em;
             @include flex-horizonal-center;
         }
-        &--fixed {
-            grid-row: 1 / 2;
-        }
         &--value {
             margin: 0;
+            padding-inline: 1em;
         }
     }
     &__body {
+        height: 100%;
+        grid-row: 4 / 5;
         overflow-x: hidden;
-        display: grid;
-        padding-block: 1em;
-        grid-template-columns: 1fr;
-        grid-template-rows: 1fr fit-content(8em) fit-content(1em);
+        overflow-y: scroll;
+        align-self: flex-start;
+    }
+    &__controls {
+        grid-row: -3 / -2;
+        @include grid-columns;
+        background: $color_footer_bkg;
     }
     &__footer {
-        @include grid-columns;
         grid-row: -2 / -1;
-        background: $color_footer_bkg;
-        align-self: end;
-        height: 100%;
+        align-self: center;
     }
     &__quizid {
         font-size: $font_btn;
@@ -88,26 +95,13 @@
         font-size: $fnt_normal;
     }
     &__column {
+        margin-block: 0.5em;
         grid-column: 1 / -1;
         @include scrollbar;
         margin-inline: 1em;
         margin-bottom: 1em;
         padding: 1em;
-        border-radius: 1em;
-        background-color: rgba(255, 255, 255, .15);
-        backdrop-filter: blur(2px);
-        &--right {
-            &>p,
-            &>*>p {
-                text-align: right;
-                color: rgb(24, 20, 20);
-                text-indent: 10px;
-                text-transform: lowercase;
-                font-size: xx-large;
-                font-family: 'Courier New', Courier, monospace;
-                font-stretch: ultra-expanded;
-            }
-        }
-        
+        border-radius: 0.5em;
+        background-color: rgba(252, 252, 252, 0.15);
     }
 }

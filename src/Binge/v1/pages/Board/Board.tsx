@@ -33,7 +33,7 @@ export const Board = (props: BoardProps) => {
 	}
 
 	const visNext = () => {
-		return snap.role === ROLE_QUIZMASTER && snap.snapshot.event_type === "RIGHT"
+		return snap.role === ROLE_QUIZMASTER && (snap.snapshot.event_type === "RIGHT" || !snap.snapshot.can_pass)
 	}
 
 	const removePunctuations = (str: string) => {
@@ -55,8 +55,11 @@ export const Board = (props: BoardProps) => {
 	const queryPass = () => {
 		WebSckts.send(Action.PASS, JSON.stringify(snapshotRequest(snap, Action.PASS)))
 	}
+	
+	const teams = [...snap.snapshot.teams]
 
-	const Top = <div className='board__header board__header--fixed'>
+	return <div className='board__wrapper'>
+		<div className='board__header--background'></div>
 		<div className='board__header--logo'><Header /></div>
 		<div className='board__header--block board__header--top board__header--right'>
 			<p className='board__header--value'>Question {snap.snapshot.question_no}</p>
@@ -70,29 +73,27 @@ export const Board = (props: BoardProps) => {
 		<div className='board__header--block board__header--top board__header--left board__header--quizid'>
 			<p className='board__header--value' onClick={quizIdCopied}>{removePunctuations(snap.snapshot.quiz_id)}</p>
 		</div>
-	</div>
 
-	const Body = <div className='board__body'>
-		<div className='board__column board__questions'>{snap.snapshot.question && snap.snapshot.question.map(line => <p className='board__questions--line'>{line}</p>)}</div>
-		{/* <div className='board__column'>
-			<p className='board__hint'>{snap.hintRevealed && snap.snapshot.hint.map(line => <p className='board__questions--line'>{line}</p>)}</p>
-		</div> */}
-		{/* <div></div> */}
-		
-		{snap.answerRevealed ? <div className='board__column'><p className='board__answer'>{snap.snapshot.answer.map(line => <p className='board__answers--line'>{line}</p>)}</p></div> : <div></div>} 
-		<State teams={snap.snapshot.teams} currentTeamId={snap.snapshot.team_s_turn} />
-	</div>
+		<div className='board__body'>
+			<div className='board__column board__questions'>
+				{snap.snapshot.question && snap.snapshot.question.map(line => <p className='board__questions--line'>{line}</p>)}
+			</div>
+			{/* <div className='board__column'>
+				<p className='board__hint'>{snap.hintRevealed && snap.snapshot.hint.map(line => <p className='board__questions--line'>{line}</p>)}</p>
+			</div> */}
+			{/* <div></div> */}
+			{snap.answerRevealed ? <div className='board__column'><p className='board__answer'>{snap.snapshot.answer.map(line => <p className='board__answers--line'>{line}</p>)}</p></div> : <div></div>} 
+		</div>
 
-	const Bottom = <div className='board__footer board__footer--fixed'>
-			{/* <Query label={"Hint"} onClick={queryHint} visible={visHint()} /> */}
+		<div className='board__controls'>
 			<Query label={"Pass"} onClick={queryPass} visible={visPass()} />
 			<Query label={"Right"} onClick={queryRight} visible={visRight()} />
 			<Query label={"Next"} onClick={queryNext} visible={visNext()} />
-	</div>
+		</div>
+		
+		<div className='board__footer'>
+			<State teams={teams.sort((a, b) => b.score - a.score)} currentTeamId={snap.snapshot.team_s_turn} />
+		</div>
 
-	return <div className='board__wrapper'>
-		{Top}
-		{Body}
-		{Bottom}
 	</div>
 }
