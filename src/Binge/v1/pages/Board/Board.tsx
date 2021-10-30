@@ -59,6 +59,7 @@ export const Board = (props: BoardProps) => {
 	const teams = [...snap.snapshot.teams]
 
 	return <div className='board__wrapper'>
+		<div className='board__wrapper--background'></div>
 		<div className='board__header--background'></div>
 		<div className='board__header--logo'><Header /></div>
 		<div className='board__header--block board__header--top board__header--right'>
