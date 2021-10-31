@@ -1,6 +1,6 @@
 import { useSnapshot } from "valtio"
 import { Board } from "../pages/Board/Board"
-import { QuizCreator, QuizJoiner, QuizWatcher, Reception } from "../pages/Credentials/Credentials"
+import { QuizCreator, Reception } from "../pages/Credentials/Credentials"
 import { Landing } from "../pages/Landing/Landing"
 import { Lobby } from "../pages/Lobby/Lobby"
 import { state } from "../state/State"
@@ -16,8 +16,6 @@ export const Switcher = (props: SwitchProps) => {
     switch(snap.page) {
       case 'reception': return <Reception />
       case 'create': return <QuizCreator />
-      case 'join': return <QuizJoiner />
-      case 'watch': return <QuizWatcher />
       case 'quiz': return <Board />
       case 'lobby': return <Lobby />
       case '': return <Landing />

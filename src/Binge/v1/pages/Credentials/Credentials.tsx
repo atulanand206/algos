@@ -5,7 +5,9 @@ import { Form } from "../../components/Form/Form"
 import { Header } from "../../components/Header/Header"
 import * as GameManager from "../../dataStore/GameManager"
 import { state } from "../../state/State"
+import { Urls } from "../../utils/_urls"
 import './Credentials.scss'
+import './Quizzes.scss'
 
 type Props = {
 }
@@ -26,49 +28,53 @@ export const Form_QuizMaster = 'quizmaster'
 export const Form_Player = 'player'
 export const Form_Audience = 'audience'
 
+export const CreateQuiz = () => {
+	return <div className='quizzes__item' key={`item.key ${-1}`}>
+		<button className='quizzes__item__button' onClick={() => Urls.toCreate()}>Create Quiz</button>
+	</div>
+}
+
+export const QuizzesList = () => {
+
+	const snap = useSnapshot(state);
+
+  return (
+    <div className='quizzes__list' >
+			{snap.can_create_quiz && CreateQuiz()}
+      {snap.quizzes.map((item, ix) => {
+				const total = item.specs.teams * item.specs.players
+        return <div className='quizzes__item' key={`item.key ${ix}`}>
+					<div className='quizzes__item--quizmaster'>{item.quizmaster.name}</div>
+					<div className='quizzes__item--name'>Name {item.specs.name}</div>
+					<div className='quizzes__item--rounds'>{item.specs.rounds} Rounds</div>
+					<div className='quizzes__item--rounds'>{item.specs.questions} Questions</div>
+					<div className='quizzes__item--config'>{item.specs.teams} Teams of {item.specs.players} Players</div>
+					<div className='quizzes__item--config'>Players {item.players_joined} / {total}</div>
+					{item.can_join && <button className='quizzes__item__button' onClick={() => GameManager.joinPlayer(snap, item.id)}>Join</button>}
+					<button className='quizzes__item__button' onClick={() => GameManager.joinAudience(snap, item.id)}>Watch</button>
+				</div>
+			})}	
+    </div>
+  );
+}
+
 export const Reception = (props: Props) => {
-	
-	const snap = useSnapshot(state)
-	const [entries, setEntries] = useState(new Map())
-	const [formReset, setFormReset] = useState(false)
-
-	const submit = (action: string) => {
-		GameManager.onPlayerCreated(snap, action)
-		entries.clear()
-		setEntries(entries)
-	}
-
-	const onChange = (entry: string, value: any) => {
-		setFormReset(false)
-		entries.set(entry, value)
-		setEntries(entries)
-	}
-
-	const credentialsForm = <Form
-		reset={formReset}
-		header={''}
-		fields={[]}
-		actions={[Action_Create, Action_Join, Action_Watch]}
-		onSubmit={submit}
-		onChange={onChange} />
-
 	return (
 		<div className='credentials__wrapper'>
 			<Header />
-			{credentialsForm}
-			<Box height='8em' />
+			{QuizzesList()}
 		</div>
 	)
 }
 
 export const QuizCreator = (props: Props) => {
-	
+
 	const snap = useSnapshot(state)
 	const [entries, setEntries] = useState(new Map())
 	const [formReset, setFormReset] = useState(false)
 
 	const submit = (action: string) => {
-		GameManager.formEntered(snap, action, entries)
+		GameManager.createQuiz(snap, entries)
 		entries.clear()
 		setEntries(entries)
 	}
@@ -91,77 +97,6 @@ export const QuizCreator = (props: Props) => {
 		<div className='credentials__wrapper'>
 			<Header />
 			{quizMasterSpecsForm}
-			<Box height='8em' />
-		</div>
-	)
-}
-
-export const QuizJoiner = (props: Props) => {
-	
-	const snap = useSnapshot(state)
-	const [entries, setEntries] = useState(new Map())
-	const [formReset, setFormReset] = useState(false)
-
-	const submit = (action: string) => {
-		GameManager.formEntered(snap, action, entries)
-		entries.clear()
-		setEntries(entries)
-	}
-
-	const onChange = (entry: string, value: any) => {
-		setFormReset(false)
-		entries.set(entry, value)
-		setEntries(entries)
-	}
-
-	const playerSpecsForm = <Form
-		reset={formReset}
-		header={Header_Specs}
-		fields={[Entry_QuizId]}
-		actions={[Action_Join]}
-		onSubmit={submit}
-		onChange={onChange} />
-
-
-	return (
-		<div className='credentials__wrapper'>
-			<Header />
-			{playerSpecsForm}
-			<Box height='8em' />
-		</div>
-	)
-}
-
-export const QuizWatcher = (props: Props) => {
-	
-	const snap = useSnapshot(state)
-	const [entries, setEntries] = useState(new Map())
-	const [formReset, setFormReset] = useState(false)
-
-	const submit = (action: string) => {
-		GameManager.formEntered(snap, action, entries)
-		entries.clear()
-		setEntries(entries)
-	}
-
-	const onChange = (entry: string, value: any) => {
-		setFormReset(false)
-		entries.set(entry, value)
-		setEntries(entries)
-	}
-
-	const audienceSpecsForm = <Form
-		reset={formReset}
-		header={Header_Specs}
-		fields={[Entry_QuizId]}
-		actions={[Action_Watch]}
-		onSubmit={submit}
-		onChange={onChange} />
-
-	return (
-		<div className='credentials__wrapper'>
-			<Header />
-			{audienceSpecsForm}
 			<Box height='8em' />
 		</div>
 	)

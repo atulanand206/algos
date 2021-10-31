@@ -36,10 +36,6 @@ export const Board = (props: BoardProps) => {
 		return snap.role === ROLE_QUIZMASTER && (snap.snapshot.event_type === "RIGHT" || !snap.snapshot.can_pass)
 	}
 
-	const removePunctuations = (str: string) => {
-		return str.replace('["-.,:;!@#$%^&*()_+="]', "").toUpperCase()
-	}
-
 	// const queryHint = () => {
 	// 	WebSckts.send(Action.HINT, JSON.stringify(snapshotRequest(snap, Action.HINT)))
 	// }
@@ -72,7 +68,7 @@ export const Board = (props: BoardProps) => {
 			<p className='board__header--value'>{snap.player.name}</p>
 		</div>
 		<div className='board__header--block board__header--top board__header--left board__header--quizid'>
-			<p className='board__header--value' onClick={quizIdCopied}>{removePunctuations(snap.snapshot.quiz_id)}</p>
+			<p className='board__header--value' onClick={quizIdCopied}>{snap.quiz.specs.name}</p>
 		</div>
 
 		<div className='board__body'>
