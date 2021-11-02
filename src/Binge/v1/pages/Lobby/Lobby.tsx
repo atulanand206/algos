@@ -59,10 +59,6 @@ export const Lobby = (props: Props) => {
     else return <></>
   }
 
-  const removePunctuations = (str: string) => {
-    return str.replace('["-.,:;!@#$%^&*()_+="]', "").toUpperCase()
-  }
-
   const tm = (team: TeamRoster) => {
     return team.players.map((player, ix) => <Popover content={renderPlayer(player, props)} key={`popover container ${ix}`} />)
   }
@@ -89,9 +85,9 @@ export const Lobby = (props: Props) => {
       <div className='lobby__header'>
         <Header />
       </div>
-      <p className='lobby__quiz--id--value lobby__quiz--id' onClick={quizIdCopied}>Quiz Id: {removePunctuations(snap.quiz.id)}</p>
+      <p className='lobby__quiz--id--value lobby__quiz--id' onClick={quizIdCopied}>{snap.quiz.specs.name}</p>
       <p className='lobby__quiz--id--label lobby__quizmaster'><span className='lobby__label'>Quizmaster</span><br/>{snap.quiz.quizmaster.name}</p>
-      <p className='lobby__quiz--id--label lobby__player'><span className='lobby__label'>Player</span><br/>{snap.player.name}</p>
+      {snap.role !== ROLE_QUIZMASTER && <p className='lobby__quiz--id--label lobby__player'><span className='lobby__label'>Player</span><br/>{snap.player.name}</p>}
       {roster}
       {waiting}
       <div className='lobby__start'>

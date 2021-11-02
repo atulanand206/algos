@@ -88,7 +88,7 @@ export const QuizCreator = (props: Props) => {
 	const quizMasterSpecsForm = <Form
 		reset={formReset}
 		header={Header_Specs}
-		fields={[Entry_TeamsInAQuiz, Entry_PlayersInATeam, Entry_Questions_Count]}
+		fields={[Entry_Name, Entry_TeamsInAQuiz, Entry_PlayersInATeam, Entry_Questions_Count]}
 		actions={[Action_Create]}
 		onSubmit={submit}
 		onChange={onChange} />

@@ -1,4 +1,4 @@
-import { Entry_TeamsInAQuiz, Entry_PlayersInATeam, Entry_Questions_Count } from "../pages/Credentials/Credentials"
+import { Entry_TeamsInAQuiz, Entry_PlayersInATeam, Entry_Questions_Count, Entry_Name } from "../pages/Credentials/Credentials"
 import { Action } from "../utils/Action"
 import { findActiveQuizzes } from "../utils/_api"
 import { Player, Snap } from "../utils/_interfaces"
@@ -32,7 +32,7 @@ export const onResponseJoinGame = (snap: any, response: string, quizId: string) 
 	state.role = res.role
 	state.snapshot = res.snapshot
 	handlers(snap.player, res.snapshot)
-	if (res.quiz.active) {
+	if (res.quiz.started) {
 		Urls.toQuiz()
 	} else {
 		Urls.toLobby()
@@ -101,7 +101,7 @@ export const handlersQuestions = (player: Player, snapshot: Snap) => {
 
 export const createQuiz = (snap: any, entries: Map<string, string>) => {
 	const specs = {
-		name: 'Binquiz live',
+		name: entries.get(Entry_Name) || 'Binquiz live',
 		teams: parseInt(entries.get(Entry_TeamsInAQuiz) || '4'),
 		players: parseInt(entries.get(Entry_PlayersInATeam) || '4'),
 		questions: parseInt(entries.get(Entry_Questions_Count) || '20')
