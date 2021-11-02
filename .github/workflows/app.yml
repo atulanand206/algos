@@ -3,20 +3,20 @@ name: CI
 on: push
 
 jobs:
-	build:
-		runs-on: ubuntu-latest
+  build:
+    runs-on: ubuntu-latest
 
-		steps:
-		- uses: actions/checkout@v2
-		
-		- name: Install
-			run: yarn install
+    steps:
+    - uses: actions/checkout@v2
 
-		- name: Lint 🧐
-			run: yarn lint
+    - name: Install
+      run: yarn install
 
-		- name: Build 🏗️
-			run: yarn build
+    - name: Lint
+      run: yarn lint
 
-		- name: Test 🚨
-			run: yarn test
+    - name: Build
+      run: yarn build
+
+    - name: Test
+      run: yarn test
