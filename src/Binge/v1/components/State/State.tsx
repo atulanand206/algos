@@ -9,7 +9,7 @@ type AvatarProps = {
 	active: boolean
 }
 
-const Avatar = (props: AvatarProps) => {
+export const Avatar = (props: AvatarProps) => {
 	return (
 		<div key={props.team.name}
 			className={classNames('state__team',
@@ -50,7 +50,7 @@ export const State = (props: Props) => {
 	return (
 		<div className='state__container'>
 			<div className={show ? 'state__table' : 'state__table--hidden'}>
-				{props.teams.map((ix) => <Avatar team={ix}
+				{props.teams.map((ix) => <Avatar team={ix} key={ix.name}
 					active={ix.id === props.currentTeamId} />)}
 			</div>
 			<div className='state__header'>
