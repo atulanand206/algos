@@ -1,11 +1,8 @@
 import { useState } from "react"
-import { useSnapshot } from "valtio"
 import { Box } from "../../components/Box/Box"
 import { Form } from "../../components/Form/Form"
 import { Header } from "../../components/Header/Header"
-import * as GameManager from "../../dataStore/GameManager"
-import { state } from "../../state/State"
-import { Game } from "../../utils/_interfaces"
+import { Game, Specs } from "../../utils/_interfaces"
 import { Urls } from "../../utils/_urls"
 import './Credentials.scss'
 import './Quizzes.scss'
@@ -18,6 +15,7 @@ export const Entry_Name = 'name'
 export const Entry_TeamsInAQuiz = 'teams in a quiz'
 export const Entry_PlayersInATeam = 'players in a team'
 export const Entry_Questions_Count = 'questions in a quiz'
+export const Entry_Rounds_Count = 'rounds in a question'
 export const Entry_QuizId = 'quiz id'
 export const Action_Create = 'create'
 export const Action_Join = 'join'
@@ -92,16 +90,23 @@ export const Reception = (props: Props) => {
 }
 
 type QuizCreatorProps = {
+	onCreate: (specs: Specs) => void
 }
 
 export const QuizCreator = (props: QuizCreatorProps) => {
 
-	const snap = useSnapshot(state)
 	const [entries, setEntries] = useState(new Map())
 	const [formReset, setFormReset] = useState(false)
 
-	const submit = (action: string) => {
-		GameManager.createQuiz(snap, entries)
+	const submit = () => {
+		const specs = {
+			name: entries.get(Entry_Name) || 'Binquiz live',
+			teams: parseInt(entries.get(Entry_TeamsInAQuiz) || '4'),
+			players: parseInt(entries.get(Entry_PlayersInATeam) || '4'),
+			questions: parseInt(entries.get(Entry_Questions_Count) || '20'),
+			rounds: parseInt(entries.get(Entry_Questions_Count) || '2'),
+		}
+		props.onCreate(specs)
 		entries.clear()
 		setEntries(entries)
 	}
@@ -110,20 +115,19 @@ export const QuizCreator = (props: QuizCreatorProps) => {
 		setFormReset(false)
 		entries.set(entry, value)
 		setEntries(entries)
+		console.log(entry, value, entries)
 	}
-
-	const quizMasterSpecsForm = <Form
-		reset={formReset}
-		header={Header_Specs}
-		fields={[Entry_Name, Entry_TeamsInAQuiz, Entry_PlayersInATeam, Entry_Questions_Count]}
-		actions={[Action_Create]}
-		onSubmit={submit}
-		onChange={onChange} />
 
 	return (
 		<div className='credentials__wrapper'>
 			<Header />
-			{quizMasterSpecsForm}
+			<Form
+				reset={formReset}
+				header={Header_Specs}
+				fields={[Entry_Name, Entry_TeamsInAQuiz, Entry_PlayersInATeam, Entry_Questions_Count, Entry_Rounds_Count]}
+				actions={[Action_Create]}
+				onSubmit={submit}
+				onChange={onChange} />
 			<Box height='8em' />
 		</div>
 	)

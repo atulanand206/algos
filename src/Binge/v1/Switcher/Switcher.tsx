@@ -20,7 +20,8 @@ export const Switcher = (props: SwitchProps) => {
         quizzes={snap.quizzes}
         onJoin={(quizId) => GameManager.joinPlayer(snap, quizId)}
         onWatch={(quizId) => GameManager.joinAudience(snap, quizId)} />
-      case 'create': return <QuizCreator />
+      case 'create': return <QuizCreator 
+        onCreate={(specs) => GameManager.createQuiz(snap, specs)}/>
       case 'quiz': return <Board />
       case 'lobby': return <Lobby />
       case '': return <Landing />

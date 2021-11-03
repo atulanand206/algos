@@ -1,7 +1,6 @@
-import { Entry_TeamsInAQuiz, Entry_PlayersInATeam, Entry_Questions_Count, Entry_Name } from "../pages/Credentials/Credentials"
 import { Action } from "../utils/Action"
 import { findActiveQuizzes } from "../utils/_api"
-import { Player, Snap } from "../utils/_interfaces"
+import { Player, Snap, Specs } from "../utils/_interfaces"
 import { Urls } from "../utils/_urls"
 import { WebSckts } from "../utils/_websockets"
 import { state } from './../state/State'
@@ -99,13 +98,7 @@ export const handlersQuestions = (player: Player, snapshot: Snap) => {
 	WebSckts.register(Action.S_SCORE, (response: string) => onResponseScore(snapshot, response))
 }
 
-export const createQuiz = (snap: any, entries: Map<string, string>) => {
-	const specs = {
-		name: entries.get(Entry_Name) || 'Binquiz live',
-		teams: parseInt(entries.get(Entry_TeamsInAQuiz) || '4'),
-		players: parseInt(entries.get(Entry_PlayersInATeam) || '4'),
-		questions: parseInt(entries.get(Entry_Questions_Count) || '20')
-	}
+export const createQuiz = (snap: any, specs: Specs) => {
 	const obj = { action: Action.toString(Action.SPECS), person: snap.player, specs: specs }
 	console.log(obj)
 	handlerQuizmaster(snap)
