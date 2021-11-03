@@ -45,7 +45,7 @@
 		grid-auto-rows: auto;
 		margin-inline: 1em;
 		overflow-y: scroll;
-		max-height: 10em;
+		max-height: 32em;
 		height: auto;
 		border-radius: 1.75em;
 		// background: radial-gradient(#093145, #191557);
@@ -72,9 +72,14 @@
 
   &__team {
     display: grid;
+    grid-template-rows: 1fr 1fr;
     grid-template-columns: repeat(3, 1fr);
     padding: 1em;
 		padding-inline: 2em;
+
+    & > * {
+      grid-row: 1/2;
+    }
 
 		&--current {
 			display: grid;
@@ -100,6 +105,13 @@
     &--turn {
       text-align: right;
       font-size: $font_btn;
+    }
+    &--players {
+      grid-row: 2/3;
+      grid-column: 1/-1;
+    }
+    &--player {
+      margin-block: 0.2em;
     }
   }
 }

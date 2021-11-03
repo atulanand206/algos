@@ -51,6 +51,10 @@ export const Board = (props: BoardProps) => {
 	const queryPass = () => {
 		WebSckts.send(Action.PASS, JSON.stringify(snapshotRequest(snap, Action.PASS)))
 	}
+
+	const rankedTeams = () => {
+		return teams.sort((a, b) => b.score - a.score)
+	}
 	
 	const teams = [...snap.snapshot.teams]
 
@@ -89,7 +93,7 @@ export const Board = (props: BoardProps) => {
 		</div>
 		
 		<div className='board__footer'>
-			<State teams={teams.sort((a, b) => b.score - a.score)} currentTeamId={snap.snapshot.team_s_turn} />
+			<State teams={rankedTeams()} currentTeamId={snap.snapshot.team_s_turn} />
 		</div>
 
 	</div>

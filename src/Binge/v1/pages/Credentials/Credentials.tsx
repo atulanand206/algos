@@ -29,23 +29,32 @@ export const Form_Player = 'player'
 export const Form_Audience = 'audience'
 
 export const CreateQuiz = () => {
-	return <div className='quizzes__item' key={`item.key ${-1}`}>
+	return <div className='quizzes__item quizzes__item--create' key={`item.key ${-1}`}>
 		<button className='quizzes__item__button' onClick={() => Urls.toCreate()}>Create Quiz</button>
 	</div>
 }
 
 export const QuizzesList = () => {
 
-	const snap = useSnapshot(state);
+	const scrollContainer = document.querySelector("div");
 
+	if (scrollContainer) {
+		scrollContainer.addEventListener("wheel", (evt) => {
+				evt.preventDefault();
+				scrollContainer.scrollLeft += evt.deltaY;
+		});
+	}
+
+	const snap = useSnapshot(state);
+	console.log(JSON.stringify(snap))
   return (
     <div className='quizzes__list' >
 			{snap.can_create_quiz && CreateQuiz()}
       {snap.quizzes.map((item, ix) => {
 				const total = item.specs.teams * item.specs.players
-        return <div className='quizzes__item' key={`item.key ${ix}`}>
+        return <div className='quizzes__item quizzes__item--quiz' key={`item.key ${ix}`}>
 					<div className='quizzes__item--quizmaster'>{item.quizmaster.name}</div>
-					<div className='quizzes__item--name'>Name {item.specs.name}</div>
+					<div className='quizzes__item--name'>{item.specs.name}</div>
 					<div className='quizzes__item--rounds'>{item.specs.rounds} Rounds</div>
 					<div className='quizzes__item--rounds'>{item.specs.questions} Questions</div>
 					<div className='quizzes__item--config'>{item.specs.teams} Teams of {item.specs.players} Players</div>

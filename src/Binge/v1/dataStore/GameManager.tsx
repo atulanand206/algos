@@ -9,8 +9,8 @@ import { state } from './../state/State'
 export const onResponsePlayer = async (snap: any, player: Player) => {
 	console.log(player)
 	state.player = player
-	await findActiveQuizzes(player.id)
 	Urls.toReception()
+	await findActiveQuizzes(player.id)
 }
 
 export const onResponseCreateGame = (snap: any, response: string) => {

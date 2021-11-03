@@ -10,7 +10,7 @@ export class WebSckts {
 
   static _instance: WebSckts
   client: W3CWebSocket
-  websocketUrl: string = `${process.env.REACT_APP_WEBSOCKETS_SCHEME}://${window.location.hostname}:${5000}/ws`
+  websocketUrl: string = `${process.env.REACT_APP_WEBSOCKETS_SCHEME}://${window.location.hostname}${process.env.REACT_APP_SERVER_ENDPOINT_PREFIX}/ws`
 
   handlers = new Map()
 

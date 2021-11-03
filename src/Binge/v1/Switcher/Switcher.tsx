@@ -24,6 +24,7 @@ export const Switcher = (props: SwitchProps) => {
   
   return (
     <div className='quiz__wrapper'>
+      <div className='quiz__wrapper__background'/>
       {view()}
     </div>
   )
