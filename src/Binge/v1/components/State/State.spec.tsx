@@ -116,4 +116,53 @@ describe('State', function () {
     expect(wrapper.find('Avatar').at(0).prop('active')).equal(false);
     expect(wrapper.find('Avatar').at(1).prop('active')).equal(true);
   });
+
+  it('should pass team to Avatar correctly', () => {
+    const props = {
+      teams: [{
+        id: "test-id-1",
+        name: "test-name-1",
+        score: 0,
+        players: [{
+          id: "test-id-2",
+          name: "test-name-2",
+          email: "test-email-1"
+        }]
+      },
+      {
+        id: "test-id-3",
+        name: "test-name-3",
+        score: 0,
+        players: [{
+          id: "test-id-4",
+          name: "test-name-4",
+          email: "test-email-2"
+        }]
+      }],
+      currentTeamId: "test-id-3",
+    }
+    const wrapper = shallow(
+      <State {...props} />
+    );
+    expect(wrapper.find('Avatar').at(0).prop('team')).deep.equal({
+      id: "test-id-1",
+      name: "test-name-1",
+      score: 0,
+      players: [{
+        id: "test-id-2",
+        name: "test-name-2",
+        email: "test-email-1"
+      }]
+    });
+    expect(wrapper.find('Avatar').at(1).prop('team')).deep.equal({
+      id: "test-id-3",
+      name: "test-name-3",
+      score: 0,
+      players: [{
+        id: "test-id-4",
+        name: "test-name-4",
+        email: "test-email-2"
+      }]
+    });
+  })
 });
