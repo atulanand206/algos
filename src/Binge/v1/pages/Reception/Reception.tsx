@@ -4,7 +4,7 @@ import { Form } from "../../components/Form/Form"
 import { Header } from "../../components/Header/Header"
 import { Game, Specs } from "../../utils/_interfaces"
 import { Urls } from "../../utils/_urls"
-import './Credentials.scss'
+import './Reception.scss'
 import './Quizzes.scss'
 
 

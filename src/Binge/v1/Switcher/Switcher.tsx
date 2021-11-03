@@ -1,6 +1,6 @@
 import { useSnapshot } from "valtio"
 import { Board } from "../pages/Board/Board"
-import { QuizCreator, Reception } from "../pages/Credentials/Credentials"
+import { QuizCreator, Reception } from "../pages/Reception/Reception"
 import * as GameManager from "../dataStore/GameManager"
 import { Landing } from "../pages/Landing/Landing"
 import { Lobby } from "../pages/Lobby/Lobby"
@@ -12,19 +12,21 @@ type SwitchProps = {}
 export const Switcher = (props: SwitchProps) => {
 
   const snap = useSnapshot(state)
+  const { page, quizzes, can_create_quiz } = snap
 
   const view = () => {
-    switch (snap.page) {
+    switch (page) {
       case 'reception': return <Reception
-        canCreateQuiz={snap.can_create_quiz}
-        quizzes={snap.quizzes}
+        canCreateQuiz={can_create_quiz}
+        quizzes={quizzes}
         onJoin={(quizId) => GameManager.joinPlayer(snap, quizId)}
         onWatch={(quizId) => GameManager.joinAudience(snap, quizId)} />
       case 'create': return <QuizCreator 
         onCreate={(specs) => GameManager.createQuiz(snap, specs)}/>
       case 'quiz': return <Board />
       case 'lobby': return <Lobby />
-      case '': return <Landing />
+      case '': return <Landing 
+        onLogin={(player) => GameManager.onLoginSuccess(snap, player)} />
     }
   }
 

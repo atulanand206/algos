@@ -2,7 +2,7 @@
 import { expect } from 'chai'
 import { shallow } from 'enzyme'
 import sinon from 'sinon'
-import { QuizCreator, Reception } from './Credentials'
+import { QuizCreator, Reception } from './Reception'
 
 describe('Reception', () => {
 
