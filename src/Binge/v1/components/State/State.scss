@@ -1,44 +1,105 @@
 @import "../../utils/components";
-
 .state {
-    &__container {
-        @include flex-vertical-center;
+  &__container {
+    // @include grid-rows;
+		position: relative;
+    padding-inline: 1em;
+    height: auto;
+  }
+
+  &__header {
+    margin: 0;
+    height: 2em;
+    letter-spacing: 1em;
+    background: $color_black;
+    font-size: $fnt_normal;
+    border-radius: 1em;
+    padding: 0.5em;
+    padding-inline: 1.5em;
+    display: grid;
+    grid-template-columns: 1rem 1fr 1rem;
+
+		&--text {
+      grid-row: 1 / -1;
+      grid-column: 2/3;
+      font-size: $fnt_normal;
+      color: $color_header;
+      margin: 0;
+      text-align: center;
     }
 
-    &__header {
-        margin: 0;
-        letter-spacing: 1em;
-        font-size: $fnt_normal;
+    &--icon {
+			margin: auto;
+      grid-row: 1 / -1;
+      grid-column: -2/-1;
+      color: $color_header;
     }
+  }
 
-    &__team {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        padding-block: 1em;
+	&__table {
+		position: absolute;
+		left: 1em;
+		right: 1em;
+		bottom: 4em;
+		display: grid;
+		grid-auto-rows: auto;
+		margin-inline: 1em;
+		overflow-y: scroll;
+		max-height: 10em;
+		height: auto;
+		border-radius: 1.75em;
+		// background: radial-gradient(#093145, #191557);
+		background: $color_black;
+		transform: scaleY(1);
+		transition: all .5s ease-in-out;
 
-        & > * {
-            margin: 0;
-            text-align: left;
-            font-size: $fnt_normal;
-        }
+		&--hidden {
+			position: absolute;
+			left: 1em;
+			right: 1em;
+			bottom: 0;
+			// background: radial-gradient(#423977, #191557);
+			background: $color_black;
+			transform: scaleY(0); 
+			height: 0;
+			transition-duration: .5s;
 
-        &--name {
-            text-align: left;
-        }
+			& > * > * {
+				opacity: 0;
+			}
+		}
+	}
 
-        &--score {
-            text-align: right;
-        }
+  &__team {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    padding: 1em;
+		padding-inline: 2em;
 
-        &--turn {
-            text-align: right;
-            font-size: $font_btn;
-        }
+		&--current {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+
+			& > * {
+				text-align: center;
+				grid-row: 1/-1;
+			}
+		}
+
+    & > * {
+      margin: 0;
+      text-align: left;
+      font-size: $fnt_normal;
     }
-
-    &__table {
-        width: 95%;
-        display: grid;
-        grid-auto-rows: auto;
+    &--name {
+      text-align: left;
     }
+    &--score {
+      text-align: right;
+    }
+    &--turn {
+      text-align: right;
+      font-size: $font_btn;
+    }
+  }
 }

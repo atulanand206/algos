@@ -4,15 +4,17 @@
   &__wrapper {
     @include no-decoration;
     width: 100%;
+    
   }
 
   &__value {
+    margin: 0;
     @include no-decoration;
     font-size: $font_btn;
     width: 100%;
     color: $color_white;
     text-align: center;
-    padding-bottom: 1em;
+    padding-bottom: 0.5em;
     border-bottom: 1px solid $color_white;
 
     &--editable {

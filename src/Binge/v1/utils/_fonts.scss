@@ -4,6 +4,9 @@
 @import url("https://fonts.googleapis.com/css2?family=Merriweather&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Scada&display=swap");
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Source+Serif+Pro:ital,wght@0,200;1,200&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Henny+Penny&family=Source+Serif+Pro:ital,wght@0,200;1,200&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Henny+Penny&family=Righteous&family=Source+Serif+Pro:ital,wght@0,200;1,200&display=swap');
 
 $font_btn: 1.4em;
 $fnt_normal: 1.3em;
@@ -21,9 +24,24 @@ $fnt_xlarge: 10em;
 
 * {
     @include no-selection;
-    font-family: "Scada", sans-serif;
+    // font-family: "Scada", sans-serif;
+    font-family: "Righteous", sans-serif;
 }
 
 @mixin font-content {
-    font-family: 'Montserrat', sans-serif;
+    font-size: 1.2em;
+    letter-spacing: 0.1em;
+    line-height: 1.2em;
+    font-style: italic;
+    // font-family: Helvetica, Sans-Serif;;
+    // font-family: 'Montserrat', Sans-Serif;;
+    font-family: 'Source Serif Pro', serif;;
+}
+
+@mixin logo {
+    text-align: center;
+    color: $color_header;
+    text-shadow: 1px 1px 1px rgb(135, 135, 222);
+    font-family: "Sedgwick Ave Display", cursive;
+    // font-family: 'Righteous', cursive;
 }
