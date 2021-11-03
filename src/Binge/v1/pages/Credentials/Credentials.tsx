@@ -5,12 +5,11 @@ import { Form } from "../../components/Form/Form"
 import { Header } from "../../components/Header/Header"
 import * as GameManager from "../../dataStore/GameManager"
 import { state } from "../../state/State"
+import { Game } from "../../utils/_interfaces"
 import { Urls } from "../../utils/_urls"
 import './Credentials.scss'
 import './Quizzes.scss'
 
-type Props = {
-}
 
 export const Header_Credentials = 'credentials?'
 export const Header_Specs = 'specs?'
@@ -33,50 +32,69 @@ export const CreateQuiz = () => {
 		<button className='quizzes__item__button' onClick={() => Urls.toCreate()}>Create Quiz</button>
 	</div>
 }
+type QuizProps = {
+	item: Game
+	canJoin: boolean
+	onJoin: () => void
+	onWatch: () => void
+}
 
-export const QuizzesList = () => {
+export const Quiz = (props: QuizProps) => {
+	const { item } = props
+	const total = item.specs.teams * item.specs.players
+	return <div className='quizzes__item quizzes__item--quiz' key={`item.key ${item.id}`}>
+		<div className='quizzes__item--quizmaster'>{item.quizmaster.name}</div>
+		<div className='quizzes__item--name'>{item.specs.name}</div>
+		<div className='quizzes__item--rounds'>{item.specs.rounds} Rounds</div>
+		<div className='quizzes__item--rounds'>{item.specs.questions} Questions</div>
+		<div className='quizzes__item--config'>{item.specs.teams} Teams of {item.specs.players} Players</div>
+		<div className='quizzes__item--config'>Players {item.players_joined} / {total}</div>
+		{props.canJoin && <button className='quizzes__item__button' onClick={props.onJoin}>Join</button>}
+		<button className='quizzes__item__button' onClick={props.onWatch}>Watch</button>
+	</div>
+}
 
-	const scrollContainer = document.querySelector("div");
+type QuizzesProps = {
+	quizzes: Game[]
+	onJoin: (quizId: string) => void
+	onWatch: (quizId: string) => void
+}
 
-	if (scrollContainer) {
-		scrollContainer.addEventListener("wheel", (evt) => {
-				evt.preventDefault();
-				scrollContainer.scrollLeft += evt.deltaY;
-		});
-	}
+export const Quizzes = (props: QuizzesProps) => {
+	return <>{props.quizzes.map((item, ix) => {
+		return <Quiz
+			item={item}
+			key={`item.key ${ix}`}
+			canJoin={item.can_join}
+			onJoin={() => props.onJoin(item.id)}
+			onWatch={() => props.onWatch(item.id)} />
+	})}	</>
+}
 
-	const snap = useSnapshot(state);
-	console.log(JSON.stringify(snap))
-  return (
-    <div className='quizzes__list' >
-			{snap.can_create_quiz && CreateQuiz()}
-      {snap.quizzes.map((item, ix) => {
-				const total = item.specs.teams * item.specs.players
-        return <div className='quizzes__item quizzes__item--quiz' key={`item.key ${ix}`}>
-					<div className='quizzes__item--quizmaster'>{item.quizmaster.name}</div>
-					<div className='quizzes__item--name'>{item.specs.name}</div>
-					<div className='quizzes__item--rounds'>{item.specs.rounds} Rounds</div>
-					<div className='quizzes__item--rounds'>{item.specs.questions} Questions</div>
-					<div className='quizzes__item--config'>{item.specs.teams} Teams of {item.specs.players} Players</div>
-					<div className='quizzes__item--config'>Players {item.players_joined} / {total}</div>
-					{item.can_join && <button className='quizzes__item__button' onClick={() => GameManager.joinPlayer(snap, item.id)}>Join</button>}
-					<button className='quizzes__item__button' onClick={() => GameManager.joinAudience(snap, item.id)}>Watch</button>
-				</div>
-			})}	
-    </div>
-  );
+type Props = {
+	canCreateQuiz: boolean
+	quizzes: Game[]
+	onJoin: (quizId: string) => void
+	onWatch: (quizId: string) => void
 }
 
 export const Reception = (props: Props) => {
+
 	return (
 		<div className='credentials__wrapper'>
 			<Header />
-			{QuizzesList()}
+			<div className='quizzes__list' >
+				{props.canCreateQuiz ? <CreateQuiz /> : <></>}
+				<Quizzes quizzes={props.quizzes} onJoin={props.onJoin} onWatch={props.onWatch} />
+			</div>
 		</div>
 	)
 }
 
-export const QuizCreator = (props: Props) => {
+type QuizCreatorProps = {
+}
+
+export const QuizCreator = (props: QuizCreatorProps) => {
 
 	const snap = useSnapshot(state)
 	const [entries, setEntries] = useState(new Map())

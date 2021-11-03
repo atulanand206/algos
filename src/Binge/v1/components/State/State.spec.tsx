@@ -1,3 +1,4 @@
+/* eslint-disable jest/valid-expect */
 import { expect } from 'chai';
 import { shallow } from 'enzyme';
 import { State, Avatar } from './State';
@@ -107,8 +108,7 @@ describe('State', function () {
     const wrapper = shallow(
       <State {...props} />
     );
-    const toggle = wrapper.find('.state__header--icon');
-    toggle.simulate('click');
+    wrapper.find('.state__header--icon').simulate('click');
     expect(wrapper.find('.state__table--hidden')).length(0);
     expect(wrapper.find('.state__table')).length(1);
     expect(wrapper.find('.fa-arrow-up')).length(1);
