@@ -61,10 +61,10 @@ export const Roster = (props: RosterProps) => {
 }
 
 type Props = {
-  quiz: Game
-  teams: TeamRoster[]
   player: Player
+  quiz: Game
   role: string
+  teams: TeamRoster[]
   onStart: () => void
 }
 

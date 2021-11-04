@@ -126,6 +126,22 @@ export const queryActive = (snap: any) => {
 	WebSckts.send(Action.ACTIVE, JSON.stringify({ action: Action.toString(Action.ACTIVE) }))
 }
 
+export const snapshotRequest = (action: Action, quizId: string, questionId: string) => {
+  return { action: Action.toString(action), quiz_id: quizId, question_id: questionId }
+}
+
+export const queryPass = (snap: any) => {
+	WebSckts.send(Action.PASS, JSON.stringify(snapshotRequest(Action.PASS, snap.quiz.id, snap.snapshot.question_id)))
+}
+
+export const queryRight = (snap: any) => {
+	WebSckts.send(Action.RIGHT, JSON.stringify(snapshotRequest(Action.RIGHT, snap.quiz.id, snap.snapshot.question_id)))
+}
+
+export const queryNext = (snap: any) => {
+	WebSckts.send(Action.NEXT, JSON.stringify(snapshotRequest(Action.NEXT, snap.quiz.id, snap.snapshot.question_id)))
+}
+
 export const queryExtend = (snap: any) => {
 }
 

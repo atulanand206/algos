@@ -16,22 +16,30 @@ export const Switcher = (props: SwitchProps) => {
 
   const view = () => {
     switch (page) {
+      case '': return <Landing 
+        onLogin={(player) => GameManager.onLoginSuccess(snap, player)} />
+      case 'create': return <QuizCreator 
+        onCreate={(specs) => GameManager.createQuiz(snap, specs)}/>
       case 'reception': return <Reception
         canCreateQuiz={can_create_quiz}
         quizzes={quizzes}
         onJoin={(quizId) => GameManager.joinPlayer(snap, quizId)}
         onWatch={(quizId) => GameManager.joinAudience(snap, quizId)} />
-      case 'create': return <QuizCreator 
-        onCreate={(specs) => GameManager.createQuiz(snap, specs)}/>
-      case 'quiz': return <Board />
       case 'lobby': return <Lobby 
-        quiz={snap.quiz}
-        teams={snap.snapshot.teams}
-        role={snap.role}
         player={snap.player} 
+        quiz={snap.quiz}
+        role={snap.role}
+        teams={snap.snapshot.teams}
         onStart={() => GameManager.start(snap)} />
-      case '': return <Landing 
-        onLogin={(player) => GameManager.onLoginSuccess(snap, player)} />
+      case 'quiz': return <Board 
+        player={snap.player}   
+        quiz={snap.quiz}
+        role={snap.role}
+        snapshot={snap.snapshot}
+        answerRevealed={snap.answerRevealed} 
+        onPass={() => GameManager.queryPass(snap)}
+        onNext={() => GameManager.queryNext(snap)}
+        onRight={() => GameManager.queryRight(snap)} />
     }
   }
 

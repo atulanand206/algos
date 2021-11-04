@@ -61,6 +61,7 @@ export type Snap = {
   question: string[];
   answer: string[];
   hint: string[];
+  can_pass: boolean;
 };
 
 export type Score = {
