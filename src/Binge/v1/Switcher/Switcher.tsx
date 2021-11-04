@@ -25,8 +25,11 @@ export const Switcher = (props: SwitchProps) => {
         onCreate={(specs) => GameManager.createQuiz(snap, specs)}/>
       case 'quiz': return <Board />
       case 'lobby': return <Lobby 
+        quiz={snap.quiz}
+        teams={snap.snapshot.teams}
         role={snap.role}
-        player={snap.player} />
+        player={snap.player} 
+        onStart={() => GameManager.start(snap)} />
       case '': return <Landing 
         onLogin={(player) => GameManager.onLoginSuccess(snap, player)} />
     }
