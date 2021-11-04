@@ -5,13 +5,15 @@
         grid-template-columns: 1fr 1fr;
         grid-template-rows: 5em 3em 3em 1fr 4em 5em;
         overflow: hidden;
+        justify-self: center;
+        background: $color_background_board;
+        max-width: 800px;
 
         &--background {
             height: 100%;
             grid-row: 1/-1;
             grid-column: 1/-1;
-            // background-image: url('./../../../../images/background.svg');
-            @include blink;
+            
         }
         &>* {
             grid-column: 1/-1;

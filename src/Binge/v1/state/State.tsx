@@ -69,7 +69,10 @@ const state = proxy({
       rounds: 2
     },
     tags: [''],
-    active: false
+    active: false,
+    players: 0,
+    can_join: false,
+    players_joined: 0,
   },
   answerRevealed: false,
   hintRevealed: false

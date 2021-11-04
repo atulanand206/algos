@@ -1,0 +1,52 @@
+@import "../../utils/components";
+.quizzes {
+  &__list {
+    align-self: flex-start;
+    justify-self: center;
+    grid-row: 2/3;
+    grid-column: 1/-1;
+    display: grid;
+    grid-template-rows: 1fr;
+    grid-gap: 10px; 
+    list-style: none;
+    width: 800px;
+    grid-auto-flow: column;
+    grid-auto-columns: 1fr;
+    overflow-x: auto;
+    padding: 6px;
+  }
+
+  &__item {
+    background-color: $color_background_board;
+    border: 1px solid #99b4c0;
+    padding: 8px;
+    margin: 4px;
+    border-radius: 2em;
+    max-width: clamp(16em, 64em, 132em);
+    display: grid;
+    place-items: center;
+    div {
+      color: $color_white
+    }
+
+    &__button {
+      margin-block: 2em;
+    }
+
+    &--quizmaster {
+      grid-row: 1/2;
+      grid-column: 1/2;
+    }
+
+    &--create {
+      width: 8em;
+      grid-row: 1/-1;
+      grid-column: 1/-1;
+    }
+
+    &--quiz {
+      grid-template-columns: repeat(3, 1fr);   
+      grid-template-rows: repeat(1, 1fr);
+    }
+  }
+}

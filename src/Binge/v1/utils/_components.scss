@@ -5,6 +5,9 @@
 @import "wrappers";
 @import "glow";
 
+$small: 900px;
+$medium: 1300px;
+
 @mixin logo-large {
     @include logo;
     font-size: $fnt_large;

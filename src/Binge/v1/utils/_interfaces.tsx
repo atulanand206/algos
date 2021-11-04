@@ -24,6 +24,7 @@ export type TeamRoster = {
 };
 
 export type Specs = {
+  name: string;
   teams: number;
   players: number;
   questions: number;
@@ -36,6 +37,8 @@ export type Game = {
   tags: string[];
   specs: Specs;
   active: boolean;
+  can_join: boolean;
+  players_joined: number;
 };
 
 export type Answer = {
@@ -58,6 +61,7 @@ export type Snap = {
   question: string[];
   answer: string[];
   hint: string[];
+  can_pass: boolean;
 };
 
 export type Score = {

@@ -4,14 +4,22 @@
   &__wrapper {
     height: 100%;
     display: grid;
-    background: $color_background;
+    background-color: $color_background;
+    grid-template-rows: 1fr;
     // background-image: url('./../../../images/background.svg');
     // background: #112 url(//images.weserv.nl/?url=i.imgur.com/6QJjYMe.jpg)  center no-repeat;
-    background-size:cover;
-
+    
     & > * {
       display: grid;
+      grid-row: 1/-1;
+      grid-column: 1/-1;
       align-items: center;
+    }
+
+    &__background {
+      display: grid;
+      background-image: url('./../../../images/background.svg');
+      // @include blink;
     }
   }
 }

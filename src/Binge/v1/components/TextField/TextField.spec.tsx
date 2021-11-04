@@ -1,6 +1,6 @@
-import { expect } from 'chai';
-import { shallow } from 'enzyme';
-import { TextField } from './TextField';
+import { expect } from 'chai'
+import { shallow } from 'enzyme'
+import { TextField } from './TextField'
 
 describe('Text Field', function () {
 
@@ -11,9 +11,9 @@ describe('Text Field', function () {
     }
     const wrapper = shallow(
       <TextField {...props} />
-    );
+    )
     const textFields = wrapper.find('.text-field__value')
-    expect(textFields).length(1);
-    expect(textFields.at(0).text()).equal('random value');
-  });
-});
+    expect(textFields).length(1)
+    expect(textFields.at(0).text()).equal('random value')
+  })
+})

@@ -1,17 +1,13 @@
 import GoogleLogin from "react-google-login"
-import { useSnapshot } from "valtio"
 import { Header } from "../../components/Header/Header"
-import *  as GameManager from "../../dataStore/GameManager"
-import { state } from "../../state/State"
 import { Player } from "../../utils/_interfaces"
 import './Landing.scss'
 
 type LandingProps = {
+	onLogin: (player: Player) => void
 }
 
 export const Landing = (props: LandingProps) => {
-
-	const snap = useSnapshot(state)
 
 	const responseFail = (response: any) => {
 		console.log(response)
@@ -22,7 +18,7 @@ export const Landing = (props: LandingProps) => {
 		const profile = response.profileObj
 		const obj: Player = { id: profile.googleId, name: profile.name, email: profile.email }
 		console.log(obj)
-		GameManager.onLoginSuccess(snap, obj)
+		props.onLogin(obj)
 	}
 
 	const glogin = () => {

@@ -36,20 +36,20 @@
   }
 }
 
-$color-blink-background: $color-background;
+$color-blink-background: $color_background_landing;
 
 @keyframes blink-animation {
   0% {
     background-color: $color-blink-background;
   }
   25% {
-    background-color: rgba($color-blink-background, 0.6);
+    background-color: rgba($color-blink-background, 0.8);
   }
   50% {
     background-color: rgba($color-blink-background, 0.2);
   }
   75% {
-    background-color: rgba($color-blink-background, 0.6);
+    background-color: rgba($color-blink-background, 0.8);
   }
   100% {
     background-color: $color-blink-background;
@@ -60,26 +60,27 @@ $color-blink-background: $color-background;
     background-color: $color-blink-background;
   }
   25% {
-    background-color: rgba($color-blink-background, 0.6);
+    background-color: rgba($color-blink-background, 0.8);
   }
   50% {
     background-color: rgba($color-blink-background, 0.2);
   }
   75% {
-    background-color: rgba($color-blink-background, 0.6);
+    background-color: rgba($color-blink-background, 0.8);
   }
   100% {
     background-color: $color-blink-background;
   }
 }
 @mixin blink {
-  $animation-name: fade;
+  $animation-name: blink-animation;
+  $blink-time: 2s;
 
-  -moz-transition: all 0.5s ease-in-out;
-  -webkit-transition: all 0.5s ease-in-out;
-  -o-transition: all 0.5s ease-in-out;
-  -ms-transition: all 0.5s ease-in-out;
-  transition: all 0.5s ease-in-out;
+  -moz-transition: all $blink-time ease-in-out;
+  -webkit-transition: all $blink-time ease-in-out;
+  -o-transition: all $blink-time ease-in-out;
+  -ms-transition: all $blink-time ease-in-out;
+  transition: all $blink-time ease-in-out;
   -moz-animation: $animation-name normal 1.5s infinite ease-in-out;
   /* Firefox */
   -webkit-animation: $animation-name normal 1.5s infinite ease-in-out;

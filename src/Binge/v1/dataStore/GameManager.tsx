@@ -1,16 +1,66 @@
-import { Entry_TeamsInAQuiz, Entry_PlayersInATeam, Entry_Questions_Count, Entry_Name } from "../pages/Credentials/Credentials"
 import { Action } from "../utils/Action"
 import { findActiveQuizzes } from "../utils/_api"
-import { Player, Snap } from "../utils/_interfaces"
+import { Player, Snap, Specs } from "../utils/_interfaces"
 import { Urls } from "../utils/_urls"
 import { WebSckts } from "../utils/_websockets"
 import { state } from './../state/State'
 
+export const send = (requestAction: Action, requestObj: string) => {
+	WebSckts.send(requestAction, requestObj)
+}
+
+export const register = (action: Action, handler: (msg: string) => void) => {
+	WebSckts.register(action, handler)
+}
+
+export const beginRequest = (player: Player): string => {
+	return JSON.stringify({ action: Action.toString(Action.BEGIN), person: player })
+}
+
+export const createQuizRequest = (snap: any, specs: Specs) => {
+	return JSON.stringify({ action: Action.toString(Action.SPECS), person: snap.player, specs: specs })
+}
+
+export const joinRequest = (action: Action, snap: any, quizId: string) => {
+	return JSON.stringify({ action: Action.toString(action), person: snap.player, quiz_id: quizId })
+}
+
+export const startRequest = (snap: any): string => {
+	return JSON.stringify({ action: Action.toString(Action.START), quiz_id: snap.quiz.id })
+}
+
+export const activeRequest = JSON.stringify({ action: Action.toString(Action.ACTIVE) })
+
+export const snapshotRequest = (action: Action, quizId: string, questionId: string) => {
+	return JSON.stringify({ action: Action.toString(action), quiz_id: quizId, question_id: questionId })
+}
+
+export const refreshRequest = (player: Player, snapshot: Snap): string => {
+	return JSON.stringify({ action: Action.toString(Action.REFRESH), person: player, quiz_id: snapshot.quiz_id })
+}
+
+export const canAcceptQuizSnapshot = (snap: any, response: Snap): boolean => {
+	return response.quiz_id === snap.quiz_id
+}
+
+export const onResponseLogin = (snap: any, response: string, email: string) => {
+	const res = JSON.parse(response)
+	console.log(res)
+	if (res.tokens !== null) {
+		sessionStorage.setItem('access_token', res.tokens.access_token)
+		sessionStorage.setItem('refresh_token', res.tokens.refresh_token)
+	}
+	state.can_create_quiz = res.quizmaster
+	if (res.player.email === email) {
+		onResponsePlayer(snap, res.player)
+	}
+}
+
 export const onResponsePlayer = async (snap: any, player: Player) => {
 	console.log(player)
 	state.player = player
-	await findActiveQuizzes(player.id)
 	Urls.toReception()
+	await findActiveQuizzes(player.id)
 }
 
 export const onResponseCreateGame = (snap: any, response: string) => {
@@ -39,6 +89,23 @@ export const onResponseJoinGame = (snap: any, response: string, quizId: string) 
 	}
 }
 
+export const onResponseQuestion = (snapshot: Snap, response: string) => {
+	const res = JSON.parse(response)
+	console.log(res, canAcceptQuizSnapshot(snapshot, res.snapshot))
+	state.snapshot = res.snapshot
+	console.log(res)
+	switch (res.action) {
+		case Action.toString(Action.START): Urls.toQuiz(); break;
+		case Action.toString(Action.HINT): state.hintRevealed = true; break;
+		case Action.toString(Action.RIGHT): state.answerRevealed = true; break;
+		case Action.toString(Action.NEXT): state.answerRevealed = false; state.hintRevealed = false; break;
+	}
+}
+
+export const onResponseRefresh = (player: Player, snapshot: Snap) => {
+	send(Action.REFRESH, refreshRequest(player, snapshot))
+}
+
 export const onResponseScore = (snap: any, response: string) => {
 }
 
@@ -46,30 +113,13 @@ export const onResponseActive = (snapshot: Snap, response: string) => {
 
 }
 
-export const onResponseRefresh = (player: Player, snapshot: Snap) => {
-	const obj = { action: Action.toString(Action.REFRESH), person: player, quiz_id: snapshot.quiz_id }
-	WebSckts.send(Action.REFRESH, JSON.stringify(obj))
+export const onLoginSuccess = (snap: any, player: Player) => {
+	handlerPlayer(snap, player.email)
+	send(Action.BEGIN, beginRequest(player))
 }
 
 export const handlerPlayer = (snap: any, email: string) => {
-	WebSckts.register(Action.S_PLAYER, (response: string) => {
-		const res = JSON.parse(response)
-		console.log(res)
-		if (res.tokens !== null) {
-			sessionStorage.setItem('access_token', res.tokens.access_token)
-			sessionStorage.setItem('refresh_token', res.tokens.refresh_token)
-		}
-		state.can_create_quiz = res.quizmaster
-		if (res.player.email === email) {
-			onResponsePlayer(snap, res.player)
-		}
-	})
-}
-
-export const onLoginSuccess = (snap: any, player: Player) => {
-	handlerPlayer(snap, player.email)
-	const obj = { action: Action.toString(Action.BEGIN), person: player }
-	WebSckts.send(Action.BEGIN, JSON.stringify(obj))
+	register(Action.S_PLAYER, (response: string) => onResponseLogin(snap, response, email))
 }
 
 export const handlers = (player: Player, snapshot: Snap) => {
@@ -78,59 +128,60 @@ export const handlers = (player: Player, snapshot: Snap) => {
 }
 
 export const handlerActiveQuiz = (player: Player, snapshot: Snap) => {
-	WebSckts.register(Action.S_ACTIVE, (response: string) => onResponseActive(snapshot, response))
-	WebSckts.register(Action.S_REFRESH, () => onResponseRefresh(player, snapshot))
+	register(Action.S_ACTIVE, (response: string) => onResponseActive(snapshot, response))
+	register(Action.S_REFRESH, () => onResponseRefresh(player, snapshot))
 }
 
 export const handlerQuizmaster = (snap: any) => {
-	WebSckts.register(Action.S_JOIN, (response: string) => onResponseCreateGame(snap, response))
+	register(Action.S_JOIN, (response: string) => onResponseCreateGame(snap, response))
 }
 
 export const handlerJoinPlayer = (snap: any, quizId: string) => {
-	WebSckts.register(Action.S_JOIN, (res) => onResponseJoinGame(snap, res, quizId))
+	register(Action.S_JOIN, (res) => onResponseJoinGame(snap, res, quizId))
 }
 
 export const handlerAudience = (snap: any, quizId: string) => {
-	WebSckts.register(Action.S_JOIN, (res) => onResponseJoinGame(snap, res, quizId))
+	register(Action.S_JOIN, (res) => onResponseJoinGame(snap, res, quizId))
 }
 
 export const handlersQuestions = (player: Player, snapshot: Snap) => {
-	WebSckts.register(Action.S_GAME, (response: string) => onResponse(snapshot, response))
-	WebSckts.register(Action.S_SCORE, (response: string) => onResponseScore(snapshot, response))
+	register(Action.S_GAME, (response: string) => onResponseQuestion(snapshot, response))
+	register(Action.S_SCORE, (response: string) => onResponseScore(snapshot, response))
 }
 
-export const createQuiz = (snap: any, entries: Map<string, string>) => {
-	const specs = {
-		name: entries.get(Entry_Name) || 'Binquiz live',
-		teams: parseInt(entries.get(Entry_TeamsInAQuiz) || '4'),
-		players: parseInt(entries.get(Entry_PlayersInATeam) || '4'),
-		questions: parseInt(entries.get(Entry_Questions_Count) || '20')
-	}
-	const obj = { action: Action.toString(Action.SPECS), person: snap.player, specs: specs }
-	console.log(obj)
+export const createQuiz = (snap: any, specs: Specs) => {
 	handlerQuizmaster(snap)
-	WebSckts.send(Action.SPECS, JSON.stringify(obj))
+	send(Action.SPECS, createQuizRequest(snap, specs))
 }
 
 export const joinPlayer = (snap: any, quizId: string) => {
-	const obj = { action: Action.toString(Action.JOIN), person: snap.player, quiz_id: quizId }
 	handlerJoinPlayer(snap, quizId)
-	WebSckts.send(Action.JOIN, JSON.stringify(obj))
+	send(Action.JOIN, joinRequest(Action.JOIN, snap, quizId))
 }
 
 export const joinAudience = (snap: any, quizId: string) => {
-	const obj = { action: Action.toString(Action.WATCH), person: snap.player, quiz_id: quizId }
 	handlerAudience(snap, quizId)
-	WebSckts.send(Action.WATCH, JSON.stringify(obj))
+	send(Action.WATCH, joinRequest(Action.WATCH, snap, quizId))
 }
 
 export const start = (snap: any) => {
-	const obj = { action: Action.toString(Action.START), quiz_id: snap.quiz.id }
-	WebSckts.send(Action.START, JSON.stringify(obj))
+	send(Action.START, startRequest(snap))
 }
 
 export const queryActive = (snap: any) => {
-	WebSckts.send(Action.ACTIVE, JSON.stringify({ action: Action.toString(Action.ACTIVE) }))
+	send(Action.ACTIVE, activeRequest)
+}
+
+export const queryPass = (snap: any) => {
+	send(Action.PASS, snapshotRequest(Action.PASS, snap.quiz.id, snap.snapshot.question_id))
+}
+
+export const queryRight = (snap: any) => {
+	send(Action.RIGHT, snapshotRequest(Action.RIGHT, snap.quiz.id, snap.snapshot.question_id))
+}
+
+export const queryNext = (snap: any) => {
+	send(Action.NEXT, snapshotRequest(Action.NEXT, snap.quiz.id, snap.snapshot.question_id))
 }
 
 export const queryExtend = (snap: any) => {
@@ -147,22 +198,5 @@ export const queryLink = (snap: any) => {
 }
 
 export const queryScore = (snap: any) => {
-	WebSckts.send(Action.SCORE, JSON.stringify({ action: Action.toString(Action.SCORE), quiz_id: snap.quiz.id }))
-}
-
-export const onResponse = (snapshot: Snap, response: string) => {
-	const res = JSON.parse(response)
-	console.log(res, canAcceptQuizSnapshot(snapshot, res.snapshot))
-	state.snapshot = res.snapshot
-	console.log(res)
-	switch (res.action) {
-		case Action.toString(Action.START): Urls.toQuiz(); break;
-		case Action.toString(Action.HINT): state.hintRevealed = true; break;
-		case Action.toString(Action.RIGHT): state.answerRevealed = true; break;
-		case Action.toString(Action.NEXT): state.answerRevealed = false; state.hintRevealed = false; break;
-	}
-}
-
-export const canAcceptQuizSnapshot = (snap: any, response: Snap): boolean => {
-	return response.quiz_id === snap.quiz_id
+	send(Action.SCORE, JSON.stringify({ action: Action.toString(Action.SCORE), quiz_id: snap.quiz.id }))
 }
