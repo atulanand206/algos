@@ -10,7 +10,26 @@ import { useSnapshot } from "valtio"
 import { state } from "../../state/State"
 import { Header } from "../../components/Header/Header"
 
+type QueryButtonProps = {
+  role: string
+  filled: boolean
+  onStart: () => void
+}
+
+export const StartButton = (props: QueryButtonProps) => {
+  return <div className='lobby__start'>
+    <Query
+      label={!props.filled ? 'waiting...' : (props.role === ROLE_QUIZMASTER) ? 'start' : ''}
+      visible={!(props.filled && props.role !== ROLE_QUIZMASTER)}
+      onClick={() => {
+        if (props.filled) props.onStart()
+      }}></Query>
+  </div>
+}
+
 type Props = {
+  player: Player
+  role: string
 }
 
 export const Lobby = (props: Props) => {
@@ -54,7 +73,7 @@ export const Lobby = (props: Props) => {
   //   return s
   // }
 
-  const waiting = () => {
+  const Waiting = () => {
     if (filled()) return <p className='lobby__quiz--id--label'>waiting...</p>
     else return <></>
   }
@@ -63,7 +82,7 @@ export const Lobby = (props: Props) => {
     return team.players.map((player, ix) => <Popover content={renderPlayer(player, props)} key={`popover container ${ix}`} />)
   }
 
-  const teamRoster = (team: TeamRoster) => {
+  const TeamRoster = (team: TeamRoster) => {
     if (team.players.length === 0) return <></>
     return <div className='lobby__team--player' key={`roster team ${team.id}`}>
       {tm(team)}
@@ -71,14 +90,16 @@ export const Lobby = (props: Props) => {
     </div>
   }
 
-  const roster = 
+  const Roster = () =>
     <div className='lobby__teams'>
       {snap.snapshot.teams.map((team, ix) =>
         <div className='lobby__team' key={`lobby ${ix}`}>
           <p className={classNames('lobby__team--name', playerInTeam(team) && 'lobby__team--name--editable')}>{team.name} ({team.players.length}/{snap.quiz.specs.players})</p>
-          {teamRoster(team)}
+          {TeamRoster(team)}
         </div>)}
     </div>
+
+  const PlayerLabel = () => <p className='lobby__quiz--id--label lobby__player'><span className='lobby__label'>Player</span><br/>{props.player.name}</p>
 
   return (
     <div className='lobby__wrapper'>
@@ -87,17 +108,13 @@ export const Lobby = (props: Props) => {
       </div>
       <p className='lobby__quiz--id--value lobby__quiz--id' onClick={quizIdCopied}>{snap.quiz.specs.name}</p>
       <p className='lobby__quiz--id--label lobby__quizmaster'><span className='lobby__label'>Quizmaster</span><br/>{snap.quiz.quizmaster.name}</p>
-      {snap.role !== ROLE_QUIZMASTER && <p className='lobby__quiz--id--label lobby__player'><span className='lobby__label'>Player</span><br/>{snap.player.name}</p>}
-      {roster}
-      {waiting}
-      <div className='lobby__start'>
-        <Query
-          label={!filled() ? 'waiting...' : (snap.role === ROLE_QUIZMASTER) ? 'start' : ''}
-          visible={!(filled() && snap.role !== ROLE_QUIZMASTER)}
-          onClick={() => {
-            if (filled()) start()
-          }}></Query>
-      </div>
+      {props.role !== ROLE_QUIZMASTER ? <PlayerLabel /> : <></>}
+      <Roster />
+      <Waiting />
+      <StartButton 
+        role={props.role} 
+        filled={filled()}
+        onStart={start} />
     </div>
   )
 }
