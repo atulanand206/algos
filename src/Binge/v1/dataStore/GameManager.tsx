@@ -82,6 +82,7 @@ export const onResponseJoinGame = (snap: any, response: string, quizId: string) 
 	state.role = res.role
 	state.snapshot = res.snapshot
 	handlers(snap.player, res.snapshot)
+	refresh(snap.player, res.snapshot)
 	if (res.quiz.started) {
 		Urls.toQuiz()
 	} else {
@@ -102,7 +103,7 @@ export const onResponseQuestion = (snapshot: Snap, response: string) => {
 	}
 }
 
-export const onResponseRefresh = (player: Player, snapshot: Snap) => {
+export const refresh = (player: Player, snapshot: Snap) => {
 	send(Action.REFRESH, refreshRequest(player, snapshot))
 }
 
@@ -129,7 +130,7 @@ export const handlers = (player: Player, snapshot: Snap) => {
 
 export const handlerActiveQuiz = (player: Player, snapshot: Snap) => {
 	register(Action.S_ACTIVE, (response: string) => onResponseActive(snapshot, response))
-	register(Action.S_REFRESH, () => onResponseRefresh(player, snapshot))
+	register(Action.S_REFRESH, () => refresh(player, snapshot))
 }
 
 export const handlerQuizmaster = (snap: any) => {
