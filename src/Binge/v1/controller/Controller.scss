@@ -8,15 +8,13 @@
     grid-template-rows: 1fr;
     // background-image: url('./../../../images/background.svg');
     // background: #112 url(//images.weserv.nl/?url=i.imgur.com/6QJjYMe.jpg)  center no-repeat;
-    
-    & > * {
-      display: grid;
-      grid-row: 1/-1;
-      grid-column: 1/-1;
-      align-items: center;
-    }
+
 
     &__background {
+      grid-row: 1/-1;
+      grid-column: 1/-1;
+      height: 100%;
+      width: 100%;
       display: grid;
       background-image: url('./../../../images/background.svg');
       // @include blink;

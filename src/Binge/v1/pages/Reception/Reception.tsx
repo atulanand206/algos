@@ -40,16 +40,16 @@ type QuizProps = {
 export const Quiz = (props: QuizProps) => {
 	const { item } = props
 	const total = item.specs.teams * item.specs.players
-	return <div className='quizzes__item quizzes__item--quiz' key={`item.key ${item.id}`}>
-		<div className='quizzes__item--quizmaster'>{item.quizmaster.name}</div>
-		<div className='quizzes__item--name'>{item.specs.name}</div>
-		<div className='quizzes__item--rounds'>{item.specs.rounds} Rounds</div>
-		<div className='quizzes__item--rounds'>{item.specs.questions} Questions</div>
-		<div className='quizzes__item--config'>{item.specs.teams} Teams of {item.specs.players} Players</div>
-		<div className='quizzes__item--config'>Players {item.players_joined} / {total}</div>
+	return <article className='quizzes__item quizzes__item--quiz' key={`item.key ${item.id}`}>
+		<p className='quizzes__item--quizmaster'>{item.quizmaster.name}</p>
+		<p className='quizzes__item--name'>{item.specs.name}</p>
+		<p className='quizzes__item--rounds'>{item.specs.rounds} Rounds</p>
+		<p className='quizzes__item--rounds'>{item.specs.questions} Questions</p>
+		<p className='quizzes__item--config'>{item.specs.teams} Teams of {item.specs.players} Players</p>
+		<p className='quizzes__item--config'>Players {item.players_joined} / {total}</p>
 		{props.canJoin && <button className='quizzes__item__button' onClick={props.onJoin}>Join</button>}
 		<button className='quizzes__item__button' onClick={props.onWatch}>Watch</button>
-	</div>
+	</article>
 }
 
 type QuizzesProps = {
@@ -81,10 +81,10 @@ export const Reception = (props: Props) => {
 	return (
 		<div className='credentials__wrapper'>
 			<Header />
-			<div className='quizzes__list' >
+			<section className='quizzes__list' >
 				{props.canCreateQuiz ? <CreateQuiz /> : <></>}
 				<Quizzes quizzes={props.quizzes} onJoin={props.onJoin} onWatch={props.onWatch} />
-			</div>
+			</section>
 		</div>
 	)
 }

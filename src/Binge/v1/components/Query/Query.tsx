@@ -7,7 +7,7 @@ type QueryProps = {
 }
 
 export const Query = (props: QueryProps) => {
-	if (!props.visible) return <div></div>
+	if (!props.visible) return <></>
 	return (
 		<button
 			className='query__button'

@@ -51,6 +51,7 @@
   @include animation-click;
   @include no-decoration;
   @include hover-underline;
+  cursor: pointer;
   text-align: center;
   font-size: $fnt_normal;
   color: $color_white;

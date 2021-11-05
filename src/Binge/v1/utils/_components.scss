@@ -8,6 +8,18 @@
 $small: 900px;
 $medium: 1300px;
 
+@mixin wrapper {
+    display: grid;
+    height: 100%;
+    display: grid;
+    grid-row: 1/-1;
+    grid-column: 1/-1;
+    align-items: center;
+    max-width: 800px;
+    justify-self: center;
+    background: transparent;
+}
+
 @mixin logo-large {
     @include logo;
     font-size: $fnt_large;

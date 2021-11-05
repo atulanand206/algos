@@ -3,12 +3,11 @@
 .landing {
 
     &__wrapper {
+        @include wrapper;
         grid-template-rows: 1fr 8fr 1fr 4fr;
         grid-template-columns: 1fr 4fr 1fr;
         // background: #112 url(//images.weserv.nl/?url=i.imgur.com/6QJjYMe.jpg)  center no-repeat;
         // background-size:cover;
-      background: transparent;
-
     }
 
     &__header {

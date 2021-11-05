@@ -73,19 +73,19 @@ $color-blink-background: $color_background_landing;
   }
 }
 @mixin blink {
-  $animation-name: blink-animation;
-  $blink-time: 2s;
+  // $animation-name: blink-animation;
+  // $blink-time: 2s;
 
-  -moz-transition: all $blink-time ease-in-out;
-  -webkit-transition: all $blink-time ease-in-out;
-  -o-transition: all $blink-time ease-in-out;
-  -ms-transition: all $blink-time ease-in-out;
-  transition: all $blink-time ease-in-out;
-  -moz-animation: $animation-name normal 1.5s infinite ease-in-out;
-  /* Firefox */
-  -webkit-animation: $animation-name normal 1.5s infinite ease-in-out;
-  /* Webkit */
-  -ms-animation: $animation-name normal 1.5s infinite ease-in-out;
-  /* IE */
-  animation: $animation-name normal 1.5s infinite ease-in-out;
+  // -moz-transition: all $blink-time ease-in-out;
+  // -webkit-transition: all $blink-time ease-in-out;
+  // -o-transition: all $blink-time ease-in-out;
+  // -ms-transition: all $blink-time ease-in-out;
+  // transition: all $blink-time ease-in-out;
+  // -moz-animation: $animation-name normal 1.5s infinite ease-in-out;
+  // /* Firefox */
+  // -webkit-animation: $animation-name normal 1.5s infinite ease-in-out;
+  // /* Webkit */
+  // -ms-animation: $animation-name normal 1.5s infinite ease-in-out;
+  // /* IE */
+  // animation: $animation-name normal 1.5s infinite ease-in-out;
 }

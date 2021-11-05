@@ -1,31 +1,32 @@
 @import "../../utils/components";
 .board {
     &__wrapper {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        grid-template-rows: 5em 3em 3em 1fr 4em 5em;
-        overflow: hidden;
-        justify-self: center;
+        @include wrapper;
+        grid-template-columns: 1fr;
+        // grid-template-rows: 5em 3em 3em 1fr 4em 5em;
+        grid-template-rows: 10em 1fr 8em;
         background: $color_background_board;
-        max-width: 800px;
+        overflow: hidden;
 
         &--background {
             height: 100%;
             grid-row: 1/-1;
-            grid-column: 1/-1;
-            
         }
-        &>* {
-            grid-column: 1/-1;
+
+        & > * {
             color: $color_white;
         }
     }
     &__header {
-        
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1.5fr 1fr 1fr;
+        grid-row: 1/2;
         width: 100%;
+
         &--background {
             height: 100%;
-            grid-row: 1 / 4;
+            grid-row: 1 / -1;
             grid-column: 1 / -1;
             background: $color_footer_bkg;
         }
@@ -63,16 +64,22 @@
             padding-inline: 1em;
         }
     }
-    &__body {
+    &__content {
         height: 100%;
-        grid-row: 4 / 5;
+        display: grid;
+        grid-row: 2/3;
+        grid-template-rows: 1fr 4em;
+        align-self: flex-start;
+    }
+    
+    &__body {
         overflow-x: hidden;
         overflow-y: scroll;
         align-self: flex-start;
     }
     &__controls {
-        grid-row: -3 / -2;
         @include grid-columns;
+        grid-row: -2 / -1;
         background: $color_footer_bkg;
     }
     &__footer {

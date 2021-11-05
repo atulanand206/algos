@@ -11,17 +11,17 @@ type AvatarProps = {
 
 export const Avatar = (props: AvatarProps) => {
 	return (
-		<div key={props.team.name}
+		<article key={props.team.name}
 			className={classNames('state__team',
 				props.active && 'state__team--active')}>
 			<p className='state__team--name'>{props.team.name}</p>
 			<p className='state__team--turn'>{props.active ? '...' : ''}</p>
 			<p className='state__team--score'>{props.team.score}</p>
-			<div className='state__team--players'>
+			<section className='state__team--players'>
 				{props.team.players.map((player, index) => 
 				<p className='state__team--player' key={index}>{player.name}</p>)}	
-			</div>
-		</div>
+			</section>
+		</article>
 	)
 }
 
@@ -49,14 +49,14 @@ export const State = (props: Props) => {
 	
 	return (
 		<div className='state__container'>
-			<div className={show ? 'state__table' : 'state__table--hidden'}>
+			<section className={show ? 'state__table' : 'state__table--hidden'}>
 				{props.teams.map((ix) => <Avatar team={ix} key={ix.name}
 					active={ix.id === props.currentTeamId} />)}
-			</div>
-			<div className='state__header'>
+			</section>
+			<section className='state__header'>
 				<p className='state__header--text'>scores</p>
 				{arrow}
-			</div>
+			</section>
 			{/* <div className='state__team--current'>
 				<p className='state__item'>Score {currentTeamScore}</p>
 				<p className='state__item'>Rank {currentTeamRankAfterSortingTeams}</p>
