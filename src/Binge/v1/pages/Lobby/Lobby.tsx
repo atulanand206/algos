@@ -14,14 +14,14 @@ type QueryButtonProps = {
 }
 
 export const StartButton = (props: QueryButtonProps) => {
-  return <div className='lobby__start'>
+  return <section className='lobby__start'>
     <Query
       label={!props.filled ? 'waiting...' : (props.role === ROLE_QUIZMASTER) ? 'start' : ''}
       visible={!(props.filled && props.role !== ROLE_QUIZMASTER)}
       onClick={() => {
         if (props.filled) props.onStart()
       }}></Query>
-  </div>
+  </section>
 }
 
 type RosterProps = {
@@ -42,22 +42,22 @@ export const Roster = (props: RosterProps) => {
 
   const TeamRoster = (team: TeamRoster) => {
     if (team.players.length === 0) return <></>
-    return <div className='lobby__team--player' key={`roster team ${team.id}`}>
+    return <article className='lobby__team--player' key={`roster team ${team.id}`}>
       {tm(team)}
       {/* {empty(team).map(ent => ent)} */}
-    </div>
+    </article>
   }
   
   const playerInTeam = (team: Team) => {
     return team.players.filter((player) => props.playerId === player.id).length !== 0
   }
-  return <div className='lobby__teams'>
+  return <section className='lobby__teams'>
     {props.teams.map((team, ix) =>
-      <div className='lobby__team' key={`lobby ${ix}`}>
-        <p className={classNames('lobby__team--name', playerInTeam(team) && 'lobby__team--name--editable')}>{team.name} ({team.players.length}/{props.maxPerTeam})</p>
+      <section className='lobby__team' key={`lobby ${ix}`}>
+        <h1 className={classNames('lobby__team--name', playerInTeam(team) && 'lobby__team--name--editable')}>{team.name} ({team.players.length}/{props.maxPerTeam})</h1>
         {TeamRoster(team)}
-      </div>)}
-  </div>
+      </section>)}
+  </section>
 }
 
 type Props = {
@@ -91,20 +91,24 @@ export const Lobby = (props: Props) => {
 
   return (
     <div className='lobby__wrapper'>
-      <div className='lobby__header'>
+      <header className='lobby__header'>
         <Header />
-      </div>
-      <p className='lobby__quiz--id--value lobby__quiz--id' onClick={quizIdCopied}>{props.quiz.specs.name}</p>
-      <p className='lobby__quiz--id--label lobby__quizmaster'><span className='lobby__label'>Quizmaster</span><br/>{props.quiz.quizmaster.name}</p>
-      {props.role !== ROLE_QUIZMASTER ? <PlayerLabel /> : <></>}
-      <Roster 
-        playerId={props.player.id}
-        teams={props.teams}
-        maxPerTeam={props.quiz.specs.players} />
-      <StartButton 
-        role={props.role} 
-        filled={filled()}
-        onStart={start} />
+      </header>
+      <main className='lobby__content'>
+        <p className='lobby__quiz--id--value lobby__quiz--id' onClick={quizIdCopied}>{props.quiz.specs.name}</p>
+        <p className='lobby__quiz--id--label lobby__quizmaster'><span className='lobby__label'>Quizmaster</span><br/>{props.quiz.quizmaster.name}</p>
+        {props.role !== ROLE_QUIZMASTER ? <PlayerLabel /> : <></>}
+        <Roster 
+          playerId={props.player.id}
+          teams={props.teams}
+          maxPerTeam={props.quiz.specs.players} />
+      </main>
+      <footer className='lobby__footer'>
+        <StartButton 
+          role={props.role} 
+          filled={filled()}
+          onStart={start} />
+      </footer>
     </div>
   )
 }

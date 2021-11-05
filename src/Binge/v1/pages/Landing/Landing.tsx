@@ -34,12 +34,12 @@ export const Landing = (props: LandingProps) => {
 
 	return (
 		<div className='landing__wrapper'>
-			<div className='landing__header'>
+			<header className='landing__header'>
 				<Header large/>
-			</div>
-			<div className='landing__content'>
+			</header>
+			<main className='landing__content'>
 				{glogin()}
-			</div>
+			</main>
 		</div>
 	)
 }

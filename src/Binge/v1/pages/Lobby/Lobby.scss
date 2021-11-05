@@ -2,15 +2,20 @@
 
 .lobby {
   &__wrapper {
+    @include wrapper;
     // background: url('./../../../../images/choose_bg.jpg');
     background-size: cover;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 2fr 0.5fr 0.5fr 6fr 2fr;
+    grid-template-columns: 1fr;
+    grid-template-rows: 2fr 10fr 2fr;
     padding-inline: 2em;
   }
 
-  &__header {
-    grid-column: 1/-1;
+  &__content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 1em;
+    padding-inline: 2em;
+    align-self: flex-start;
   }
 
   &__button {
@@ -55,6 +60,7 @@
     grid-template-columns: 1fr;
     grid-template-rows: repeat(auto-fill, minmax(8em, 1fr));
     gap: 1em;
+    padding-block: 0.5em;
 
     & > * {
       margin-inline: 1em;
