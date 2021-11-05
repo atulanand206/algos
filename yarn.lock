@@ -2071,11 +2071,6 @@
   resolved "https://registry.npmjs.org/@types/q/-/q-1.5.5.tgz"
   integrity sha512-L28j2FcJfSZOnL1WBjDYp2vUHCeIFlyYI/53EwD/rKUBQ7MtUUfbQWiyKJGpcnv4/WgrhWsFKrcPstcAt/J0tQ==
 
-"@types/quixote@^0.7.29":
-  version "0.7.29"
-  resolved "https://registry.yarnpkg.com/@types/quixote/-/quixote-0.7.29.tgz#43cd08165c00d061f3d4ec7f2f9dd5c956ed59d3"
-  integrity sha512-ssl7McSBLVPhn02x3PWuB2qtUHUQzwi/nid3lzAsIFzu4FaEqFzSy8fYmza0Mnc2YhbsLrLlQ3rlyt6xRE/JFg==
-
 "@types/react-router-dom@^5.3.1":
   version "5.3.1"
   resolved "https://registry.yarnpkg.com/@types/react-router-dom/-/react-router-dom-5.3.1.tgz#76700ccce6529413ec723024b71f01fc77a4a980"
