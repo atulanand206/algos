@@ -3,6 +3,17 @@
 A react based client application to play Binquiz. It's a single page application at the moment in which containers change using a local string flag. The game itself is multiplayer and will be moderated by a quizmaster and some players in the teams. Stay tuned in  for the first event.
 
 ---
+## Table of contents
+- Technology
+  - External Comms
+  - Package structure
+  - Installation
+  - Environment Variables
+  - Building Image
+  - Dependencies
+- Author
+---
+## Technology
 ### External Comms
 - Google OAuth client for authenticating and retrieving user. Used by pretty much everyone made it like the top choice when choosing identity provider.
 - Web sockets networking for seamless quizzing experience with every player getting an update at the same time.
@@ -50,7 +61,7 @@ src
 - `spec.scss` - Sass styles tests.
 - `svg` - Images.
 ---
-## Installation
+### Installation
 
 - First of all, install `npm` which comes bundled with [Node](https://nodejs.org/en/download/).
 -  Install `yarn` package manager by running. 
