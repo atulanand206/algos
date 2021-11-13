@@ -41,14 +41,16 @@ export const Quiz = (props: QuizProps) => {
 	const { item } = props
 	const total = item.specs.teams * item.specs.players
 	return <article className='quizzes__item quizzes__item--quiz' key={`item.key ${item.id}`}>
-		<p className='quizzes__item--quizmaster'>{item.quizmaster.name}</p>
-		<p className='quizzes__item--name'>{item.specs.name}</p>
-		<p className='quizzes__item--rounds'>{item.specs.rounds} Rounds</p>
-		<p className='quizzes__item--rounds'>{item.specs.questions} Questions</p>
-		<p className='quizzes__item--config'>{item.specs.teams} Teams of {item.specs.players} Players</p>
-		<p className='quizzes__item--config'>Players {item.players_joined} / {total}</p>
-		{props.canJoin && <button className='quizzes__item__button' onClick={props.onJoin}>Join</button>}
-		<button className='quizzes__item__button' onClick={props.onWatch}>Watch</button>
+		<div className='quizzes__item--name'><p className='quizzes__item--value'>{item.specs.name}</p></div>
+		<div className='quizzes__item--quizmaster'><p className='quizzes__item--value'>{item.quizmaster.name}</p></div>
+		<div className='quizzes__item--rounds'><p className='quizzes__item--value'>{item.specs.rounds}</p></div>
+		<div className='quizzes__item--questions'><p className='quizzes__item--value'>{item.specs.questions}</p></div>
+		<div className='quizzes__item--config'><p className='quizzes__item--value'>{item.specs.teams} of {item.specs.players}</p></div>
+		<div className='quizzes__item--players'><p className='quizzes__item--value'>{item.players_joined} / {total}</p></div>
+		<div className='quizzes__item__button-container'>
+			{props.canJoin && <button className='quizzes__item__button' onClick={props.onJoin}>Join</button>}
+			<button className='quizzes__item__button' onClick={props.onWatch}>Watch</button>
+		</div>
 	</article>
 }
 

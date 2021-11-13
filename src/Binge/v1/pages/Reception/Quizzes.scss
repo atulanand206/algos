@@ -3,17 +3,15 @@
   &__list {
     align-self: flex-start;
     justify-self: center;
-    grid-row: 2/3;
     grid-column: 1/-1;
     display: grid;
-    grid-template-rows: 1fr;
     grid-gap: 10px; 
     list-style: none;
-    width: 800px;
-    grid-auto-flow: column;
-    grid-auto-columns: 1fr;
-    overflow-x: auto;
+    grid-auto-flow: row;
+    grid-auto-rows: 1fr;
+    overflow-y: scroll;
     padding: 6px;
+    color: $color_white;
   }
 
   &__item {
@@ -25,17 +23,93 @@
     max-width: clamp(16em, 64em, 132em);
     display: grid;
     place-items: center;
+    position: relative;
+
+    &--quiz {
+      grid-template-columns: repeat(3, 1fr);   
+      grid-template-rows: repeat(4, 1fr);
+    }
+
     div {
-      color: $color_white
+      color: $color_white;
+      width: 100%;
+    }
+
+    &--value {
+      text-align: center;
+      &::after {
+        content: "";
+        display: flex;
+        align-self: center;
+        position: absolute;
+        height: 0.5em;
+        font-size: 0.5em;
+        text-align: center;
+        letter-spacing: 0.1em;
+      }
     }
 
     &__button {
-      margin-block: 2em;
+      margin-inline: 2em;
+
+      &-container {
+        grid-row: -2/-1;
+        grid-column: 1/-1;
+      }
+    }
+
+    &--name {
+      grid-row: 1/2;
+      grid-column: 1/2;
+
+      .quizzes__item--value::after {
+        content: "QUIZ";
+      }
     }
 
     &--quizmaster {
       grid-row: 1/2;
+      grid-column: -2/-1;
+
+      .quizzes__item--value::after {
+        content: "QUIZMASTER";
+      }
+    }
+
+    &--rounds {
+      grid-row: 2/3;
       grid-column: 1/2;
+
+      .quizzes__item--value::after {
+        content: "ROUNDS";
+      }
+    }
+
+    &--questions {
+      grid-row: 2/3;
+      grid-column: -2/-1;
+
+      .quizzes__item--value::after {
+        content: "QUESTIONS";
+      }
+    }
+
+    &--config {
+      grid-row: 2/3;
+      grid-column: 2/3;
+
+      .quizzes__item--value::after {
+        content: "TEAMS";
+      }
+    }
+
+    &--players {
+      grid-row: -3/-2;
+      grid-column: 1/-1;
+
+      .quizzes__item--value::after {
+        content: "PLAYERS";
+      }
     }
 
     &--create {
@@ -44,9 +118,5 @@
       grid-column: 1/-1;
     }
 
-    &--quiz {
-      grid-template-columns: repeat(3, 1fr);   
-      grid-template-rows: repeat(1, 1fr);
-    }
   }
 }

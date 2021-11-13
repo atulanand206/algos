@@ -3,7 +3,8 @@
 .credentials {
   &__wrapper{
     @include wrapper;
-    grid-template-rows: 2fr 12fr;
+    grid-template-rows: 8em 1fr;
+    overflow-y: hidden;
     // background: url('./../../../../images/choose_bg.jpg');
     background-size: cover
   }
