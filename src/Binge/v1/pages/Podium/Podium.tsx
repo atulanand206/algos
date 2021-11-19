@@ -1,45 +1,28 @@
-import { ROLE_QUIZMASTER, ROLE_PLAYER } from "../../features/Features"
+import { ROLE_QUIZMASTER } from "../../features/Features"
 import { Header } from "../../components/Header/Header"
 import { Query } from "../../components/Query/Query"
 import { State } from "../../components/State/State"
-import { getPlayersTeamId } from "../../dataStore/DataStore"
-import './Board.scss'
+import './Podium.scss'
 import { Game, Player, Snap } from "../../utils/_interfaces"
 
-type BoardProps = {
+type Props = {
 	player: Player
 	quiz: Game
 	role: string
 	snapshot: Snap
-	answerRevealed: boolean
-	onPass: () => void
 	onNext: () => void
-	onRight: () => void
-	onFinish: () => void
 }
 
-export const Board = (props: BoardProps) => {
+export const Podium = (props: Props) => {
 
 	const quizIdCopied = () => {
 		navigator.clipboard.writeText(props.snapshot.quiz_id)
-	}
-
-	const visPass = () => {
-		return props.role === ROLE_PLAYER && props.snapshot.team_s_turn === getPlayersTeamId(props.role, props.snapshot, props.player.id) && props.snapshot.can_pass
-	}
-
-	const visRight = () => {
-		return props.role === ROLE_QUIZMASTER && props.snapshot.event_type !== "RIGHT"
 	}
 
 	const visNext = () => {
 		return props.role === ROLE_QUIZMASTER && (props.snapshot.event_type === "RIGHT" || !props.snapshot.can_pass) && props.quiz.specs.questions !== props.snapshot.question_no
 	}
 
-	const visFinish = () => {
-		return props.role === ROLE_QUIZMASTER && (props.snapshot.event_type === "RIGHT" || !props.snapshot.can_pass) && props.quiz.specs.questions === props.snapshot.question_no
-	}
-	
 	const teams = [...props.snapshot.teams]
 
 	const rankedTeams = () => {
@@ -66,22 +49,9 @@ export const Board = (props: BoardProps) => {
 		</header>
 		
 		<main className='board__content'>
-			<section className='board__body'>
-				<article className='board__column board__questions'>
-					{props.snapshot.question && props.snapshot.question.map(line => <p className='board__questions--line'>{line}</p>)}
-				</article>
-				{/* <div className='board__column'>
-					<p className='board__hint'>{snap.hintRevealed && snap.snapshot.hint.map(line => <p className='board__questions--line'>{line}</p>)}</p>
-				</div> */}
-				{/* <div></div> */}
-				{props.answerRevealed ? <article className='board__column'><p className='board__answer'>{props.snapshot.answer && props.snapshot.answer.map(line => <p className='board__answers--line'>{line}</p>)}</p></article> : <></>} 
-			</section>
-
+			
 			<section  className='board__controls'>
-				<Query label={"Pass"} onClick={props.onPass} visible={visPass()} />
-				<Query label={"Right"} onClick={props.onRight} visible={visRight()} />
 				<Query label={"Next"} onClick={props.onNext} visible={visNext()} />
-				<Query label={"Finish"} onClick={props.onFinish} visible={visFinish()} />
 			</section>
 		</main>
 		<footer className='board__footer'>

@@ -26,7 +26,7 @@ export const joinRequest = (action: Action, snap: any, quizId: string) => {
 }
 
 export const startRequest = (snap: any): string => {
-	return JSON.stringify({ action: Action.toString(Action.START), quiz_id: snap.quiz.id })
+	return JSON.stringify({ action: Action.toString(Action.START), person: snap.player, quiz_id: snap.quiz.id })
 }
 
 export const activeRequest = JSON.stringify({ action: Action.toString(Action.ACTIVE) })
@@ -100,6 +100,7 @@ export const onResponseQuestion = (snapshot: Snap, response: string) => {
 		case Action.toString(Action.HINT): state.hintRevealed = true; break;
 		case Action.toString(Action.RIGHT): state.answerRevealed = true; break;
 		case Action.toString(Action.NEXT): state.answerRevealed = false; state.hintRevealed = false; break;
+		case Action.toString(Action.FINISH): state.answerRevealed = false; state.hintRevealed = false; Urls.toPodium(); break;
 	}
 }
 
@@ -179,6 +180,10 @@ export const queryPass = (snap: any) => {
 
 export const queryRight = (snap: any) => {
 	send(Action.RIGHT, snapshotRequest(Action.RIGHT, snap.quiz.id, snap.snapshot.question_id))
+}
+
+export const queryFinish = (snap: any) => {
+	send(Action.FINISH, snapshotRequest(Action.FINISH, snap.quiz.id, snap.snapshot.question_id))
 }
 
 export const queryNext = (snap: any) => {

@@ -3,6 +3,7 @@ import { Board } from "../pages/Board/Board"
 import { QuizCreator, Reception } from "../pages/Reception/Reception"
 import * as GameManager from "../dataStore/GameManager"
 import { Landing } from "../pages/Landing/Landing"
+import { Podium } from "../pages/Podium/Podium"
 import { Lobby } from "../pages/Lobby/Lobby"
 import { state } from "../state/State"
 import './../controller/Controller.scss'
@@ -39,7 +40,14 @@ export const Switcher = (props: SwitchProps) => {
         answerRevealed={snap.answerRevealed} 
         onPass={() => GameManager.queryPass(snap)}
         onNext={() => GameManager.queryNext(snap)}
-        onRight={() => GameManager.queryRight(snap)} />
+        onRight={() => GameManager.queryRight(snap)}
+        onFinish={() => GameManager.queryFinish(snap)} />
+      case 'podium': return <Podium 
+        player={snap.player}   
+        quiz={snap.quiz}
+        role={snap.role}
+        snapshot={snap.snapshot}
+        onNext={() => GameManager.queryNext(snap)} />
     }
   }
 

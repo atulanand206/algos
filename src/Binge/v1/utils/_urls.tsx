@@ -16,7 +16,9 @@ export class Urls {
 
   static toJoin = () => this.toPage('join')
 
-  static toWatch= () => this.toPage('watch')
+  static toWatch = () => this.toPage('watch')
+  
+  static toPodium = () => this.toPage('podium')
 
   static toPage = (url: string) => state.page = url
 }

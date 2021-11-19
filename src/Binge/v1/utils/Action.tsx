@@ -7,6 +7,7 @@ export enum Action {
   START,
   HINT,
   RIGHT,
+  FINISH,
   PASS,
   NEXT,
   SCORE,
